@@ -119,10 +119,6 @@ namespace Warehouse.Controllers
                         tokenResult = JsonConvert.DeserializeObject<TokenResult>(await response.Content.ReadAsStringAsync());
                     }
                 }
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    throw new HttpException("User not found");
-                }
                 User loggedUser = _context.Users.FirstOrDefault(u => u.Login == registration.Login && u.Password == PasswordHash);
                 if (loggedUser == null)
                 {
@@ -137,6 +133,7 @@ namespace Warehouse.Controllers
                     loginResult.Role = loggedUser.Role;
                     loginResult.ExpirationTime = Convert.ToInt32(tokenResult.expires_in);
                     loginResult.Message = "Login successfully";
+                    loginResult.ExpirationTime = Convert.ToInt32(tokenResult.expires_in);
                 }
             }
             catch (Exception ex)
