@@ -22,16 +22,14 @@ namespace Warehouse.Controllers
     public class AccountController : ApiController
     {
         private readonly WarehouseEntities _context;
-        private readonly AuthRepository _authRepository;
         private readonly AccountRepository _accountRepository;
         // GET: Account
         public AccountController()
         {
             _context = new WarehouseEntities();
-            _authRepository = new AuthRepository();
             _accountRepository = new AccountRepository();
         }
-        [Authorize]
+
         [HttpPost]
         [Route("RegisterUser")]
         public RegistrationResult RegisterUser([FromBody]Registration registration)
@@ -131,7 +129,6 @@ namespace Warehouse.Controllers
                     loginResult.TokenType = tokenResult.token_type;
                     loginResult.Status = true;
                     loginResult.Role = loggedUser.Role;
-                    loginResult.ExpirationTime = Convert.ToInt32(tokenResult.expires_in);
                     loginResult.Message = "Login successfully";
                     loginResult.ExpirationTime = Convert.ToInt32(tokenResult.expires_in);
                 }
