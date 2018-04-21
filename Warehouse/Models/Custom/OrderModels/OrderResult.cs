@@ -23,7 +23,7 @@ namespace Warehouse.Models.Custom
         public int Num_of_Positions { get; set; }
         public bool? If_PDF_And_Sent { get; set; }
         public bool? If_Delivery_Generated { get; set; }
-        public string Status { get; set; }
+        public int? Status { get; set; }
         public DateTime? Created_At { get; set; }
         public DateTime? Edited_At { get; set; }
         public DateTime? Deleted_At { get; set; }
