@@ -27,6 +27,7 @@ namespace Warehouse.Models.DAL
     
         public DbSet<Client> Clients { get; set; }
         public DbSet<CMR_Dispatches> CMR_Dispatches { get; set; }
+        public DbSet<Counter> Counters { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }
         public DbSet<Deliveries_Dispatches> Deliveries_Dispatches { get; set; }
         public DbSet<Dispatch> Dispatches { get; set; }

@@ -249,6 +249,9 @@
     <Compile Include="Models\DAL\CMR_Dispatches.cs">
       <DependentUpon>Warehouse.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DAL\Counter.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DAL\Deliveries_Dispatches.cs">
       <DependentUpon>Warehouse.tt</DependentUpon>
     </Compile>

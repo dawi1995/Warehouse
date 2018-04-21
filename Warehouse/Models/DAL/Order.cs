@@ -29,7 +29,7 @@ namespace Warehouse.Models.DAL
         public int Num_of_Positions { get; set; }
         public Nullable<bool> If_PDF_And_Sent { get; set; }
         public Nullable<bool> If_Delivery_Generated { get; set; }
-        public string Status { get; set; }
+        public Nullable<int> Status { get; set; }
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Edited_At { get; set; }
         public Nullable<System.DateTime> Deleted_At { get; set; }
