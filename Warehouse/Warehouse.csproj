@@ -224,15 +224,54 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\SecurityHelper.cs" />
-    <Compile Include="Models\Custom\LoginRequest.cs" />
-    <Compile Include="Models\Custom\LoginResult.cs" />
-    <Compile Include="Models\Custom\Registration.cs" />
-    <Compile Include="Models\Custom\TokenResult.cs" />
+    <Compile Include="Models\Custom\AccountModels\ChangePassword.cs" />
+    <Compile Include="Models\Custom\AccountModels\ClientEdit.cs" />
+    <Compile Include="Models\Custom\AccountModels\ClientRegistration.cs" />
+    <Compile Include="Models\Custom\AccountModels\LoginRequest.cs" />
+    <Compile Include="Models\Custom\AccountModels\LoginResult.cs" />
+    <Compile Include="Models\Custom\AccountModels\UserEdit.cs" />
+    <Compile Include="Models\Custom\AccountModels\UserRegistration.cs" />
+    <Compile Include="Models\Custom\AccountModels\TokenResult.cs" />
+    <Compile Include="Models\Custom\AccountModels\UserInformation.cs" />
+    <Compile Include="Models\Custom\OrderModels\OrderResult.cs" />
+    <Compile Include="Models\Custom\RequestResult.cs" />
+    <Compile Include="Models\DAL\Client.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DAL\CMR_Dispatches.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DAL\Deliveries_Dispatches.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DAL\Delivery.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DAL\Dispatch.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DAL\Dispatches_Positions.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DAL\Order.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DAL\Orders_Positions.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DAL\Protocols_of_Difference.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DAL\sysdiagram.cs">
+      <DependentUpon>Warehouse.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DAL\User.cs">
       <DependentUpon>Warehouse.tt</DependentUpon>
     </Compile>
@@ -331,6 +370,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\Order\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

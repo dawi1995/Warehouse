@@ -12,14 +12,15 @@ namespace Warehouse.Models.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Dispatches_Positions
     {
         public int Id { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public int Role { get; set; }
-        public Nullable<System.DateTime> Created_at { get; set; }
-        public Nullable<System.DateTime> Edited_at { get; set; }
-        public Nullable<System.DateTime> Deleted_at { get; set; }
+        public Nullable<int> Dispatch_Id { get; set; }
+        public Nullable<int> Order_Position_Id { get; set; }
+        public Nullable<int> Amount { get; set; }
+        public Nullable<int> Weight_Gross { get; set; }
+        public Nullable<System.DateTime> Created_At { get; set; }
+        public Nullable<System.DateTime> Edited_At { get; set; }
+        public Nullable<System.DateTime> Deleted_At { get; set; }
     }
 }

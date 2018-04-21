@@ -32,56 +32,141 @@ namespace Warehouse.Controllers
 
         [HttpPost]
         [Route("RegisterUser")]
-        public RegistrationResult RegisterUser([FromBody]Registration registration)
+        public RequestResult RegisterUser([FromBody]UserRegistration registration)
         {
             string PasswordHash = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
-            RegistrationResult registrationResult = new RegistrationResult();
+            RequestResult requestResult = new RequestResult();
             try
             {
-                if (_accountRepository.IsLoginFree(registration))
+                if (_accountRepository.IsLoginFree(registration.Login))
                 {
-                    User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role };
+                    User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now};
                     _context.Users.Add(userToAdd);
                     _context.SaveChanges();
-                    registrationResult.Status = true;
-                    registrationResult.Message = "The user has been registered";
+                    requestResult.Status = true;
+                    requestResult.Message = "The user has been registered";
                 }
                 else
                 {
-                    registrationResult.Status = false;
-                    registrationResult.Message = "Login exists in system.";
+                    requestResult.Status = false;
+                    requestResult.Message = "Login exists in system.";
                 }
             }
             catch (Exception ex)
             {
-                registrationResult.Status = false;
-                registrationResult.Message = ex.ToString();
+                requestResult.Status = false;
+                requestResult.Message = ex.ToString();
             }
 
-            return registrationResult;
+            return requestResult;
+        }
+
+        [HttpPost]
+        [Route("RegisterClient")]
+        public RequestResult RegisterClient([FromBody]ClientRegistration registration)
+        {
+            string PasswordHash = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
+            RequestResult requestResult = new RequestResult();
+            try
+            {
+                if (_accountRepository.IsLoginFree(registration.Login))
+                {
+                    User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now };
+                    _context.Users.Add(userToAdd);
+                    _context.SaveChanges();
+                    Client clientToAdd = new Client { Name = registration.Name, Address = registration.Address, VAT_Id = registration.VAT_Id, Email = registration.Email, User_Id = userToAdd.Id, Created_At = userToAdd.Created_at };
+                    _context.Clients.Add(clientToAdd);
+                    _context.SaveChanges();
+                    requestResult.Status = true;
+                    requestResult.Message = "The client has been registered";
+                }
+                else
+                {
+                    requestResult.Status = false;
+                    requestResult.Message = "Login exists in system.";
+                }
+            }
+            catch (Exception ex)
+            {
+                requestResult.Status = false;
+                requestResult.Message = ex.ToString();
+            }
+
+            return requestResult;
         }
 
         [HttpPost]
         [Route("EditUser")]
-        public void EditUser([FromBody]Registration registration)
+        public RequestResult EditUser([FromBody]UserEdit registration)
         {
-            RegistrationResult registrationResult = new RegistrationResult();
+            RequestResult requestResult = new RequestResult();
             try
             {
-                User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id);
-                userToEdit.Login = registration.Login;
-                userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
-                userToEdit.Role = registration.Role;
-                _context.Users.Add(userToEdit);
-                _context.SaveChanges();
-                registrationResult.Status = true;
-                registrationResult.Message = "The user has been edited";
+                if (_accountRepository.IsLoginFree(registration.Login))
+                {
+                    User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
+                    userToEdit.Login = registration.Login;
+                    userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
+                    userToEdit.Role = registration.Role;
+                    userToEdit.Edited_at = DateTime.Now;
+                    _context.SaveChanges();
+                    requestResult.Status = true;
+                    requestResult.Message = "The user has been edited";
+                }
+                else
+                {
+                    requestResult.Status = false;
+                    requestResult.Message = "Login exists in system.";
+                }
+
             }
             catch (Exception ex)
             {
-                registrationResult.Status = false;
-                registrationResult.Message = ex.ToString();
+                requestResult.Status = false;
+                requestResult.Message = ex.ToString();
             }
+            return requestResult;
+
+        }
+
+        [HttpPost]
+        [Route("EditClient")]
+        public RequestResult EditClient([FromBody]ClientEdit registration)
+        {
+            RequestResult requestResult = new RequestResult();
+            try
+            {
+                if (_accountRepository.IsLoginFree(registration.Login))
+                {
+                    User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
+                    userToEdit.Login = registration.Login;
+                    userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
+                    userToEdit.Role = registration.Role;
+                    userToEdit.Edited_at = DateTime.Now;
+                    Client clientToEdit = _context.Clients.FirstOrDefault(c => c.User_Id == registration.Id);
+                    clientToEdit.Name = registration.Name;
+                    clientToEdit.Address = registration.Address;
+                    clientToEdit.VAT_Id = registration.VAT_Id;
+                    clientToEdit.Email = registration.Email;
+                    clientToEdit.Edited_At = userToEdit.Edited_at;
+                    _context.SaveChanges();
+                    requestResult.Status = true;
+                    requestResult.Message = "The client has been edited";
+                }
+                else
+                {
+                    requestResult.Status = false;
+                    requestResult.Message = "Login exists in system.";
+                }
+
+                
+            }
+            catch (Exception ex)
+            {
+                requestResult.Status = false;
+                requestResult.Message = ex.ToString();                
+            }
+            return requestResult;
 
         }
 
@@ -117,7 +202,7 @@ namespace Warehouse.Controllers
                         tokenResult = JsonConvert.DeserializeObject<TokenResult>(await response.Content.ReadAsStringAsync());
                     }
                 }
-                User loggedUser = _context.Users.FirstOrDefault(u => u.Login == registration.Login && u.Password == PasswordHash);
+                User loggedUser = _context.Users.FirstOrDefault(u => u.Login == registration.Login && u.Password == PasswordHash && u.Deleted_at == null);
                 if (loggedUser == null)
                 {
                     loginResult.Status = false;
@@ -139,8 +224,151 @@ namespace Warehouse.Controllers
                 loginResult.Message = ex.ToString();
             }
             return loginResult;
+        }
 
+        [HttpGet]
+        [Route("RemoveUser")]
+        public RequestResult RemoveUser(int userId)
+        {
+            RequestResult requestResult = new RequestResult();
+            try
+            {
+                User userToDelete = _context.Users.FirstOrDefault(u => u.Id == userId && u.Deleted_at == null);
+                if (userToDelete != null)
+                {
+                    userToDelete.Deleted_at = DateTime.Now;
+                    Client clientToDelete = _context.Clients.FirstOrDefault(c => c.User_Id == userToDelete.Id && c.Deleted_At == null);
+                    if (clientToDelete != null)
+                    {
+                        clientToDelete.Deleted_At = DateTime.Now;
+                    }
+                    _context.SaveChanges();
+                    requestResult.Status = false;
+                    requestResult.Message = "The user has been deleted";
 
+                }
+                else
+                {
+                    requestResult.Status = false;
+                    requestResult.Message = "The user with the given ID does not exist";
+                }
+            }
+            catch (Exception ex)
+            {
+                requestResult.Status = false;
+                requestResult.Message = ex.Message;
+            }
+            return requestResult;
+        }
+
+        [HttpGet]
+        [Route("GetAllUsers")]
+        public List<UserInformation> GetAllUsers(int offset, int limit)
+        {
+            List<UserInformation> result = new List<UserInformation>();
+            var listOfUsers = _context.Users.Where(u => u.Deleted_at == null).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
+            foreach (var user in listOfUsers)
+            {
+                UserInformation userInfo = new UserInformation();
+                userInfo.Id = user.Id;
+                userInfo.Login = user.Login;
+                userInfo.Role = user.Role;
+                userInfo.Created_At = user.Created_at;
+                userInfo.Edited_At = user.Edited_at;
+                Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
+                if (client != null)
+                {
+                    userInfo.Name = client.Name;
+                    userInfo.Address = client.Address;
+                    userInfo.VAT_Id = client.VAT_Id;
+                    userInfo.Email = client.Email;
+                }
+                result.Add(userInfo);
+            }
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetUsersByRole")]
+        public List<UserInformation> GetUsersByRole(int role, int offset, int limit)
+        {
+            List<UserInformation> result = new List<UserInformation>();
+            var listOfUsers = _context.Users.Where(u => u.Deleted_at == null && u.Role == role).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
+            foreach (var user in listOfUsers)
+            {
+                UserInformation userInfo = new UserInformation();
+                userInfo.Id = user.Id;
+                userInfo.Login = user.Login;
+                userInfo.Role = user.Role;
+                userInfo.Created_At = user.Created_at;
+                userInfo.Edited_At = user.Edited_at;
+                Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
+                if (client != null)
+                {
+                    userInfo.Name = client.Name;
+                    userInfo.Address = client.Address;
+                    userInfo.VAT_Id = client.VAT_Id;
+                    userInfo.Email = client.Email;
+                }
+                result.Add(userInfo);
+            }
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetUserById")]
+        public UserInformation GetUserById(int userId)
+        {
+            UserInformation userInfo = new UserInformation();
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId && u.Deleted_at == null);
+            if (user != null)
+            {
+                userInfo.Id = user.Id;
+                userInfo.Login = user.Login;
+                userInfo.Role = user.Role;
+                userInfo.Created_At = user.Created_at;
+                userInfo.Edited_At = user.Edited_at;
+                Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
+                if (client != null)
+                {
+                    userInfo.Name = client.Name;
+                    userInfo.Address = client.Address;
+                    userInfo.VAT_Id = client.VAT_Id;
+                    userInfo.Email = client.Email;
+                }
+            }
+            return userInfo;
+        }
+
+        [HttpPost]
+        [Route("ChangePassword")]
+        public RequestResult ChangePassword([FromBody] ChangePassword changePassword)
+        {
+            RequestResult result = new RequestResult();
+            var user = _context.Users.FirstOrDefault(u => u.Id == changePassword.UserId && u.Deleted_at == null);
+            if (user != null)
+            {
+                string oldPasswordHash = SecurityHelper.EncodePassword(changePassword.OldPassword, SecurityHelper.SALT);
+                if (user.Password == oldPasswordHash)
+                {
+                    string newPasswordHash = SecurityHelper.EncodePassword(changePassword.NewPassword, SecurityHelper.SALT);
+                    user.Password = newPasswordHash;
+                    _context.SaveChanges();
+                    result.Status = false;
+                    result.Message = "Password has been changed";
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "Old password is incorrect";
+                }
+            }
+            else
+            {
+                result.Status = false;
+                result.Message = "User not found";
+            }
+            return result;
         }
 
     }

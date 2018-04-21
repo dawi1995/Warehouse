@@ -12,14 +12,12 @@ namespace Warehouse.Models.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class sysdiagram
     {
-        public int Id { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public int Role { get; set; }
-        public Nullable<System.DateTime> Created_at { get; set; }
-        public Nullable<System.DateTime> Edited_at { get; set; }
-        public Nullable<System.DateTime> Deleted_at { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

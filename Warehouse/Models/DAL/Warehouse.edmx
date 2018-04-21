@@ -5,6 +5,164 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="WarehouseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Clients">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="VAT_Id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="User_Id" Type="int" />
+          <Property Name="Created_At" Type="datetime" />
+          <Property Name="Edited_At" Type="datetime" />
+          <Property Name="Deleted_At" Type="datetime" />
+        </EntityType>
+        <EntityType Name="CMR_Dispatches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Dispatch_Id" Type="int" Nullable="false" />
+          <Property Name="Commodity_Type" Type="nvarchar" MaxLength="50" />
+          <Property Name="Destination" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sender_Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sender_Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sender_VAT_Id" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sender_Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Created_At" Type="datetime" />
+          <Property Name="Edited_At" Type="datetime" />
+          <Property Name="Deleted_At" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Deliveries">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Order_Id" Type="int" Nullable="false" />
+          <Property Name="Transport_Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date_Of_Delivery" Type="date" Nullable="false" />
+          <Property Name="Delivery_Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="If_PDF_And_Sent" Type="bit" />
+          <Property Name="If_PDF_Dispatch" Type="bit" />
+          <Property Name="If_Differntial_Delivery_Dispatch" Type="bit" />
+          <Property Name="If_PDF_Differential" Type="bit" />
+          <Property Name="If_Delivery_Dispatch_Balanced" Type="bit" />
+          <Property Name="Created_At" Type="datetime" />
+          <Property Name="Edited_At" Type="datetime" />
+          <Property Name="Deleted_At" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Deliveries_Dispatches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Delivery_Id" Type="int" Nullable="false" />
+          <Property Name="Dispatch_Id" Type="int" Nullable="false" />
+          <Property Name="Created_At" Type="datetime" />
+          <Property Name="Edited_At" Type="datetime" />
+          <Property Name="Deleted_At" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Dispatches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Dispatch_Id" Type="nvarchar" MaxLength="50" />
+          <Property Name="Creation_Date" Type="datetime" />
+          <Property Name="Car_Id" Type="nvarchar" MaxLength="50" />
+          <Property Name="Carrier_Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Carrier_Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Carrier_VAT_Id" Type="nvarchar" MaxLength="50" />
+          <Property Name="Carrier_Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Receiver_Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Receiver_Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Receiver_VAT_Id" Type="nvarchar" MaxLength="50" />
+          <Property Name="Receiver_Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Duty_Doc_Id" Type="nvarchar" MaxLength="50" />
+          <Property Name="Number_Of_Positions" Type="int" />
+          <Property Name="CMR_Id" Type="nvarchar" MaxLength="50" />
+          <Property Name="If_PDF_And_Sent" Type="bit" />
+          <Property Name="If_CMR_And_Sent" Type="bit" />
+          <Property Name="If_CMR" Type="bit" />
+          <Property Name="Created_At" Type="datetime" />
+          <Property Name="Edited_At" Type="datetime" />
+          <Property Name="Deleted_At" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Dispatches_Positions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Dispatch_Id" Type="int" />
+          <Property Name="Order_Position_Id" Type="int" />
+          <Property Name="Amount" Type="int" />
+          <Property Name="Weight_Gross" Type="int" />
+          <Property Name="Created_At" Type="datetime" />
+          <Property Name="Edited_At" Type="datetime" />
+          <Property Name="Deleted_At" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Container_Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ATB" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Pickup_PIN" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date_Of_Arrival" Type="date" />
+          <Property Name="Creation_Date" Type="datetime" Nullable="false" />
+          <Property Name="Creator_Id" Type="int" Nullable="false" />
+          <Property Name="Order_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="VAT_Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Num_of_Positions" Type="int" Nullable="false" />
+          <Property Name="If_PDF_And_Sent" Type="bit" />
+          <Property Name="If_Delivery_Generated" Type="bit" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="Created_At" Type="datetime" />
+          <Property Name="Edited_At" Type="datetime" />
+          <Property Name="Deleted_At" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Orders_Positions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Order_id" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="Weight_Gross" Type="int" Nullable="false" />
+          <Property Name="Amount_Received" Type="int" />
+          <Property Name="Weight_Gross_Received" Type="int" />
+          <Property Name="Created_At" Type="datetime" />
+          <Property Name="Edited_At" Type="datetime" />
+          <Property Name="Deleted_At" Type="datetime" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Protocols_of_Difference">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Protocol_Of_Difference_Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Delivery_Id" Type="int" Nullable="false" />
+          <Property Name="Created_At" Type="datetime" />
+          <Property Name="Edited_At" Type="datetime" />
+          <Property Name="Deleted_At" Type="datetime" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Id" />
@@ -13,8 +171,21 @@
           <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Role" Type="int" Nullable="false" />
+          <Property Name="Created_at" Type="datetime" />
+          <Property Name="Edited_at" Type="datetime" />
+          <Property Name="Deleted_at" Type="datetime" />
         </EntityType>
         <EntityContainer Name="WarehouseModelStoreContainer">
+          <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CMR_Dispatches" EntityType="Self.CMR_Dispatches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Deliveries" EntityType="Self.Deliveries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Deliveries_Dispatches" EntityType="Self.Deliveries_Dispatches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dispatches" EntityType="Self.Dispatches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dispatches_Positions" EntityType="Self.Dispatches_Positions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders_Positions" EntityType="Self.Orders_Positions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Protocols_of_Difference" EntityType="Self.Protocols_of_Difference" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -22,8 +193,176 @@
     <edmx:ConceptualModels>
       <Schema Namespace="WarehouseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="WarehouseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clients" EntityType="WarehouseModel.Client" />
+          <EntitySet Name="CMR_Dispatches" EntityType="WarehouseModel.CMR_Dispatches" />
+          <EntitySet Name="Deliveries" EntityType="WarehouseModel.Delivery" />
+          <EntitySet Name="Deliveries_Dispatches" EntityType="WarehouseModel.Deliveries_Dispatches" />
+          <EntitySet Name="Dispatches" EntityType="WarehouseModel.Dispatch" />
+          <EntitySet Name="Dispatches_Positions" EntityType="WarehouseModel.Dispatches_Positions" />
+          <EntitySet Name="Orders" EntityType="WarehouseModel.Order" />
+          <EntitySet Name="Orders_Positions" EntityType="WarehouseModel.Orders_Positions" />
+          <EntitySet Name="Protocols_of_Difference" EntityType="WarehouseModel.Protocols_of_Difference" />
+          <EntitySet Name="sysdiagrams" EntityType="WarehouseModel.sysdiagram" />
           <EntitySet Name="Users" EntityType="WarehouseModel.User" />
         </EntityContainer>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="VAT_Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="User_Id" Type="Int32" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
+          <Property Name="Edited_At" Type="DateTime" Precision="3" />
+          <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="CMR_Dispatches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Dispatch_Id" Type="Int32" Nullable="false" />
+          <Property Name="Commodity_Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Destination" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sender_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sender_Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sender_VAT_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sender_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
+          <Property Name="Edited_At" Type="DateTime" Precision="3" />
+          <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Delivery">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Order_Id" Type="Int32" Nullable="false" />
+          <Property Name="Transport_Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Of_Delivery" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Delivery_Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="If_PDF_And_Sent" Type="Boolean" />
+          <Property Name="If_PDF_Dispatch" Type="Boolean" />
+          <Property Name="If_Differntial_Delivery_Dispatch" Type="Boolean" />
+          <Property Name="If_PDF_Differential" Type="Boolean" />
+          <Property Name="If_Delivery_Dispatch_Balanced" Type="Boolean" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
+          <Property Name="Edited_At" Type="DateTime" Precision="3" />
+          <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Deliveries_Dispatches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Delivery_Id" Type="Int32" Nullable="false" />
+          <Property Name="Dispatch_Id" Type="Int32" Nullable="false" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
+          <Property Name="Edited_At" Type="DateTime" Precision="3" />
+          <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Dispatch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Dispatch_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Creation_Date" Type="DateTime" Precision="3" />
+          <Property Name="Car_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Carrier_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Carrier_Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Carrier_VAT_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Carrier_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Receiver_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Receiver_Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Receiver_VAT_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Receiver_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Duty_Doc_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Number_Of_Positions" Type="Int32" />
+          <Property Name="CMR_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="If_PDF_And_Sent" Type="Boolean" />
+          <Property Name="If_CMR_And_Sent" Type="Boolean" />
+          <Property Name="If_CMR" Type="Boolean" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
+          <Property Name="Edited_At" Type="DateTime" Precision="3" />
+          <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Dispatches_Positions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Dispatch_Id" Type="Int32" />
+          <Property Name="Order_Position_Id" Type="Int32" />
+          <Property Name="Amount" Type="Int32" />
+          <Property Name="Weight_Gross" Type="Int32" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
+          <Property Name="Edited_At" Type="DateTime" Precision="3" />
+          <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Container_Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ATB" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Pickup_PIN" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Of_Arrival" Type="DateTime" Precision="0" />
+          <Property Name="Creation_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Creator_Id" Type="Int32" Nullable="false" />
+          <Property Name="Order_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="VAT_Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Num_of_Positions" Type="Int32" Nullable="false" />
+          <Property Name="If_PDF_And_Sent" Type="Boolean" />
+          <Property Name="If_Delivery_Generated" Type="Boolean" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
+          <Property Name="Edited_At" Type="DateTime" Precision="3" />
+          <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Orders_Positions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Order_id" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="Weight_Gross" Type="Int32" Nullable="false" />
+          <Property Name="Amount_Received" Type="Int32" />
+          <Property Name="Weight_Gross_Received" Type="Int32" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
+          <Property Name="Edited_At" Type="DateTime" Precision="3" />
+          <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Protocols_of_Difference">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Protocol_Of_Difference_Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Delivery_Id" Type="Int32" Nullable="false" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
+          <Property Name="Edited_At" Type="DateTime" Precision="3" />
+          <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
@@ -32,16 +371,190 @@
           <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Role" Type="Int32" Nullable="false" />
+          <Property Name="Created_at" Type="DateTime" Precision="3" />
+          <Property Name="Edited_at" Type="DateTime" Precision="3" />
+          <Property Name="Deleted_at" Type="DateTime" Precision="3" />
         </EntityType>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="WarehouseModelStoreContainer" CdmEntityContainer="WarehouseEntities">
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="WarehouseModel.Client">
+              <MappingFragment StoreEntitySet="Clients">
+                <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
+                <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="VAT_Id" ColumnName="VAT_Id" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CMR_Dispatches">
+            <EntityTypeMapping TypeName="WarehouseModel.CMR_Dispatches">
+              <MappingFragment StoreEntitySet="CMR_Dispatches">
+                <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
+                <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Sender_Email" ColumnName="Sender_Email" />
+                <ScalarProperty Name="Sender_VAT_Id" ColumnName="Sender_VAT_Id" />
+                <ScalarProperty Name="Sender_Address" ColumnName="Sender_Address" />
+                <ScalarProperty Name="Sender_Name" ColumnName="Sender_Name" />
+                <ScalarProperty Name="Destination" ColumnName="Destination" />
+                <ScalarProperty Name="Commodity_Type" ColumnName="Commodity_Type" />
+                <ScalarProperty Name="Dispatch_Id" ColumnName="Dispatch_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Deliveries">
+            <EntityTypeMapping TypeName="WarehouseModel.Delivery">
+              <MappingFragment StoreEntitySet="Deliveries">
+                <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
+                <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="If_Delivery_Dispatch_Balanced" ColumnName="If_Delivery_Dispatch_Balanced" />
+                <ScalarProperty Name="If_PDF_Differential" ColumnName="If_PDF_Differential" />
+                <ScalarProperty Name="If_Differntial_Delivery_Dispatch" ColumnName="If_Differntial_Delivery_Dispatch" />
+                <ScalarProperty Name="If_PDF_Dispatch" ColumnName="If_PDF_Dispatch" />
+                <ScalarProperty Name="If_PDF_And_Sent" ColumnName="If_PDF_And_Sent" />
+                <ScalarProperty Name="Delivery_Id" ColumnName="Delivery_Id" />
+                <ScalarProperty Name="Date_Of_Delivery" ColumnName="Date_Of_Delivery" />
+                <ScalarProperty Name="Transport_Type" ColumnName="Transport_Type" />
+                <ScalarProperty Name="Order_Id" ColumnName="Order_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Deliveries_Dispatches">
+            <EntityTypeMapping TypeName="WarehouseModel.Deliveries_Dispatches">
+              <MappingFragment StoreEntitySet="Deliveries_Dispatches">
+                <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
+                <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Dispatch_Id" ColumnName="Dispatch_Id" />
+                <ScalarProperty Name="Delivery_Id" ColumnName="Delivery_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dispatches">
+            <EntityTypeMapping TypeName="WarehouseModel.Dispatch">
+              <MappingFragment StoreEntitySet="Dispatches">
+                <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
+                <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="If_CMR" ColumnName="If_CMR" />
+                <ScalarProperty Name="If_CMR_And_Sent" ColumnName="If_CMR_And_Sent" />
+                <ScalarProperty Name="If_PDF_And_Sent" ColumnName="If_PDF_And_Sent" />
+                <ScalarProperty Name="CMR_Id" ColumnName="CMR_Id" />
+                <ScalarProperty Name="Number_Of_Positions" ColumnName="Number_Of_Positions" />
+                <ScalarProperty Name="Duty_Doc_Id" ColumnName="Duty_Doc_Id" />
+                <ScalarProperty Name="Receiver_Email" ColumnName="Receiver_Email" />
+                <ScalarProperty Name="Receiver_VAT_Id" ColumnName="Receiver_VAT_Id" />
+                <ScalarProperty Name="Receiver_Address" ColumnName="Receiver_Address" />
+                <ScalarProperty Name="Receiver_Name" ColumnName="Receiver_Name" />
+                <ScalarProperty Name="Carrier_Email" ColumnName="Carrier_Email" />
+                <ScalarProperty Name="Carrier_VAT_Id" ColumnName="Carrier_VAT_Id" />
+                <ScalarProperty Name="Carrier_Address" ColumnName="Carrier_Address" />
+                <ScalarProperty Name="Carrier_Name" ColumnName="Carrier_Name" />
+                <ScalarProperty Name="Car_Id" ColumnName="Car_Id" />
+                <ScalarProperty Name="Creation_Date" ColumnName="Creation_Date" />
+                <ScalarProperty Name="Dispatch_Id" ColumnName="Dispatch_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dispatches_Positions">
+            <EntityTypeMapping TypeName="WarehouseModel.Dispatches_Positions">
+              <MappingFragment StoreEntitySet="Dispatches_Positions">
+                <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
+                <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Weight_Gross" ColumnName="Weight_Gross" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Order_Position_Id" ColumnName="Order_Position_Id" />
+                <ScalarProperty Name="Dispatch_Id" ColumnName="Dispatch_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="WarehouseModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
+                <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="If_Delivery_Generated" ColumnName="If_Delivery_Generated" />
+                <ScalarProperty Name="If_PDF_And_Sent" ColumnName="If_PDF_And_Sent" />
+                <ScalarProperty Name="Num_of_Positions" ColumnName="Num_of_Positions" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="VAT_Id" ColumnName="VAT_Id" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Order_Number" ColumnName="Order_Number" />
+                <ScalarProperty Name="Creator_Id" ColumnName="Creator_Id" />
+                <ScalarProperty Name="Creation_Date" ColumnName="Creation_Date" />
+                <ScalarProperty Name="Date_Of_Arrival" ColumnName="Date_Of_Arrival" />
+                <ScalarProperty Name="Pickup_PIN" ColumnName="Pickup_PIN" />
+                <ScalarProperty Name="ATB" ColumnName="ATB" />
+                <ScalarProperty Name="Container_Id" ColumnName="Container_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders_Positions">
+            <EntityTypeMapping TypeName="WarehouseModel.Orders_Positions">
+              <MappingFragment StoreEntitySet="Orders_Positions">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
+                <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Weight_Gross_Received" ColumnName="Weight_Gross_Received" />
+                <ScalarProperty Name="Amount_Received" ColumnName="Amount_Received" />
+                <ScalarProperty Name="Weight_Gross" ColumnName="Weight_Gross" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Order_id" ColumnName="Order_id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Protocols_of_Difference">
+            <EntityTypeMapping TypeName="WarehouseModel.Protocols_of_Difference">
+              <MappingFragment StoreEntitySet="Protocols_of_Difference">
+                <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
+                <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Delivery_Id" ColumnName="Delivery_Id" />
+                <ScalarProperty Name="Protocol_Of_Difference_Id" ColumnName="Protocol_Of_Difference_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="WarehouseModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="WarehouseModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Deleted_at" ColumnName="Deleted_at" />
+                <ScalarProperty Name="Edited_at" ColumnName="Edited_at" />
+                <ScalarProperty Name="Created_at" ColumnName="Created_at" />
                 <ScalarProperty Name="Role" ColumnName="Role" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Login" ColumnName="Login" />

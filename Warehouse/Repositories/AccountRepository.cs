@@ -17,9 +17,9 @@ namespace Warehouse.Repositories
             _warehouseEntities = new WarehouseEntities();
         }
 
-        public bool IsLoginFree(Registration registration)
+        public bool IsLoginFree(string login)
         {
-            User userToCheck = _warehouseEntities.Users.FirstOrDefault(u => u.Login == registration.Login);
+            User userToCheck = _warehouseEntities.Users.FirstOrDefault(u => u.Login == login && u.Deleted_at == null);
             if (userToCheck != null)
             {
                 return false;
@@ -46,7 +46,7 @@ namespace Warehouse.Repositories
         //    _warehouseEntities.SaveChanges();
         //}
 
-        public void ChangePassword(Registration registration)
+        public void ChangePassword(UserRegistration registration)
         {
             //User userWithChangePassword = _warehouseEntities.Users.FirstOrDefault(u => u.Id == registration.Id && u.Password == SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT));
             //userWithChangePassword.Password 

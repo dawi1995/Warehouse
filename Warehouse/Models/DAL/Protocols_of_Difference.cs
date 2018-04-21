@@ -12,14 +12,13 @@ namespace Warehouse.Models.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Protocols_of_Difference
     {
         public int Id { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public int Role { get; set; }
-        public Nullable<System.DateTime> Created_at { get; set; }
-        public Nullable<System.DateTime> Edited_at { get; set; }
-        public Nullable<System.DateTime> Deleted_at { get; set; }
+        public string Protocol_Of_Difference_Id { get; set; }
+        public int Delivery_Id { get; set; }
+        public Nullable<System.DateTime> Created_At { get; set; }
+        public Nullable<System.DateTime> Edited_At { get; set; }
+        public Nullable<System.DateTime> Deleted_At { get; set; }
     }
 }

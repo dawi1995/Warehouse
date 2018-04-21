@@ -12,14 +12,16 @@ namespace Warehouse.Models.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Client
     {
         public int Id { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public int Role { get; set; }
-        public Nullable<System.DateTime> Created_at { get; set; }
-        public Nullable<System.DateTime> Edited_at { get; set; }
-        public Nullable<System.DateTime> Deleted_at { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string VAT_Id { get; set; }
+        public string Email { get; set; }
+        public Nullable<int> User_Id { get; set; }
+        public Nullable<System.DateTime> Created_At { get; set; }
+        public Nullable<System.DateTime> Edited_At { get; set; }
+        public Nullable<System.DateTime> Deleted_At { get; set; }
     }
 }
