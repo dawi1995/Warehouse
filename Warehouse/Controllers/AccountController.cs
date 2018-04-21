@@ -15,6 +15,7 @@ using Warehouse.Helpers;
 using Warehouse.Models.Custom;
 using Warehouse.Models.DAL;
 using Warehouse.Repositories;
+using static Warehouse.Enums;
 
 namespace Warehouse.Controllers
 {
@@ -30,144 +31,177 @@ namespace Warehouse.Controllers
             _accountRepository = new AccountRepository();
         }
 
+        [Authorize]
         [HttpPost]
         [Route("RegisterUser")]
         public RequestResult RegisterUser([FromBody]UserRegistration registration)
         {
-            string PasswordHash = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
-            RequestResult requestResult = new RequestResult();
-            try
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
-                if (_accountRepository.IsLoginFree(registration.Login))
+                string PasswordHash = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
+                RequestResult requestResult = new RequestResult();
+                try
                 {
-                    User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now};
-                    _context.Users.Add(userToAdd);
-                    _context.SaveChanges();
-                    requestResult.Status = true;
-                    requestResult.Message = "The user has been registered";
+                    if (_accountRepository.IsLoginFree(registration.Login))
+                    {
+                        User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now };
+                        _context.Users.Add(userToAdd);
+                        _context.SaveChanges();
+                        requestResult.Status = true;
+                        requestResult.Message = "The user has been registered";
+                    }
+                    else
+                    {
+                        requestResult.Status = false;
+                        requestResult.Message = "Login exists in system.";
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
                     requestResult.Status = false;
-                    requestResult.Message = "Login exists in system.";
+                    requestResult.Message = ex.ToString();
                 }
-            }
-            catch (Exception ex)
-            {
-                requestResult.Status = false;
-                requestResult.Message = ex.ToString();
-            }
 
-            return requestResult;
+                return requestResult;
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+          
         }
 
+        [Authorize]
         [HttpPost]
         [Route("RegisterClient")]
         public RequestResult RegisterClient([FromBody]ClientRegistration registration)
         {
-            string PasswordHash = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
-            RequestResult requestResult = new RequestResult();
-            try
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
-                if (_accountRepository.IsLoginFree(registration.Login))
+                string PasswordHash = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
+                RequestResult requestResult = new RequestResult();
+                try
                 {
-                    User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now };
-                    _context.Users.Add(userToAdd);
-                    _context.SaveChanges();
-                    Client clientToAdd = new Client { Name = registration.Name, Address = registration.Address, VAT_Id = registration.VAT_Id, Email = registration.Email, User_Id = userToAdd.Id, Created_At = userToAdd.Created_at };
-                    _context.Clients.Add(clientToAdd);
-                    _context.SaveChanges();
-                    requestResult.Status = true;
-                    requestResult.Message = "The client has been registered";
+                    if (_accountRepository.IsLoginFree(registration.Login))
+                    {
+                        User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now };
+                        _context.Users.Add(userToAdd);
+                        _context.SaveChanges();
+                        Client clientToAdd = new Client { Name = registration.Name, Address = registration.Address, VAT_Id = registration.VAT_Id, Email = registration.Email, User_Id = userToAdd.Id, Created_At = userToAdd.Created_at };
+                        _context.Clients.Add(clientToAdd);
+                        _context.SaveChanges();
+                        requestResult.Status = true;
+                        requestResult.Message = "The client has been registered";
+                    }
+                    else
+                    {
+                        requestResult.Status = false;
+                        requestResult.Message = "Login exists in system.";
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
                     requestResult.Status = false;
-                    requestResult.Message = "Login exists in system.";
+                    requestResult.Message = ex.ToString();
                 }
+                return requestResult;
             }
-            catch (Exception ex)
+            else
             {
-                requestResult.Status = false;
-                requestResult.Message = ex.ToString();
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
-
-            return requestResult;
+            
         }
 
+        [Authorize]
         [HttpPost]
         [Route("EditUser")]
         public RequestResult EditUser([FromBody]UserEdit registration)
         {
-            RequestResult requestResult = new RequestResult();
-            try
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
-                if (_accountRepository.IsLoginFree(registration.Login))
+                RequestResult requestResult = new RequestResult();
+                try
                 {
-                    User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
-                    userToEdit.Login = registration.Login;
-                    userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
-                    userToEdit.Role = registration.Role;
-                    userToEdit.Edited_at = DateTime.Now;
-                    _context.SaveChanges();
-                    requestResult.Status = true;
-                    requestResult.Message = "The user has been edited";
+                    if (_accountRepository.IsLoginFree(registration.Login))
+                    {
+                        User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
+                        userToEdit.Login = registration.Login;
+                        userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
+                        userToEdit.Role = registration.Role;
+                        userToEdit.Edited_at = DateTime.Now;
+                        _context.SaveChanges();
+                        requestResult.Status = true;
+                        requestResult.Message = "The user has been edited";
+                    }
+                    else
+                    {
+                        requestResult.Status = false;
+                        requestResult.Message = "Login exists in system.";
+                    }
+
                 }
-                else
+                catch (Exception ex)
                 {
                     requestResult.Status = false;
-                    requestResult.Message = "Login exists in system.";
+                    requestResult.Message = ex.ToString();
                 }
-
+                return requestResult;
             }
-            catch (Exception ex)
+            else
             {
-                requestResult.Status = false;
-                requestResult.Message = ex.ToString();
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
-            return requestResult;
+           
 
         }
 
+        [Authorize]
         [HttpPost]
         [Route("EditClient")]
         public RequestResult EditClient([FromBody]ClientEdit registration)
         {
-            RequestResult requestResult = new RequestResult();
-            try
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
-                if (_accountRepository.IsLoginFree(registration.Login))
+                RequestResult requestResult = new RequestResult();
+                try
                 {
-                    User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
-                    userToEdit.Login = registration.Login;
-                    userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
-                    userToEdit.Role = registration.Role;
-                    userToEdit.Edited_at = DateTime.Now;
-                    Client clientToEdit = _context.Clients.FirstOrDefault(c => c.User_Id == registration.Id);
-                    clientToEdit.Name = registration.Name;
-                    clientToEdit.Address = registration.Address;
-                    clientToEdit.VAT_Id = registration.VAT_Id;
-                    clientToEdit.Email = registration.Email;
-                    clientToEdit.Edited_At = userToEdit.Edited_at;
-                    _context.SaveChanges();
-                    requestResult.Status = true;
-                    requestResult.Message = "The client has been edited";
+                    if (_accountRepository.IsLoginFree(registration.Login))
+                    {
+                        User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
+                        userToEdit.Login = registration.Login;
+                        userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
+                        userToEdit.Role = registration.Role;
+                        userToEdit.Edited_at = DateTime.Now;
+                        Client clientToEdit = _context.Clients.FirstOrDefault(c => c.User_Id == registration.Id);
+                        clientToEdit.Name = registration.Name;
+                        clientToEdit.Address = registration.Address;
+                        clientToEdit.VAT_Id = registration.VAT_Id;
+                        clientToEdit.Email = registration.Email;
+                        clientToEdit.Edited_At = userToEdit.Edited_at;
+                        _context.SaveChanges();
+                        requestResult.Status = true;
+                        requestResult.Message = "The client has been edited";
+                    }
+                    else
+                    {
+                        requestResult.Status = false;
+                        requestResult.Message = "Login exists in system.";
+                    }
+
+
                 }
-                else
+                catch (Exception ex)
                 {
                     requestResult.Status = false;
-                    requestResult.Message = "Login exists in system.";
+                    requestResult.Message = ex.ToString();
                 }
-
-                
+                return requestResult;
             }
-            catch (Exception ex)
+            else
             {
-                requestResult.Status = false;
-                requestResult.Message = ex.ToString();                
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
-            return requestResult;
-
         }
 
         [HttpPost]
@@ -183,11 +217,10 @@ namespace Warehouse.Controllers
             {
 
                 List<KeyValuePair<string, string>> postData = new List<KeyValuePair<string, string>>(){
-                    new KeyValuePair<string, string>("grant_type", "password"),
-                    new KeyValuePair<string, string>("username", registration.Login),
-                    new KeyValuePair<string, string>("password", registration.Password),
-
-            };
+                new KeyValuePair<string, string>("grant_type", "password"),
+                new KeyValuePair<string, string>("username", registration.Login),
+                new KeyValuePair<string, string>("password", registration.Password),
+                };
 
                 using (var httpClient = new HttpClient())
                 {
@@ -223,123 +256,158 @@ namespace Warehouse.Controllers
                 loginResult.Status = false;
                 loginResult.Message = ex.ToString();
             }
-            return loginResult;
+            return loginResult; 
         }
 
+        [Authorize]
         [HttpGet]
         [Route("RemoveUser")]
         public RequestResult RemoveUser(int userId)
         {
-            RequestResult requestResult = new RequestResult();
-            try
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
-                User userToDelete = _context.Users.FirstOrDefault(u => u.Id == userId && u.Deleted_at == null);
-                if (userToDelete != null)
+                RequestResult requestResult = new RequestResult();
+                try
                 {
-                    userToDelete.Deleted_at = DateTime.Now;
-                    Client clientToDelete = _context.Clients.FirstOrDefault(c => c.User_Id == userToDelete.Id && c.Deleted_At == null);
-                    if (clientToDelete != null)
+                    User userToDelete = _context.Users.FirstOrDefault(u => u.Id == userId && u.Deleted_at == null);
+                    if (userToDelete != null)
                     {
-                        clientToDelete.Deleted_At = DateTime.Now;
-                    }
-                    _context.SaveChanges();
-                    requestResult.Status = false;
-                    requestResult.Message = "The user has been deleted";
+                        userToDelete.Deleted_at = DateTime.Now;
+                        Client clientToDelete = _context.Clients.FirstOrDefault(c => c.User_Id == userToDelete.Id && c.Deleted_At == null);
+                        if (clientToDelete != null)
+                        {
+                            clientToDelete.Deleted_At = DateTime.Now;
+                        }
+                        _context.SaveChanges();
+                        requestResult.Status = false;
+                        requestResult.Message = "The user has been deleted";
 
+                    }
+                    else
+                    {
+                        requestResult.Status = false;
+                        requestResult.Message = "The user with the given ID does not exist";
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
                     requestResult.Status = false;
-                    requestResult.Message = "The user with the given ID does not exist";
+                    requestResult.Message = ex.Message;
                 }
+                return requestResult;
             }
-            catch (Exception ex)
+            else
             {
-                requestResult.Status = false;
-                requestResult.Message = ex.Message;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
-            return requestResult;
+          
         }
 
+        [Authorize]
         [HttpGet]
         [Route("GetAllUsers")]
         public List<UserInformation> GetAllUsers(int offset, int limit)
         {
-            List<UserInformation> result = new List<UserInformation>();
-            var listOfUsers = _context.Users.Where(u => u.Deleted_at == null).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
-            foreach (var user in listOfUsers)
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
-                UserInformation userInfo = new UserInformation();
-                userInfo.Id = user.Id;
-                userInfo.Login = user.Login;
-                userInfo.Role = user.Role;
-                userInfo.Created_At = user.Created_at;
-                userInfo.Edited_At = user.Edited_at;
-                Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
-                if (client != null)
+                List<UserInformation> result = new List<UserInformation>();
+                var listOfUsers = _context.Users.Where(u => u.Deleted_at == null).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
+                foreach (var user in listOfUsers)
                 {
-                    userInfo.Name = client.Name;
-                    userInfo.Address = client.Address;
-                    userInfo.VAT_Id = client.VAT_Id;
-                    userInfo.Email = client.Email;
+                    UserInformation userInfo = new UserInformation();
+                    userInfo.Id = user.Id;
+                    userInfo.Login = user.Login;
+                    userInfo.Role = user.Role;
+                    userInfo.Created_At = user.Created_at;
+                    userInfo.Edited_At = user.Edited_at;
+                    Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
+                    if (client != null)
+                    {
+                        userInfo.Name = client.Name;
+                        userInfo.Address = client.Address;
+                        userInfo.VAT_Id = client.VAT_Id;
+                        userInfo.Email = client.Email;
+                    }
+                    result.Add(userInfo);
                 }
-                result.Add(userInfo);
+                return result;
             }
-            return result;
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        
         }
 
+        [Authorize]
         [HttpGet]
         [Route("GetUsersByRole")]
         public List<UserInformation> GetUsersByRole(int role, int offset, int limit)
         {
-            List<UserInformation> result = new List<UserInformation>();
-            var listOfUsers = _context.Users.Where(u => u.Deleted_at == null && u.Role == role).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
-            foreach (var user in listOfUsers)
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
-                UserInformation userInfo = new UserInformation();
-                userInfo.Id = user.Id;
-                userInfo.Login = user.Login;
-                userInfo.Role = user.Role;
-                userInfo.Created_At = user.Created_at;
-                userInfo.Edited_At = user.Edited_at;
-                Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
-                if (client != null)
+                List<UserInformation> result = new List<UserInformation>();
+                var listOfUsers = _context.Users.Where(u => u.Deleted_at == null && u.Role == role).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
+                foreach (var user in listOfUsers)
                 {
-                    userInfo.Name = client.Name;
-                    userInfo.Address = client.Address;
-                    userInfo.VAT_Id = client.VAT_Id;
-                    userInfo.Email = client.Email;
+                    UserInformation userInfo = new UserInformation();
+                    userInfo.Id = user.Id;
+                    userInfo.Login = user.Login;
+                    userInfo.Role = user.Role;
+                    userInfo.Created_At = user.Created_at;
+                    userInfo.Edited_At = user.Edited_at;
+                    Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
+                    if (client != null)
+                    {
+                        userInfo.Name = client.Name;
+                        userInfo.Address = client.Address;
+                        userInfo.VAT_Id = client.VAT_Id;
+                        userInfo.Email = client.Email;
+                    }
+                    result.Add(userInfo);
                 }
-                result.Add(userInfo);
+                return result;
             }
-            return result;
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
         }
 
+        [Authorize]
         [HttpGet]
         [Route("GetUserById")]
         public UserInformation GetUserById(int userId)
         {
-            UserInformation userInfo = new UserInformation();
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId && u.Deleted_at == null);
-            if (user != null)
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
-                userInfo.Id = user.Id;
-                userInfo.Login = user.Login;
-                userInfo.Role = user.Role;
-                userInfo.Created_At = user.Created_at;
-                userInfo.Edited_At = user.Edited_at;
-                Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
-                if (client != null)
+                UserInformation userInfo = new UserInformation();
+                var user = _context.Users.FirstOrDefault(u => u.Id == userId && u.Deleted_at == null);
+                if (user != null)
                 {
-                    userInfo.Name = client.Name;
-                    userInfo.Address = client.Address;
-                    userInfo.VAT_Id = client.VAT_Id;
-                    userInfo.Email = client.Email;
+                    userInfo.Id = user.Id;
+                    userInfo.Login = user.Login;
+                    userInfo.Role = user.Role;
+                    userInfo.Created_At = user.Created_at;
+                    userInfo.Edited_At = user.Edited_at;
+                    Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
+                    if (client != null)
+                    {
+                        userInfo.Name = client.Name;
+                        userInfo.Address = client.Address;
+                        userInfo.VAT_Id = client.VAT_Id;
+                        userInfo.Email = client.Email;
+                    }
                 }
+                return userInfo;
             }
-            return userInfo;
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
         }
 
+        [Authorize]
         [HttpPost]
         [Route("ChangePassword")]
         public RequestResult ChangePassword([FromBody] ChangePassword changePassword)

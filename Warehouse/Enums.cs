@@ -7,7 +7,7 @@ namespace Warehouse
 {
     public class Enums
     {
-        enum UserType
+        public enum UserType
         {
             Client = 1,
             Admin = 2,

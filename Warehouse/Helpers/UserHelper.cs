@@ -4,29 +4,48 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Web;
+using System.Web.Http;
 using Warehouse.Models.DAL;
 
 namespace Warehouse.Helpers
 {
     public class UserHelper
     {
-        public static string GetUserName()
+        public static string GetCurrentUserName()
         {
             var identity = (ClaimsIdentity)HttpContext.Current.User.Identity;
             IEnumerable<Claim> claims = identity.Claims;
             var name = claims.FirstOrDefault();
             return name.Value;
         }
-        public static int GetUserId()
+        public static int GetCurrentUserId()
         {
             using (WarehouseEntities _context = new WarehouseEntities())
             {
-                string name = GetUserName();
+                string name = GetCurrentUserName();
                 User user = _context.Users.Where(u => u.Login == name).FirstOrDefault();
                 return user.Id;
             }
         }
-
+        public static int GetCurrentUserRole()
+        {
+            using (WarehouseEntities _context = new WarehouseEntities())
+            {
+                string name = GetCurrentUserName();
+                User user = _context.Users.Where(u => u.Login == name).FirstOrDefault();
+                return user.Role;
+            }
+        }
+        public static bool IsAuthorize(List<int> accesUserRoles)
+        {
+            
+            if (!accesUserRoles.Contains(GetCurrentUserRole()))
+            {
+                return false;
+            }
+            return true;
+        }
+        
         //public static Registration GetCurrentUser()
         //{
         //    using (WakeParkEntities _context = new WakeParkEntities())
