@@ -303,15 +303,59 @@ namespace Warehouse.Controllers
           
         }
 
+        //[Authorize]
+        //[HttpGet]
+        //[Route("GetAllUsers")]
+        //public List<UserInformation> GetAllUsers(int offset, int limit, int role = 0)
+        //{
+        //    if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+        //    {
+        //        List<UserInformation> result = new List<UserInformation>();
+        //        var listOfUsers = _context.Users.Where(u => u.Deleted_at == null).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
+        //        foreach (var user in listOfUsers)
+        //        {
+        //            UserInformation userInfo = new UserInformation();
+        //            userInfo.Id = user.Id;
+        //            userInfo.Login = user.Login;
+        //            userInfo.Role = user.Role;
+        //            userInfo.Created_At = user.Created_at;
+        //            userInfo.Edited_At = user.Edited_at;
+        //            Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
+        //            if (client != null)
+        //            {
+        //                userInfo.Name = client.Name;
+        //                userInfo.Address = client.Address;
+        //                userInfo.VAT_Id = client.VAT_Id;
+        //                userInfo.Email = client.Email;
+        //            }
+        //            result.Add(userInfo);
+        //        }
+        //        return result;
+        //    }
+        //    else
+        //    {
+        //        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+        //    }
+        
+        //}
+
         [Authorize]
         [HttpGet]
-        [Route("GetAllUsers")]
-        public List<UserInformation> GetAllUsers(int offset, int limit)
+        [Route("GetAllUsersByRole")]
+        public List<UserInformation> GetUsersByRole(int offset, int limit, int role = 0)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
+                List<User> listOfUsers = new List<User>();
                 List<UserInformation> result = new List<UserInformation>();
-                var listOfUsers = _context.Users.Where(u => u.Deleted_at == null).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
+                if (role == 0)
+                {
+                    listOfUsers = _context.Users.Where(u => u.Deleted_at == null).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
+                }
+                else
+                {
+                    listOfUsers = _context.Users.Where(u => u.Deleted_at == null && u.Role == role).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
+                }
                 foreach (var user in listOfUsers)
                 {
                     UserInformation userInfo = new UserInformation();
@@ -336,37 +380,26 @@ namespace Warehouse.Controllers
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
-        
         }
 
         [Authorize]
         [HttpGet]
-        [Route("GetUsersByRole")]
-        public List<UserInformation> GetUsersByRole(int role, int offset, int limit)
+        [Route("GetNumberUsersByRole")]
+        public NumberUsers GetNumberUsersByRole(int role = 0)
         {
-            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin }))
             {
+                NumberUsers number = new NumberUsers();
                 List<UserInformation> result = new List<UserInformation>();
-                var listOfUsers = _context.Users.Where(u => u.Deleted_at == null && u.Role == role).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
-                foreach (var user in listOfUsers)
+                if (role == 0)
                 {
-                    UserInformation userInfo = new UserInformation();
-                    userInfo.Id = user.Id;
-                    userInfo.Login = user.Login;
-                    userInfo.Role = user.Role;
-                    userInfo.Created_At = user.Created_at;
-                    userInfo.Edited_At = user.Edited_at;
-                    Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
-                    if (client != null)
-                    {
-                        userInfo.Name = client.Name;
-                        userInfo.Address = client.Address;
-                        userInfo.VAT_Id = client.VAT_Id;
-                        userInfo.Email = client.Email;
-                    }
-                    result.Add(userInfo);
+                    number.Number = _context.Users.Where(u => u.Deleted_at == null).Count();
                 }
-                return result;
+                else
+                {
+                    number.Number = _context.Users.Where(u => u.Deleted_at == null && u.Role == role).Count();
+                }
+                return number;
             }
             else
             {

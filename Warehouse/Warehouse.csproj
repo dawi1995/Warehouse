@@ -236,6 +236,7 @@
     <Compile Include="Models\Custom\AccountModels\ClientRegistration.cs" />
     <Compile Include="Models\Custom\AccountModels\LoginRequest.cs" />
     <Compile Include="Models\Custom\AccountModels\LoginResult.cs" />
+    <Compile Include="Models\Custom\AccountModels\NumberUsers.cs" />
     <Compile Include="Models\Custom\AccountModels\UserEdit.cs" />
     <Compile Include="Models\Custom\AccountModels\UserRegistration.cs" />
     <Compile Include="Models\Custom\AccountModels\TokenResult.cs" />
