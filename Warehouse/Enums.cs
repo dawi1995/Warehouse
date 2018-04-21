@@ -13,5 +13,12 @@ namespace Warehouse
             Admin = 2,
             SuperAdmin = 3
         };
+
+        public enum OrderStatus
+        {
+            Reported = 1,
+            Accepted = 2,
+            Difference = 3
+        };
     }
 }

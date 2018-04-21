@@ -35,6 +35,14 @@
           <Property Name="Edited_At" Type="datetime" />
           <Property Name="Deleted_At" Type="datetime" />
         </EntityType>
+        <EntityType Name="Counter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Count" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Deliveries">
           <Key>
             <PropertyRef Name="Id" />
@@ -122,7 +130,7 @@
           <Property Name="Num_of_Positions" Type="int" Nullable="false" />
           <Property Name="If_PDF_And_Sent" Type="bit" />
           <Property Name="If_Delivery_Generated" Type="bit" />
-          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="int" />
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Edited_At" Type="datetime" />
           <Property Name="Deleted_At" Type="datetime" />
@@ -178,6 +186,7 @@
         <EntityContainer Name="WarehouseModelStoreContainer">
           <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CMR_Dispatches" EntityType="Self.CMR_Dispatches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Counter" EntityType="Self.Counter" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Deliveries" EntityType="Self.Deliveries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Deliveries_Dispatches" EntityType="Self.Deliveries_Dispatches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Dispatches" EntityType="Self.Dispatches" Schema="dbo" store:Type="Tables" />
@@ -195,6 +204,7 @@
         <EntityContainer Name="WarehouseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Clients" EntityType="WarehouseModel.Client" />
           <EntitySet Name="CMR_Dispatches" EntityType="WarehouseModel.CMR_Dispatches" />
+          <EntitySet Name="Counters" EntityType="WarehouseModel.Counter" />
           <EntitySet Name="Deliveries" EntityType="WarehouseModel.Delivery" />
           <EntitySet Name="Deliveries_Dispatches" EntityType="WarehouseModel.Deliveries_Dispatches" />
           <EntitySet Name="Dispatches" EntityType="WarehouseModel.Dispatch" />
@@ -234,6 +244,14 @@
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Counter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Delivery">
           <Key>
@@ -322,7 +340,7 @@
           <Property Name="Num_of_Positions" Type="Int32" Nullable="false" />
           <Property Name="If_PDF_And_Sent" Type="Boolean" />
           <Property Name="If_Delivery_Generated" Type="Boolean" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
@@ -409,6 +427,15 @@
                 <ScalarProperty Name="Destination" ColumnName="Destination" />
                 <ScalarProperty Name="Commodity_Type" ColumnName="Commodity_Type" />
                 <ScalarProperty Name="Dispatch_Id" ColumnName="Dispatch_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Counters">
+            <EntityTypeMapping TypeName="WarehouseModel.Counter">
+              <MappingFragment StoreEntitySet="Counter">
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
