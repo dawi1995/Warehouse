@@ -123,22 +123,27 @@ namespace Warehouse.Controllers
                 RequestResult requestResult = new RequestResult();
                 try
                 {
-                    if (_accountRepository.IsLoginFree(registration.Login))
+                    User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
+                    if (userToEdit.Login != registration.Login && _accountRepository.IsLoginFree(registration.Login))
                     {
-                        User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
                         userToEdit.Login = registration.Login;
-                        userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
-                        userToEdit.Role = registration.Role;
-                        userToEdit.Edited_at = DateTime.Now;
-                        _context.SaveChanges();
-                        requestResult.Status = true;
-                        requestResult.Message = "The user has been edited";
                     }
                     else
                     {
                         requestResult.Status = false;
                         requestResult.Message = "Login exists in system.";
+                        return requestResult;
                     }
+                    if (!string.IsNullOrEmpty(registration.Password))
+                    {
+                        userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
+                    }
+                    userToEdit.Role = registration.Role;
+                    userToEdit.Edited_at = DateTime.Now;
+                    _context.SaveChanges();
+                    requestResult.Status = true;
+                    requestResult.Message = "The user has been edited";
+
 
                 }
                 catch (Exception ex)
@@ -166,30 +171,32 @@ namespace Warehouse.Controllers
                 RequestResult requestResult = new RequestResult();
                 try
                 {
-                    if (_accountRepository.IsLoginFree(registration.Login))
+                    User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
+                    if (userToEdit.Login != registration.Login && _accountRepository.IsLoginFree(registration.Login))
                     {
-                        User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
                         userToEdit.Login = registration.Login;
-                        userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
-                        userToEdit.Role = registration.Role;
-                        userToEdit.Edited_at = DateTime.Now;
-                        Client clientToEdit = _context.Clients.FirstOrDefault(c => c.User_Id == registration.Id);
-                        clientToEdit.Name = registration.Name;
-                        clientToEdit.Address = registration.Address;
-                        clientToEdit.VAT_Id = registration.VAT_Id;
-                        clientToEdit.Email = registration.Email;
-                        clientToEdit.Edited_At = userToEdit.Edited_at;
-                        _context.SaveChanges();
-                        requestResult.Status = true;
-                        requestResult.Message = "The client has been edited";
                     }
                     else
                     {
                         requestResult.Status = false;
                         requestResult.Message = "Login exists in system.";
+                        return requestResult;
                     }
-
-
+                    if (!string.IsNullOrEmpty(registration.Password))
+                    {
+                        userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
+                    }
+                    userToEdit.Role = registration.Role;
+                    userToEdit.Edited_at = DateTime.Now;
+                    Client clientToEdit = _context.Clients.FirstOrDefault(c => c.User_Id == registration.Id);
+                    clientToEdit.Name = registration.Name;
+                    clientToEdit.Address = registration.Address;
+                    clientToEdit.VAT_Id = registration.VAT_Id;
+                    clientToEdit.Email = registration.Email;
+                    clientToEdit.Edited_At = userToEdit.Edited_at;
+                    _context.SaveChanges();
+                    requestResult.Status = true;
+                    requestResult.Message = "The client has been edited";
                 }
                 catch (Exception ex)
                 {
@@ -279,7 +286,7 @@ namespace Warehouse.Controllers
                             clientToDelete.Deleted_At = DateTime.Now;
                         }
                         _context.SaveChanges();
-                        requestResult.Status = false;
+                        requestResult.Status = true;
                         requestResult.Message = "The user has been deleted";
 
                     }
