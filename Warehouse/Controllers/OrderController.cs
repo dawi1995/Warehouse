@@ -40,14 +40,14 @@ namespace Warehouse.Controllers
                     foreach (var order in allOrders)
                     {
                         List<Orders_Positions> listOfOrderPositionsForOrder = new List<Orders_Positions>();
-                        listOfOrderPositionsForOrder = _context.Orders_Positions.Where(o => o.Order_id == order.Id).ToList();
+                        listOfOrderPositionsForOrder = _context.Orders_Positions.Where(o => o.Order_id == order.Id && o.Deleted_At == null).ToList();
                         OrderResult orderResult = new OrderResult();
                         orderResult.Id = order.Id;
                         orderResult.Container_Id = order.Container_Id;
                         orderResult.ATB = order.ATB;
                         orderResult.Pickup_PIN = order.Pickup_PIN;
-                        orderResult.Date_Of_Arrival = order.Date_Of_Arrival;
-                        orderResult.Creation_Date = order.Creation_Date;
+                        orderResult.Date_Of_Arrival = order.Date_Of_Arrival == null ? string.Empty : ((DateTime)order.Date_Of_Arrival).ToString("dd-MM-yyyy");
+                        orderResult.Creation_Date = order.Creation_Date == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");
                         orderResult.Creator_Id = order.Creator_Id;
                         orderResult.Order_Number = order.Order_Number;
                         orderResult.Name = order.Name;
@@ -58,9 +58,8 @@ namespace Warehouse.Controllers
                         orderResult.If_PDF_And_Sent = order.If_PDF_And_Sent;
                         orderResult.If_Delivery_Generated = order.If_Delivery_Generated;
                         orderResult.Status = order.Status;
-                        orderResult.Created_At = order.Created_At;
-                        orderResult.Edited_At = order.Edited_At;
-                        orderResult.Deleted_At = order.Deleted_At;
+                        orderResult.Created_At = order.Created_At == null ? string.Empty : ((DateTime)order.Created_At).ToString("dd-MM-yyyy");
+                        orderResult.Edited_At = order.Edited_At == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");
                         orderResult.OrdersPositions = listOfOrderPositionsForOrder;
                         result.Add(orderResult);
                     }

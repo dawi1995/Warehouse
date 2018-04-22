@@ -12,8 +12,8 @@ namespace Warehouse.Models.Custom
         public string Container_Id { get; set; }
         public string ATB { get; set; }
         public string Pickup_PIN { get; set; }
-        public DateTime? Date_Of_Arrival { get; set; }
-        public DateTime Creation_Date { get; set; }
+        public string Date_Of_Arrival { get; set; }
+        public string Creation_Date { get; set; }
         public int Creator_Id { get; set; }
         public string Order_Number { get; set; }
         public string Name { get; set; }
@@ -24,9 +24,8 @@ namespace Warehouse.Models.Custom
         public bool? If_PDF_And_Sent { get; set; }
         public bool? If_Delivery_Generated { get; set; }
         public int? Status { get; set; }
-        public DateTime? Created_At { get; set; }
-        public DateTime? Edited_At { get; set; }
-        public DateTime? Deleted_At { get; set; }
+        public string Created_At { get; set; }
+        public string Edited_At { get; set; }
         public List<Orders_Positions> OrdersPositions { get; set; }
     }
 }
