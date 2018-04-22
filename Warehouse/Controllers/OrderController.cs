@@ -90,5 +90,69 @@ namespace Warehouse.Controllers
             }
         }
 
+        
+        [HttpPost]
+        [Route("CreateOrder")]
+        public RequestResult CreateOrder([FromBody]CreateOrder createOrder)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
+            {
+                RequestResult result = new RequestResult();
+                try
+                {
+                    if (_context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)
+                    {
+                        var counter = _context.Counters.FirstOrDefault(c => c.Name == "OrderCounter");
+                        counter.Count = 1;
+                        _context.SaveChanges();
+                    }
+                    Order newOrder = new Order();
+                    newOrder.Container_Id = createOrder.Container_Id;
+                    newOrder.ATB = createOrder.ATB;
+                    newOrder.Pickup_PIN = createOrder.Pickup_PIN;
+                    newOrder.Creation_Date = DateTime.Now;
+                    newOrder.Creator_Id = UserHelper.GetCurrentUserId();
+                    newOrder.Order_Number = newOrder.Creation_Date.Year.ToString() + "/" + newOrder.Creation_Date.Month.ToString() + "/" + _context.Counters.FirstOrDefault(c => c.Name == "OrderCounter").Count.ToString();
+                    newOrder.Name = createOrder.Name;
+                    newOrder.Address = createOrder.Address;
+                    newOrder.VAT_Id = createOrder.VAT_Id;
+                    newOrder.Email = createOrder.Email;
+                    newOrder.Num_of_Positions = createOrder.OrdersPositions.Count;
+                    newOrder.If_PDF_And_Sent = false;
+                    newOrder.If_Delivery_Generated = false;
+                    newOrder.Status = (int)OrderStatus.Reported;
+                    newOrder.Created_At = newOrder.Creation_Date;
+                    _context.Orders.Add(newOrder);
+                    _context.SaveChanges();
+                    foreach (var orderPosition in createOrder.OrdersPositions)
+                    {
+                        Orders_Positions newOrderPosition = new Orders_Positions();
+                        newOrderPosition.Order_id = newOrder.Id;
+                        newOrderPosition.Name = orderPosition.Name;
+                        newOrderPosition.Amount = orderPosition.Amount;
+                        newOrderPosition.Weight_Gross = orderPosition.Weight_Gross;
+                        newOrderPosition.Created_At = newOrder.Created_At;
+                        _context.Orders_Positions.Add(newOrderPosition);
+                    }
+                    var orderCounter = _context.Counters.FirstOrDefault(c => c.Name == "OrderCounter");
+                    orderCounter.Count++;
+                    _context.SaveChanges();
+                    result.Status = true;
+                    result.Message = "Order has been added";
+                }
+                catch (Exception ex)
+                {
+                    result.Status = false;
+                    result.Message = ex.ToString();
+                }
+                return result;
+            
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
     }
 }

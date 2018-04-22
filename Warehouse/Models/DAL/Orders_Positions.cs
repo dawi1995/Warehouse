@@ -17,9 +17,9 @@ namespace Warehouse.Models.DAL
         public int Id { get; set; }
         public int Order_id { get; set; }
         public int Amount { get; set; }
-        public int Weight_Gross { get; set; }
+        public decimal Weight_Gross { get; set; }
         public Nullable<int> Amount_Received { get; set; }
-        public Nullable<int> Weight_Gross_Received { get; set; }
+        public Nullable<decimal> Weight_Gross_Received { get; set; }
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Edited_At { get; set; }
         public Nullable<System.DateTime> Deleted_At { get; set; }

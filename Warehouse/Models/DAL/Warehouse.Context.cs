@@ -25,6 +25,7 @@ namespace Warehouse.Models.DAL
             throw new UnintentionalCodeFirstException();
         }
     
+        public DbSet<User> Users { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<CMR_Dispatches> CMR_Dispatches { get; set; }
         public DbSet<Counter> Counters { get; set; }
@@ -36,6 +37,5 @@ namespace Warehouse.Models.DAL
         public DbSet<Orders_Positions> Orders_Positions { get; set; }
         public DbSet<Protocols_of_Difference> Protocols_of_Difference { get; set; }
         public DbSet<sysdiagram> sysdiagrams { get; set; }
-        public DbSet<User> Users { get; set; }
     }
 }
