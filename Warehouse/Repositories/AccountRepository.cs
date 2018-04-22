@@ -30,26 +30,5 @@ namespace Warehouse.Repositories
             }
             
         }
-        //public void RegisterUser(Registration registration)
-        //{
-        //        User userToAdd = new User { Login = registration.Login, Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT), Role = registration.Role };
-        //        _warehouseEntities.Users.Add(userToAdd);
-        //        _warehouseEntities.SaveChanges();          
-        //}
-        //public void EditUser(Registration registration)
-        //{
-        //    User userToEdit = _warehouseEntities.Users.FirstOrDefault(u => u.Id == registration.Id);
-        //    userToEdit.Login = registration.Login;
-        //    userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
-        //    userToEdit.Role = registration.Role;
-        //    _warehouseEntities.Users.Add(userToEdit);
-        //    _warehouseEntities.SaveChanges();
-        //}
-
-        public void ChangePassword(UserRegistration registration)
-        {
-            //User userWithChangePassword = _warehouseEntities.Users.FirstOrDefault(u => u.Id == registration.Id && u.Password == SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT));
-            //userWithChangePassword.Password 
-        }
     }
 }

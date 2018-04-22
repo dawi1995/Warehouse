@@ -349,7 +349,7 @@ namespace Warehouse.Controllers
         [Authorize]
         [HttpGet]
         [Route("GetAllUsersByRole")]
-        public List<UserInformation> GetUsersByRole(int offset, int limit, int role = 0)
+        public List<UserInformation> GetUsersByRole(int offset = 0, int limit = int.MaxValue, int role = 0)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
@@ -369,8 +369,8 @@ namespace Warehouse.Controllers
                     userInfo.Id = user.Id;
                     userInfo.Login = user.Login;
                     userInfo.Role = user.Role;
-                    userInfo.Created_At = user.Created_at;
-                    userInfo.Edited_At = user.Edited_at;
+                    userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd-MM-yyyy");
+                    userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd-MM-yyyy");
                     Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
                     if (client != null)
                     {
@@ -397,7 +397,6 @@ namespace Warehouse.Controllers
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin }))
             {
                 NumberUsers number = new NumberUsers();
-                List<UserInformation> result = new List<UserInformation>();
                 if (role == 0)
                 {
                     number.Number = _context.Users.Where(u => u.Deleted_at == null).Count();
@@ -428,8 +427,8 @@ namespace Warehouse.Controllers
                     userInfo.Id = user.Id;
                     userInfo.Login = user.Login;
                     userInfo.Role = user.Role;
-                    userInfo.Created_At = user.Created_at;
-                    userInfo.Edited_At = user.Edited_at;
+                    userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd-MM-yyyy");
+                    userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd-MM-yyyy");
                     Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
                     if (client != null)
                     {

@@ -29,7 +29,7 @@ namespace Warehouse.Controllers
         /// <param name="limit">liczba jednorazowo pobranych rekordów</param>
         [HttpGet]
         [Route("GetAllOrders")]
-        public List<OrderResult> GetAllOrders(int offset, int limit)
+        public List<OrderResult> GetAllOrders(int offset = 0, int limit = int.MaxValue)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
