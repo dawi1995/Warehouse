@@ -242,6 +242,7 @@
     <Compile Include="Models\Custom\AccountModels\TokenResult.cs" />
     <Compile Include="Models\Custom\AccountModels\UserInformation.cs" />
     <Compile Include="Models\Custom\OrderModels\OrderResult.cs" />
+    <Compile Include="Models\Custom\OrderModels\OrdersPositions.cs" />
     <Compile Include="Models\Custom\RequestResult.cs" />
     <Compile Include="Models\DAL\Client.cs">
       <DependentUpon>Warehouse.tt</DependentUpon>

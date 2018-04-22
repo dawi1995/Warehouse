@@ -36,11 +36,25 @@ namespace Warehouse.Controllers
                 try
                 {
                     List<OrderResult> result = new List<OrderResult>();
-                    var allOrders = _context.Orders.OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit);
+                    var allOrders = _context.Orders.Where(o => o.Deleted_At == null).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
                     foreach (var order in allOrders)
                     {
-                        List<Orders_Positions> listOfOrderPositionsForOrder = new List<Orders_Positions>();
-                        listOfOrderPositionsForOrder = _context.Orders_Positions.Where(o => o.Order_id == order.Id && o.Deleted_At == null).ToList();
+                        List<OrdersPositions> listOfOrderPositionsForOrder = new List<OrdersPositions>();
+                        var listOfOrderPositionsFromDB = _context.Orders_Positions.Where(o => o.Order_id == order.Id && o.Deleted_At == null).ToList();
+                        foreach (Orders_Positions item in listOfOrderPositionsFromDB)
+                        {
+                            OrdersPositions ordersPositions = new OrdersPositions();
+                            ordersPositions.Id = item.Id;
+                            ordersPositions.Name = item.Name;
+                            ordersPositions.Order_id = item.Order_id;
+                            ordersPositions.Amount = item.Amount;
+                            ordersPositions.Weight_Gross = item.Weight_Gross;
+                            ordersPositions.Amount_Received = item.Amount_Received;
+                            ordersPositions.Weight_Gross_Received = item.Weight_Gross_Received;
+                            ordersPositions.Created_At = item.Created_At == null ? string.Empty : ((DateTime)item.Created_At).ToString("dd-MM-yyyy");
+                            ordersPositions.Edited_At = item.Edited_At == null ? string.Empty : ((DateTime)item.Edited_At).ToString("dd-MM-yyyy");
+                            listOfOrderPositionsForOrder.Add(ordersPositions);
+                        }
                         OrderResult orderResult = new OrderResult();
                         orderResult.Id = order.Id;
                         orderResult.Container_Id = order.Container_Id;
