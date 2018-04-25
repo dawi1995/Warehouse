@@ -154,5 +154,143 @@ namespace Warehouse.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("EditOrder")]
+        public RequestResult EditOrder([FromBody]EditOrder editOrder)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin}))
+            {
+                RequestResult result = new RequestResult();
+                try
+                {
+                    Order orderToEdit = _context.Orders.FirstOrDefault(o => o.Id == editOrder.Id);
+                    orderToEdit.Container_Id = editOrder.Container_Id;
+                    orderToEdit.ATB = editOrder.ATB;
+                    orderToEdit.Pickup_PIN = editOrder.Pickup_PIN;
+                    orderToEdit.Creation_Date = editOrder.Creation_Date;
+                    orderToEdit.Order_Number = editOrder.Order_Number;
+                    orderToEdit.Name = editOrder.Name;
+                    orderToEdit.Address = editOrder.Address;
+                    orderToEdit.VAT_Id = editOrder.VAT_Id;
+                    orderToEdit.Email = editOrder.Email;
+                    orderToEdit.Num_of_Positions = editOrder.Num_of_Positions;
+                    orderToEdit.Edited_At = DateTime.Now;
+                    _context.SaveChanges();
+                    result.Status = true;
+                    result.Message = "Order has been edited";
+                }
+                catch (Exception ex)
+                {
+                    result.Status = false;
+                    result.Message = ex.ToString();
+                }
+                return result;
+
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
+        [HttpPost]
+        [Route("EditOrdersPosition")]
+        public RequestResult EditOrdersPosition([FromBody]EditOrdersPosition editOrdersPosition)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+            {
+                RequestResult result = new RequestResult();
+                try
+                {
+                    Orders_Positions ordersPositionToEdit = _context.Orders_Positions.FirstOrDefault(o => o.Id == editOrdersPosition.Id);
+                    ordersPositionToEdit.Amount = editOrdersPosition.Amount;
+                    ordersPositionToEdit.Weight_Gross = editOrdersPosition.Weight_Gross;
+                    ordersPositionToEdit.Name = editOrdersPosition.Name;
+                    ordersPositionToEdit.Edited_At = DateTime.Now;
+                    _context.SaveChanges();
+                    result.Status = true;
+                    result.Message = "Orders posistion has been edited";
+                }
+                catch (Exception ex)
+                {
+                    result.Status = false;
+                    result.Message = ex.ToString();
+                }
+                return result;
+
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
+        [HttpGet]
+        [Route("RemoveOrder")]
+        public RequestResult RemoveOrder(int orderId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+            {
+                RequestResult result = new RequestResult();
+                try
+                {
+                    DateTime dateOfRemove = DateTime.Now;
+                    Order orderToRemove = _context.Orders.FirstOrDefault(o => o.Id == orderId);
+                    List<Orders_Positions> litOfOrdersPositionsToRemove = _context.Orders_Positions.Where(o => o.Order_id == orderId && o.Deleted_At == null).ToList();
+                    foreach (var item in litOfOrdersPositionsToRemove)
+                    {
+                        item.Deleted_At = dateOfRemove;
+                    }
+                    orderToRemove.Deleted_At = dateOfRemove;
+                    _context.SaveChanges();
+                    result.Status = true;
+                    result.Message = "Order and his orders positions has been removed";
+                }
+                catch (Exception ex)
+                {
+                    result.Status = false;
+                    result.Message = ex.ToString();
+                }
+                return result;
+
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
+        [HttpGet]
+        [Route("RemoveOrderPositions")]
+        public RequestResult RemoveOrderPositions(int orderPositionId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+            {
+                RequestResult result = new RequestResult();
+                try
+                {
+                    DateTime dateOfRemove = DateTime.Now;
+                    Orders_Positions orderPositionsToRemove = _context.Orders_Positions.FirstOrDefault(o => o.Id == orderPositionId);
+                    orderPositionsToRemove.Deleted_At = dateOfRemove;
+                    Order orderToUpdateNumOfPositions = _context.Orders.FirstOrDefault(o => o.Id == orderPositionsToRemove.Order_id);
+                    orderToUpdateNumOfPositions.Num_of_Positions--;
+                    _context.SaveChanges();
+                    result.Status = true;
+                    result.Message = "Orders positions has been removed and has been updated num of positions order";
+                }
+                catch (Exception ex)
+                {
+                    result.Status = false;
+                    result.Message = ex.ToString();
+                }
+                return result;
+
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
     }
 }
