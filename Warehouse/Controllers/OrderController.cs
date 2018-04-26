@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using Warehouse.Helpers;
+using Warehouse.Managers;
 using Warehouse.Models.Custom;
 using Warehouse.Models.DAL;
 using static Warehouse.Enums;
@@ -29,18 +30,31 @@ namespace Warehouse.Controllers
         /// <param name="limit">liczba jednorazowo pobranych rekordów</param>
         [HttpGet]
         [Route("GetAllOrders")]
-        public List<OrderResult> GetAllOrders(int offset = 0, int limit = int.MaxValue)
+        public OrderResultsList GetAllOrders(int offset = 0, int limit = int.MaxValue, string needle = "")
         {
-            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
+                OrderResultsList result = new OrderResultsList();
+                List<Order> allOrders = new List<Order>();
+                int currentUserId = UserHelper.GetCurrentUserId();
                 try
                 {
-                    List<OrderResult> result = new List<OrderResult>();
-                    var allOrders = _context.Orders.Where(o => o.Deleted_At == null).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
+                    List<OrderResult> listOfOrderResult = new List<OrderResult>();
+                    if (UserHelper.GetCurrentUserRole() == (int)UserType.SuperAdmin || UserHelper.GetCurrentUserRole() == (int)UserType.Admin)
+                    {
+                        allOrders = _context.Orders.Where(o => o.Deleted_At == null && (o.ATB.Contains(needle) || o.Name.Contains(needle) || o.Container_Id.Contains(needle))).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
+                    }
+                    else
+                    {
+                        allOrders = _context.Orders.Where(o => o.Deleted_At == null && o.Creator_Id == currentUserId && (o.ATB.Contains(needle) || o.Name.Contains(needle) || o.Container_Id.Contains(needle))).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
+                    }
+                   
                     foreach (var order in allOrders)
                     {
                         List<OrdersPositions> listOfOrderPositionsForOrder = new List<OrdersPositions>();
                         var listOfOrderPositionsFromDB = _context.Orders_Positions.Where(o => o.Order_id == order.Id && o.Deleted_At == null).ToList();
+
+
                         foreach (Orders_Positions item in listOfOrderPositionsFromDB)
                         {
                             OrdersPositions ordersPositions = new OrdersPositions();
@@ -74,9 +88,11 @@ namespace Warehouse.Controllers
                         orderResult.Status = order.Status;
                         orderResult.Created_At = order.Created_At == null ? string.Empty : ((DateTime)order.Created_At).ToString("dd-MM-yyyy");
                         orderResult.Edited_At = order.Edited_At == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");
-                        orderResult.OrdersPositions = listOfOrderPositionsForOrder;
-                        result.Add(orderResult);
+                        orderResult.OrderPositions = listOfOrderPositionsForOrder;
+                        listOfOrderResult.Add(orderResult);
                     }
+                    result.ListOfOrders = listOfOrderResult;
+                    result.NumberOfOrders = OrderManager.CountOfOrders(needle);
                     return result;
                 }
                 catch (Exception ex)
@@ -261,8 +277,8 @@ namespace Warehouse.Controllers
         }
 
         [HttpGet]
-        [Route("RemoveOrderPositions")]
-        public RequestResult RemoveOrderPositions(int orderPositionId)
+        [Route("RemoveOrdersPosition")]
+        public RequestResult RemoveOrdersPosition(int orderPositionId)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {

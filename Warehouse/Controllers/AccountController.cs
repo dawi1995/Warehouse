@@ -12,6 +12,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 using Warehouse.Helpers;
+using Warehouse.Managers;
 using Warehouse.Models.Custom;
 using Warehouse.Models.DAL;
 using Warehouse.Repositories;
@@ -349,38 +350,50 @@ namespace Warehouse.Controllers
         [Authorize]
         [HttpGet]
         [Route("GetAllUsersByRole")]
-        public List<UserInformation> GetUsersByRole(int offset = 0, int limit = int.MaxValue, int role = 0)
+        public UsersInformationList GetAllUsersByRole(int offset = 0, int limit = int.MaxValue, int role = 0, string needle = "")
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
-                List<User> listOfUsers = new List<User>();
-                List<UserInformation> result = new List<UserInformation>();
+                dynamic listOfUsers = null;
+                List<UserInformation> listOfUsersInfo = new List<UserInformation>();
+                UsersInformationList result = new UsersInformationList();
+
                 if (role == 0)
                 {
-                    listOfUsers = _context.Users.Where(u => u.Deleted_at == null).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
+                    listOfUsers = (from users in _context.Users
+                                  join clients in _context.Clients on users.Id equals clients.User_Id into q
+                                      from clients in q.DefaultIfEmpty()
+                                      where (users.Deleted_at == null && (users.Login.Contains(needle) || clients.Name.Contains(needle) || clients.Email.Contains(needle)))
+                                      select new { User = users, Client = clients }).OrderByDescending(u => u.User.Created_at).Skip(offset).Take(limit);
+
                 }
                 else
                 {
-                    listOfUsers = _context.Users.Where(u => u.Deleted_at == null && u.Role == role).OrderByDescending(u => u.Login).Skip(offset).Take(limit).ToList();
+                    listOfUsers = (from users in _context.Users
+                                      join clients in _context.Clients on users.Id equals clients.User_Id into q
+                                      from clients in q.DefaultIfEmpty()
+                                      where (users.Deleted_at == null && users.Role == role  && (users.Login.Contains(needle) || clients.Name.Contains(needle) || clients.Email.Contains(needle)))
+                                      select new { User = users, Client = clients }).OrderByDescending(u => u.User.Created_at).Skip(offset).Take(limit);                  
                 }
+
                 foreach (var user in listOfUsers)
                 {
+
                     UserInformation userInfo = new UserInformation();
-                    userInfo.Id = user.Id;
-                    userInfo.Login = user.Login;
-                    userInfo.Role = user.Role;
-                    userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd-MM-yyyy");
-                    userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd-MM-yyyy");
-                    Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
-                    if (client != null)
-                    {
-                        userInfo.Name = client.Name;
-                        userInfo.Address = client.Address;
-                        userInfo.VAT_Id = client.VAT_Id;
-                        userInfo.Email = client.Email;
-                    }
-                    result.Add(userInfo);
+                    userInfo.Id = user.User.Id;
+                    userInfo.Login = user.User.Login;
+                    userInfo.Role = user.User.Role;
+                    userInfo.Created_At = user.User.Created_at == null ? string.Empty : ((DateTime)user.User.Created_at).ToString("dd-MM-yyyy");
+                    userInfo.Edited_At = user.User.Edited_at == null ? string.Empty : ((DateTime)user.User.Edited_at).ToString("dd-MM-yyyy");
+                    userInfo.Name = user.Client == null ? string.Empty : user.Client.Name;
+                    userInfo.Address = user.Client == null ? string.Empty : user.Client.Address;
+                    userInfo.VAT_Id = user.Client == null ? string.Empty : user.Client.VAT_Id;
+                    userInfo.Email = user.Client == null ? string.Empty : user.Client.Email;
+                    listOfUsersInfo.Add(userInfo);
+
                 }
+                result.NumberOfUsers = AccountManager.CountOfUsers(role, needle);
+                result.ListOfUsers = listOfUsersInfo;
                 return result;
             }
             else
@@ -477,6 +490,8 @@ namespace Warehouse.Controllers
             }
             return result;
         }
+
+
 
     }
     

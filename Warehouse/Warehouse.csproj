@@ -231,6 +231,8 @@
     </Compile>
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\SecurityHelper.cs" />
+    <Compile Include="Managers\AccountManager.cs" />
+    <Compile Include="Managers\OrderManager.cs" />
     <Compile Include="Models\Custom\AccountModels\ChangePassword.cs" />
     <Compile Include="Models\Custom\AccountModels\ClientEdit.cs" />
     <Compile Include="Models\Custom\AccountModels\ClientRegistration.cs" />
@@ -241,11 +243,13 @@
     <Compile Include="Models\Custom\AccountModels\UserRegistration.cs" />
     <Compile Include="Models\Custom\AccountModels\TokenResult.cs" />
     <Compile Include="Models\Custom\AccountModels\UserInformation.cs" />
+    <Compile Include="Models\Custom\AccountModels\UsersInformationList.cs" />
     <Compile Include="Models\Custom\OrderModels\CreateOrder.cs" />
     <Compile Include="Models\Custom\OrderModels\CreateOrdersPositions.cs" />
     <Compile Include="Models\Custom\OrderModels\EditOrder.cs" />
     <Compile Include="Models\Custom\OrderModels\EditOrdersPosition.cs" />
     <Compile Include="Models\Custom\OrderModels\OrderResult.cs" />
+    <Compile Include="Models\Custom\OrderModels\OrderResultsList.cs" />
     <Compile Include="Models\Custom\OrderModels\OrdersPositions.cs" />
     <Compile Include="Models\Custom\RequestResult.cs" />
     <Compile Include="Models\DAL\Client.cs">

@@ -26,6 +26,6 @@ namespace Warehouse.Models.Custom
         public int? Status { get; set; }
         public string Created_At { get; set; }
         public string Edited_At { get; set; }
-        public List<OrdersPositions> OrdersPositions { get; set; }
+        public List<OrdersPositions> OrderPositions { get; set; }
     }
 }
