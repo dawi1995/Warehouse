@@ -224,6 +224,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
+    <Compile Include="Controllers\DispatchController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Enums.cs" />
@@ -246,6 +247,11 @@
     <Compile Include="Models\Custom\AccountModels\UserInformation.cs" />
     <Compile Include="Models\Custom\AccountModels\UsersInformationList.cs" />
     <Compile Include="Models\Custom\DeliveryModels\DeliveryDetails.cs" />
+    <Compile Include="Models\Custom\DeliveryModels\OrderPositionsDeliveryInfo.cs" />
+    <Compile Include="Models\Custom\DispatchModels\CarrierDispatch.cs" />
+    <Compile Include="Models\Custom\DispatchModels\DispatchDetails.cs" />
+    <Compile Include="Models\Custom\DispatchModels\OrderPositionsDispatchInfo.cs" />
+    <Compile Include="Models\Custom\DispatchModels\ReceiverDispatch.cs" />
     <Compile Include="Models\Custom\OrderModels\CreateOrder.cs" />
     <Compile Include="Models\Custom\OrderModels\CreateOrdersPositions.cs" />
     <Compile Include="Models\Custom\OrderModels\EditOrder.cs" />

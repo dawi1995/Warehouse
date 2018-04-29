@@ -18,7 +18,7 @@ namespace Warehouse.Models.DAL
         public Nullable<int> Dispatch_Id { get; set; }
         public Nullable<int> Order_Position_Id { get; set; }
         public Nullable<int> Amount { get; set; }
-        public Nullable<int> Weight_Gross { get; set; }
+        public Nullable<decimal> Weight_Gross { get; set; }
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Edited_At { get; set; }
         public Nullable<System.DateTime> Deleted_At { get; set; }

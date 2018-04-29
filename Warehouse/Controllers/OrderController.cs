@@ -136,6 +136,7 @@ namespace Warehouse.Controllers
                         orderResult.ATB = order.ATB;                    
                         orderResult.Creation_Date = order.Creation_Date == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");                    
                         orderResult.Status = order.Status;
+                        orderResult.Name = order.Name;
                         var delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == order.Id);
                         if (delivery != null)
                         {
@@ -201,7 +202,6 @@ namespace Warehouse.Controllers
                         listOfOrderPositions.Add(toAdd);
                     }
                     result.Id = orderFromDB.Id;
-                    result.Creator_Id = orderFromDB.Creator_Id;
                     result.Num_of_Positions = orderFromDB.Num_of_Positions;
                     result.Order_Number = orderFromDB.Order_Number;
                     result.Pickup_PIN = orderFromDB.Pickup_PIN;

@@ -47,9 +47,9 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Order_Id" Type="int" Nullable="false" />
-          <Property Name="Transport_Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Transport_Type" Type="int" Nullable="false" />
           <Property Name="Date_Of_Delivery" Type="date" Nullable="false" />
           <Property Name="Delivery_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="If_PDF_And_Sent" Type="bit" />
@@ -106,7 +106,7 @@
           <Property Name="Dispatch_Id" Type="int" />
           <Property Name="Order_Position_Id" Type="int" />
           <Property Name="Amount" Type="int" />
-          <Property Name="Weight_Gross" Type="int" />
+          <Property Name="Weight_Gross" Type="decimal" Precision="18" Scale="4" />
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Edited_At" Type="datetime" />
           <Property Name="Deleted_At" Type="datetime" />
@@ -257,9 +257,9 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Order_Id" Type="Int32" Nullable="false" />
-          <Property Name="Transport_Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Transport_Type" Type="Int32" Nullable="false" />
           <Property Name="Date_Of_Delivery" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Delivery_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="If_PDF_And_Sent" Type="Boolean" />
@@ -316,7 +316,7 @@
           <Property Name="Dispatch_Id" Type="Int32" />
           <Property Name="Order_Position_Id" Type="Int32" />
           <Property Name="Amount" Type="Int32" />
-          <Property Name="Weight_Gross" Type="Int32" />
+          <Property Name="Weight_Gross" Type="Decimal" Precision="18" Scale="4" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />

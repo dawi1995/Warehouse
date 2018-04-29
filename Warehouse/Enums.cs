@@ -20,5 +20,11 @@ namespace Warehouse
             Accepted = 2,
             Difference = 3
         };
+        public enum TransportType
+        {
+            Car = 1,
+            Boat = 2,
+            Plane = 3
+        };
     }
 }

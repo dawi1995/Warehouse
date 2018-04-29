@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using Warehouse.Helpers;
+using Warehouse.Models.Custom;
 using Warehouse.Models.DAL;
+using static Warehouse.Enums;
 
 namespace Warehouse.Controllers
 {
@@ -18,39 +23,32 @@ namespace Warehouse.Controllers
         }
 
         [HttpGet]
-        [Route("GetOrderDeliveries")]
-        public OrderDetails GetOrderDeliveries(int orderId)
+        [Route("GetOrderDelivery")]
+        public DeliveryDetails GetOrderDelivery(int orderId)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
-                OrderDetails result = new OrderDetails();
-                List<OrderPositionsOrderInfo> listOfOrderPositions = new List<OrderPositionsOrderInfo>();
-                Orderer orderer = new Orderer();
-
-
                 try
                 {
-                    List<Orders_Positions> ordersPositionsFromDB = _context.Orders_Positions.Where(o => o.Deleted_At == null && o.Order_id == orderId).OrderBy(o => o.Name).ToList();
-                    Order orderFromDB = _context.Orders.FirstOrDefault(o => o.Id == orderId);
-                    orderer.Name = orderFromDB.Name;
-                    orderer.VAT_Id = orderFromDB.VAT_Id;
-                    orderer.Address = orderFromDB.Address;
-                    orderer.Email = orderFromDB.Email;
-                    foreach (var orderPosition in ordersPositionsFromDB)
+                    DeliveryDetails result = new DeliveryDetails();
+                    List<OrderPositionsDeliveryInfo> listOfOrderPositions = new List<OrderPositionsDeliveryInfo>();
+                    Delivery deliveryFromDB = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderId);
+                    List<Orders_Positions> orderPositionFromDB = _context.Orders_Positions.Where(o => o.Order_id == orderId).ToList();
+                    foreach (var orderPosition in orderPositionFromDB)
                     {
-                        OrderPositionsOrderInfo toAdd = new OrderPositionsOrderInfo();
-                        toAdd.Id = orderPosition.Id;
-                        toAdd.Name = orderPosition.Name;
-                        toAdd.Amount = orderPosition.Amount;
-                        toAdd.Weight_Gross = orderPosition.Weight_Gross;
-                        listOfOrderPositions.Add(toAdd);
+                        OrderPositionsDeliveryInfo orderPositionDeliveryInfo = new OrderPositionsDeliveryInfo();
+                        orderPositionDeliveryInfo.Id = orderPosition.Id;
+                        orderPositionDeliveryInfo.Amount = orderPosition.Amount;
+                        orderPositionDeliveryInfo.Amount_Received = orderPosition.Amount_Received;
+                        orderPositionDeliveryInfo.Name = orderPosition.Name;
+                        orderPositionDeliveryInfo.Weight_Gross = orderPosition.Weight_Gross;
+                        orderPositionDeliveryInfo.Weight_Gross_Received = orderPosition.Weight_Gross_Received;
+                        listOfOrderPositions.Add(orderPositionDeliveryInfo);
                     }
-                    result.Id = orderFromDB.Id;
-                    result.Creator_Id = orderFromDB.Creator_Id;
-                    result.Num_of_Positions = orderFromDB.Num_of_Positions;
-                    result.Order_Number = orderFromDB.Order_Number;
-                    result.Pickup_PIN = orderFromDB.Pickup_PIN;
-                    result.Orderer = orderer;
+                    result.Id = deliveryFromDB.Id;
+                    result.Date_Of_Delivery = deliveryFromDB.Date_Of_Delivery == null ? string.Empty : ((DateTime)deliveryFromDB.Date_Of_Delivery).ToString("dd-MM-yyyy");
+                    result.Delivery_Number = deliveryFromDB.Delivery_Number;
+                    result.Transport_Type = deliveryFromDB.Transport_Type;
                     result.ListOfOrderPositions = listOfOrderPositions;
                     return result;
                 }

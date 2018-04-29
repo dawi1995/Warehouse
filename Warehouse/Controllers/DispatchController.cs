@@ -1,0 +1,94 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using Warehouse.Helpers;
+using Warehouse.Models.Custom;
+using Warehouse.Models.DAL;
+using static Warehouse.Enums;
+
+namespace Warehouse.Controllers
+{
+    [RoutePrefix("api/Dispatch")]
+    public class DispatchController : ApiController
+    {
+        private readonly WarehouseEntities _context;
+        public DispatchController()
+        {
+            _context = new WarehouseEntities();
+        }
+
+        [HttpGet]
+        [Route("GetOrderDispatch")]
+        public List<DispatchDetails> GetOrderDispatch(int orderId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
+            { 
+                try
+                {
+                    List<DispatchDetails> result = new List<DispatchDetails>();
+                    List<Orders_Positions> listOfOrdersPositions = _context.Orders_Positions.Where(o => o.Order_id == orderId).ToList();
+                    Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderId);
+                    List<Deliveries_Dispatches> listOfDeliveryDispatches = _context.Deliveries_Dispatches.Where(d => d.Delivery_Id == delivery.Id).ToList();
+                    foreach (var deliveryDispatch in listOfDeliveryDispatches)
+                    {
+                        Dispatch dispatch = _context.Dispatches.FirstOrDefault(d => d.Id == deliveryDispatch.Dispatch_Id);
+                        DispatchDetails dispatchDetails = new DispatchDetails();
+                        CarrierDispatch carrierDispatch = new CarrierDispatch();
+                        ReceiverDispatch receiverDispatch = new ReceiverDispatch();
+                        List<OrderPositionsDispatchInfo> listOfOrderPositionsDispatchInfo = new List<OrderPositionsDispatchInfo>();
+                        List<Dispatches_Positions> listOfDispatchPositions = new List<Dispatches_Positions>();
+                        foreach (var item in listOfOrdersPositions)
+                        {
+                            var dispatchPosition = _context.Dispatches_Positions.FirstOrDefault(d => d.Order_Position_Id == item.Id && d.Dispatch_Id == dispatch.Id);
+                            var dispatchesPositionsForOrderPosition = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == item.Id && d.Created_At < dispatchPosition.Created_At).OrderBy(d => d.Created_At).ToList();
+                            int? dispatchedAmount = dispatchesPositionsForOrderPosition.Sum(d => d.Amount);
+                            decimal? dispatchedWeight = dispatchesPositionsForOrderPosition.Sum(d => d.Weight_Gross);
+                            OrderPositionsDispatchInfo orderPositionsDispatchInfo = new OrderPositionsDispatchInfo();
+                            orderPositionsDispatchInfo.Id = item.Id;
+                            orderPositionsDispatchInfo.Name = item.Name;
+                            orderPositionsDispatchInfo.Amount = item.Amount;
+                            orderPositionsDispatchInfo.Amount_Received = item.Amount_Received;
+                            orderPositionsDispatchInfo.Amount_Before_Dispatch = item.Amount_Received - dispatchedAmount;
+                            orderPositionsDispatchInfo.Amount_Dispatch = dispatchPosition.Amount;
+                            orderPositionsDispatchInfo.Amount_After_Dispatch = orderPositionsDispatchInfo.Amount_Before_Dispatch - orderPositionsDispatchInfo.Amount_Dispatch;
+                            orderPositionsDispatchInfo.Weight_Gross = item.Weight_Gross;
+                            orderPositionsDispatchInfo.Weight_Gross_Received = item.Weight_Gross_Received;
+                            orderPositionsDispatchInfo.Weight_Before_Dispatch = item.Weight_Gross_Received - dispatchedWeight;
+                            orderPositionsDispatchInfo.Weight_Dispatch = dispatchPosition.Weight_Gross;
+                            orderPositionsDispatchInfo.Weight_After_Dispatch = orderPositionsDispatchInfo.Weight_Before_Dispatch - orderPositionsDispatchInfo.Weight_Dispatch;
+                            listOfOrderPositionsDispatchInfo.Add(orderPositionsDispatchInfo);
+                        }
+                        carrierDispatch.Carrier_Name = dispatch.Carrier_Name;
+                        carrierDispatch.Carrier_Email = dispatch.Carrier_Email;
+                        carrierDispatch.Carrier_Address = dispatch.Carrier_Address;
+                        carrierDispatch.Carrier_VAT_Id = dispatch.Carrier_VAT_Id;
+                        receiverDispatch.Receiver_Name = dispatch.Receiver_Name;
+                        receiverDispatch.Receiver_Email = dispatch.Receiver_Email;
+                        receiverDispatch.Receiver_Address = dispatch.Receiver_Address;
+                        receiverDispatch.Receiver_VAT_Id = dispatch.Receiver_VAT_Id;
+                        dispatchDetails.Id = dispatch.Id;
+                        dispatchDetails.Dispatch_Number = dispatch.Dispatch_Number;
+                        dispatchDetails.Creation_Date = dispatch.Creation_Date == null ? string.Empty : ((DateTime)(dispatch.Creation_Date)).ToString("dd-MM-yyyy");
+                        dispatchDetails.Car_Id = dispatchDetails.Car_Id;
+                        dispatchDetails.Carrier = carrierDispatch;
+                        dispatchDetails.Receiver = receiverDispatch;
+                        dispatchDetails.ListOfOrderPositions = listOfOrderPositionsDispatchInfo;
+                        result.Add(dispatchDetails);
+                    }
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+    }
+}
