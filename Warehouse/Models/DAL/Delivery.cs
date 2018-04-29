@@ -18,7 +18,7 @@ namespace Warehouse.Models.DAL
         public int Order_Id { get; set; }
         public string Transport_Type { get; set; }
         public System.DateTime Date_Of_Delivery { get; set; }
-        public string Delivery_Id { get; set; }
+        public string Delivery_Number { get; set; }
         public Nullable<bool> If_PDF_And_Sent { get; set; }
         public Nullable<bool> If_PDF_Dispatch { get; set; }
         public Nullable<bool> If_Differntial_Delivery_Dispatch { get; set; }

@@ -15,7 +15,7 @@ namespace Warehouse.Models.DAL
     public partial class Dispatch
     {
         public int Id { get; set; }
-        public string Dispatch_Id { get; set; }
+        public string Dispatch_Number { get; set; }
         public Nullable<System.DateTime> Creation_Date { get; set; }
         public string Car_Id { get; set; }
         public string Carrier_Name { get; set; }

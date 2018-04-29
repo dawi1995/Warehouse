@@ -51,7 +51,7 @@
           <Property Name="Order_Id" Type="int" Nullable="false" />
           <Property Name="Transport_Type" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Date_Of_Delivery" Type="date" Nullable="false" />
-          <Property Name="Delivery_Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Delivery_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="If_PDF_And_Sent" Type="bit" />
           <Property Name="If_PDF_Dispatch" Type="bit" />
           <Property Name="If_Differntial_Delivery_Dispatch" Type="bit" />
@@ -77,7 +77,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Dispatch_Id" Type="nvarchar" MaxLength="50" />
+          <Property Name="Dispatch_Number" Type="nvarchar" MaxLength="50" />
           <Property Name="Creation_Date" Type="datetime" />
           <Property Name="Car_Id" Type="nvarchar" MaxLength="50" />
           <Property Name="Carrier_Name" Type="nvarchar" MaxLength="50" />
@@ -261,7 +261,7 @@
           <Property Name="Order_Id" Type="Int32" Nullable="false" />
           <Property Name="Transport_Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Date_Of_Delivery" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Delivery_Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Delivery_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="If_PDF_And_Sent" Type="Boolean" />
           <Property Name="If_PDF_Dispatch" Type="Boolean" />
           <Property Name="If_Differntial_Delivery_Dispatch" Type="Boolean" />
@@ -287,7 +287,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Dispatch_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Dispatch_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Creation_Date" Type="DateTime" Precision="3" />
           <Property Name="Car_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Carrier_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -451,7 +451,7 @@
                 <ScalarProperty Name="If_Differntial_Delivery_Dispatch" ColumnName="If_Differntial_Delivery_Dispatch" />
                 <ScalarProperty Name="If_PDF_Dispatch" ColumnName="If_PDF_Dispatch" />
                 <ScalarProperty Name="If_PDF_And_Sent" ColumnName="If_PDF_And_Sent" />
-                <ScalarProperty Name="Delivery_Id" ColumnName="Delivery_Id" />
+                <ScalarProperty Name="Delivery_Number" ColumnName="Delivery_Number" />
                 <ScalarProperty Name="Date_Of_Delivery" ColumnName="Date_Of_Delivery" />
                 <ScalarProperty Name="Transport_Type" ColumnName="Transport_Type" />
                 <ScalarProperty Name="Order_Id" ColumnName="Order_Id" />
@@ -493,7 +493,7 @@
                 <ScalarProperty Name="Carrier_Name" ColumnName="Carrier_Name" />
                 <ScalarProperty Name="Car_Id" ColumnName="Car_Id" />
                 <ScalarProperty Name="Creation_Date" ColumnName="Creation_Date" />
-                <ScalarProperty Name="Dispatch_Id" ColumnName="Dispatch_Id" />
+                <ScalarProperty Name="Dispatch_Number" ColumnName="Dispatch_Number" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
