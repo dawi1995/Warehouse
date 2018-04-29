@@ -125,15 +125,18 @@ namespace Warehouse.Controllers
                 try
                 {
                     User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
-                    if (userToEdit.Login != registration.Login && _accountRepository.IsLoginFree(registration.Login))
+                    if (userToEdit.Login != registration.Login)
                     {
-                        userToEdit.Login = registration.Login;
-                    }
-                    else
-                    {
-                        requestResult.Status = false;
-                        requestResult.Message = "Login exists in system.";
-                        return requestResult;
+                        if (_accountRepository.IsLoginFree(registration.Login))
+                        {
+                            userToEdit.Login = registration.Login;
+                        }
+                        else
+                        {
+                            requestResult.Status = false;
+                            requestResult.Message = "Login exists in system.";
+                            return requestResult;
+                        }
                     }
                     if (!string.IsNullOrEmpty(registration.Password))
                     {
@@ -173,15 +176,19 @@ namespace Warehouse.Controllers
                 try
                 {
                     User userToEdit = _context.Users.FirstOrDefault(u => u.Id == registration.Id && u.Deleted_at == null);
-                    if (userToEdit.Login != registration.Login && _accountRepository.IsLoginFree(registration.Login))
+                    if (userToEdit.Login != registration.Login)
                     {
-                        userToEdit.Login = registration.Login;
-                    }
-                    else
-                    {
-                        requestResult.Status = false;
-                        requestResult.Message = "Login exists in system.";
-                        return requestResult;
+                        if (_accountRepository.IsLoginFree(registration.Login))
+                        {
+                            userToEdit.Login = registration.Login;
+                        }
+                        else
+                        {
+                            requestResult.Status = false;
+                            requestResult.Message = "Login exists in system.";
+                            return requestResult;
+                        }
+                        
                     }
                     if (!string.IsNullOrEmpty(registration.Password))
                     {

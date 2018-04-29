@@ -223,6 +223,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Enums.cs" />
@@ -247,9 +248,13 @@
     <Compile Include="Models\Custom\OrderModels\CreateOrder.cs" />
     <Compile Include="Models\Custom\OrderModels\CreateOrdersPositions.cs" />
     <Compile Include="Models\Custom\OrderModels\EditOrder.cs" />
-    <Compile Include="Models\Custom\OrderModels\EditOrdersPosition.cs" />
+    <Compile Include="Models\Custom\OrderModels\OrderDetails.cs" />
+    <Compile Include="Models\Custom\OrderModels\Orderer.cs" />
+    <Compile Include="Models\Custom\OrderModels\OrderPositionsOrderInfo.cs" />
+    <Compile Include="Models\Custom\OrderModels\OrdersListNumber.cs" />
     <Compile Include="Models\Custom\OrderModels\OrderResult.cs" />
     <Compile Include="Models\Custom\OrderModels\OrderResultsList.cs" />
+    <Compile Include="Models\Custom\OrderModels\OrdersList.cs" />
     <Compile Include="Models\Custom\OrderModels\OrdersPositions.cs" />
     <Compile Include="Models\Custom\RequestResult.cs" />
     <Compile Include="Models\DAL\Client.cs">
@@ -383,6 +388,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\Delivery\" />
     <Folder Include="Views\Order\" />
   </ItemGroup>
   <ItemGroup>

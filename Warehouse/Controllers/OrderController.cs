@@ -28,18 +28,97 @@ namespace Warehouse.Controllers
         /// </summary>
         /// <param name="offset">liczba pominiętych rekordów</param>
         /// <param name="limit">liczba jednorazowo pobranych rekordów</param>
+        //[HttpGet]
+        //[Route("GetAllOrders")]
+        //public OrderResultsList GetAllOrders(int offset = 0, int limit = int.MaxValue, string needle = "")
+        //{
+        //    if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
+        //    {
+        //        OrderResultsList result = new OrderResultsList();
+        //        List<Order> allOrders = new List<Order>();
+        //        int currentUserId = UserHelper.GetCurrentUserId();
+        //        try
+        //        {
+        //            List<OrderResult> listOfOrderResult = new List<OrderResult>();
+        //            if (UserHelper.GetCurrentUserRole() == (int)UserType.SuperAdmin || UserHelper.GetCurrentUserRole() == (int)UserType.Admin)
+        //            {
+        //                allOrders = _context.Orders.Where(o => o.Deleted_At == null && (o.ATB.Contains(needle) || o.Name.Contains(needle) || o.Container_Id.Contains(needle))).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
+        //            }
+        //            else
+        //            {
+        //                allOrders = _context.Orders.Where(o => o.Deleted_At == null && o.Creator_Id == currentUserId && (o.ATB.Contains(needle) || o.Name.Contains(needle) || o.Container_Id.Contains(needle))).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
+        //            }
+                   
+        //            foreach (var order in allOrders)
+        //            {
+        //                List<OrdersPositions> listOfOrderPositionsForOrder = new List<OrdersPositions>();
+        //                var listOfOrderPositionsFromDB = _context.Orders_Positions.Where(o => o.Order_id == order.Id && o.Deleted_At == null).ToList();
+
+
+        //                foreach (Orders_Positions item in listOfOrderPositionsFromDB)
+        //                {
+        //                    OrdersPositions ordersPositions = new OrdersPositions();
+        //                    ordersPositions.Id = item.Id;
+        //                    ordersPositions.Name = item.Name;
+        //                    ordersPositions.Order_id = item.Order_id;
+        //                    ordersPositions.Amount = item.Amount;
+        //                    ordersPositions.Weight_Gross = item.Weight_Gross;
+        //                    ordersPositions.Amount_Received = item.Amount_Received;
+        //                    ordersPositions.Weight_Gross_Received = item.Weight_Gross_Received;
+        //                    ordersPositions.Created_At = item.Created_At == null ? string.Empty : ((DateTime)item.Created_At).ToString("dd-MM-yyyy");
+        //                    ordersPositions.Edited_At = item.Edited_At == null ? string.Empty : ((DateTime)item.Edited_At).ToString("dd-MM-yyyy");
+        //                    listOfOrderPositionsForOrder.Add(ordersPositions);
+        //                }
+        //                OrderResult orderResult = new OrderResult();
+        //                orderResult.Id = order.Id;
+        //                orderResult.Container_Id = order.Container_Id;
+        //                orderResult.ATB = order.ATB;
+        //                orderResult.Pickup_PIN = order.Pickup_PIN;
+        //                orderResult.Date_Of_Arrival = order.Date_Of_Arrival == null ? string.Empty : ((DateTime)order.Date_Of_Arrival).ToString("dd-MM-yyyy");
+        //                orderResult.Creation_Date = order.Creation_Date == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");
+        //                orderResult.Creator_Id = order.Creator_Id;
+        //                orderResult.Order_Number = order.Order_Number;
+        //                orderResult.Name = order.Name;
+        //                orderResult.Address = order.Address;
+        //                orderResult.VAT_Id = order.VAT_Id;
+        //                orderResult.Email = order.Email;
+        //                orderResult.Num_of_Positions = order.Num_of_Positions;
+        //                orderResult.If_PDF_And_Sent = order.If_PDF_And_Sent;
+        //                orderResult.If_Delivery_Generated = order.If_Delivery_Generated;
+        //                orderResult.Status = order.Status;
+        //                orderResult.Created_At = order.Created_At == null ? string.Empty : ((DateTime)order.Created_At).ToString("dd-MM-yyyy");
+        //                orderResult.Edited_At = order.Edited_At == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");
+        //                orderResult.OrderPositions = listOfOrderPositionsForOrder;
+        //                listOfOrderResult.Add(orderResult);
+        //            }
+        //            result.ListOfOrders = listOfOrderResult;
+        //            result.NumberOfOrders = OrderManager.CountOfOrders(needle);
+        //            return result;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+        //        }
+        //    }
+        //    else
+        //    {
+        //        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+        //    }
+        //}
+
+
         [HttpGet]
-        [Route("GetAllOrders")]
-        public OrderResultsList GetAllOrders(int offset = 0, int limit = int.MaxValue, string needle = "")
+        [Route("GetOrders")]
+        public OrdersListNumber GetOrders(int offset = 0, int limit = int.MaxValue, string needle = "")
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
-                OrderResultsList result = new OrderResultsList();
+                OrdersListNumber result = new OrdersListNumber();
                 List<Order> allOrders = new List<Order>();
                 int currentUserId = UserHelper.GetCurrentUserId();
                 try
                 {
-                    List<OrderResult> listOfOrderResult = new List<OrderResult>();
+                    List<OrdersList> listOfOrderResult = new List<OrdersList>();
                     if (UserHelper.GetCurrentUserRole() == (int)UserType.SuperAdmin || UserHelper.GetCurrentUserRole() == (int)UserType.Admin)
                     {
                         allOrders = _context.Orders.Where(o => o.Deleted_At == null && (o.ATB.Contains(needle) || o.Name.Contains(needle) || o.Container_Id.Contains(needle))).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
@@ -48,49 +127,35 @@ namespace Warehouse.Controllers
                     {
                         allOrders = _context.Orders.Where(o => o.Deleted_At == null && o.Creator_Id == currentUserId && (o.ATB.Contains(needle) || o.Name.Contains(needle) || o.Container_Id.Contains(needle))).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
                     }
-                   
+
                     foreach (var order in allOrders)
                     {
-                        List<OrdersPositions> listOfOrderPositionsForOrder = new List<OrdersPositions>();
-                        var listOfOrderPositionsFromDB = _context.Orders_Positions.Where(o => o.Order_id == order.Id && o.Deleted_At == null).ToList();
-
-
-                        foreach (Orders_Positions item in listOfOrderPositionsFromDB)
-                        {
-                            OrdersPositions ordersPositions = new OrdersPositions();
-                            ordersPositions.Id = item.Id;
-                            ordersPositions.Name = item.Name;
-                            ordersPositions.Order_id = item.Order_id;
-                            ordersPositions.Amount = item.Amount;
-                            ordersPositions.Weight_Gross = item.Weight_Gross;
-                            ordersPositions.Amount_Received = item.Amount_Received;
-                            ordersPositions.Weight_Gross_Received = item.Weight_Gross_Received;
-                            ordersPositions.Created_At = item.Created_At == null ? string.Empty : ((DateTime)item.Created_At).ToString("dd-MM-yyyy");
-                            ordersPositions.Edited_At = item.Edited_At == null ? string.Empty : ((DateTime)item.Edited_At).ToString("dd-MM-yyyy");
-                            listOfOrderPositionsForOrder.Add(ordersPositions);
-                        }
-                        OrderResult orderResult = new OrderResult();
+                        OrdersList orderResult = new OrdersList();
                         orderResult.Id = order.Id;
                         orderResult.Container_Id = order.Container_Id;
-                        orderResult.ATB = order.ATB;
-                        orderResult.Pickup_PIN = order.Pickup_PIN;
-                        orderResult.Date_Of_Arrival = order.Date_Of_Arrival == null ? string.Empty : ((DateTime)order.Date_Of_Arrival).ToString("dd-MM-yyyy");
-                        orderResult.Creation_Date = order.Creation_Date == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");
-                        orderResult.Creator_Id = order.Creator_Id;
-                        orderResult.Order_Number = order.Order_Number;
-                        orderResult.Name = order.Name;
-                        orderResult.Address = order.Address;
-                        orderResult.VAT_Id = order.VAT_Id;
-                        orderResult.Email = order.Email;
-                        orderResult.Num_of_Positions = order.Num_of_Positions;
-                        orderResult.If_PDF_And_Sent = order.If_PDF_And_Sent;
-                        orderResult.If_Delivery_Generated = order.If_Delivery_Generated;
+                        orderResult.ATB = order.ATB;                    
+                        orderResult.Creation_Date = order.Creation_Date == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");                    
                         orderResult.Status = order.Status;
-                        orderResult.Created_At = order.Created_At == null ? string.Empty : ((DateTime)order.Created_At).ToString("dd-MM-yyyy");
-                        orderResult.Edited_At = order.Edited_At == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");
-                        orderResult.OrderPositions = listOfOrderPositionsForOrder;
+                        var delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == order.Id);
+                        if (delivery != null)
+                        {
+                            var deliveryDispatch = _context.Deliveries_Dispatches.FirstOrDefault(d => d.Delivery_Id == delivery.Id);
+                            if (deliveryDispatch != null)
+                            {
+                                orderResult.IsDispatched = true;
+                            }
+                            else
+                            {
+                                orderResult.IsDispatched = false;
+                            }
+                        }
+                        else
+                        {
+                            orderResult.IsDispatched = false;
+                        }
                         listOfOrderResult.Add(orderResult);
                     }
+
                     result.ListOfOrders = listOfOrderResult;
                     result.NumberOfOrders = OrderManager.CountOfOrders(needle);
                     return result;
@@ -106,7 +171,55 @@ namespace Warehouse.Controllers
             }
         }
 
-        
+
+        [HttpGet]
+        [Route("GetOrderDetails")]
+        public OrderDetails GetOrderDetails(int orderId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
+            {
+                OrderDetails result = new OrderDetails();
+                List<OrderPositionsOrderInfo> listOfOrderPositions = new List<OrderPositionsOrderInfo>();
+                Orderer orderer = new Orderer();
+                
+
+                try
+                {
+                    List<Orders_Positions> ordersPositionsFromDB = _context.Orders_Positions.Where(o => o.Deleted_At == null && o.Order_id == orderId).OrderBy(o => o.Name).ToList();
+                    Order orderFromDB = _context.Orders.FirstOrDefault(o => o.Id == orderId);
+                    orderer.Name = orderFromDB.Name;
+                    orderer.VAT_Id = orderFromDB.VAT_Id;
+                    orderer.Address = orderFromDB.Address;
+                    orderer.Email = orderFromDB.Email;
+                    foreach (var orderPosition in ordersPositionsFromDB)
+                    {
+                        OrderPositionsOrderInfo toAdd = new OrderPositionsOrderInfo();
+                        toAdd.Id = orderPosition.Id;
+                        toAdd.Name = orderPosition.Name;
+                        toAdd.Amount = orderPosition.Amount;
+                        toAdd.Weight_Gross = orderPosition.Weight_Gross;
+                        listOfOrderPositions.Add(toAdd);
+                    }
+                    result.Id = orderFromDB.Id;
+                    result.Creator_Id = orderFromDB.Creator_Id;
+                    result.Num_of_Positions = orderFromDB.Num_of_Positions;
+                    result.Order_Number = orderFromDB.Order_Number;
+                    result.Pickup_PIN = orderFromDB.Pickup_PIN;
+                    result.Orderer = orderer;
+                    result.ListOfOrderPositions = listOfOrderPositions;
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
         [HttpPost]
         [Route("CreateOrder")]
         public RequestResult CreateOrder([FromBody]CreateOrder createOrder)
@@ -211,7 +324,7 @@ namespace Warehouse.Controllers
 
         [HttpPost]
         [Route("EditOrdersPosition")]
-        public RequestResult EditOrdersPosition([FromBody]EditOrdersPosition editOrdersPosition)
+        public RequestResult EditOrdersPosition([FromBody]OrderPositionsOrderInfo editOrdersPosition)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
