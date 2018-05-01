@@ -14,6 +14,6 @@ namespace Warehouse.Models.Custom
         public string Address { get; set; }
         public string VAT_Id { get; set; }
         public string Email { get; set; }
-        public List<CreateOrdersPositions> OrdersPositions { get; set; }
+        public List<CreateOrdersPositions> OrderPositions { get; set; }
     }
 }

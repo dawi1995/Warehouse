@@ -246,14 +246,14 @@ namespace Warehouse.Controllers
                     newOrder.Address = createOrder.Address;
                     newOrder.VAT_Id = createOrder.VAT_Id;
                     newOrder.Email = createOrder.Email;
-                    newOrder.Num_of_Positions = createOrder.OrdersPositions.Count;
+                    newOrder.Num_of_Positions = createOrder.OrderPositions.Count;
                     newOrder.If_PDF_And_Sent = false;
                     newOrder.If_Delivery_Generated = false;
                     newOrder.Status = (int)OrderStatus.Reported;
                     newOrder.Created_At = newOrder.Creation_Date;
                     _context.Orders.Add(newOrder);
                     _context.SaveChanges();
-                    foreach (var orderPosition in createOrder.OrdersPositions)
+                    foreach (var orderPosition in createOrder.OrderPositions)
                     {
                         Orders_Positions newOrderPosition = new Orders_Positions();
                         newOrderPosition.Order_id = newOrder.Id;
