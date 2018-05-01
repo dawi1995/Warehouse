@@ -29,12 +29,12 @@ namespace Warehouse.Controllers
                 try
                 {
                     List<DispatchDetails> result = new List<DispatchDetails>();
-                    List<Orders_Positions> listOfOrdersPositions = _context.Orders_Positions.Where(o => o.Order_id == orderId).ToList();
-                    Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderId);
-                    List<Deliveries_Dispatches> listOfDeliveryDispatches = _context.Deliveries_Dispatches.Where(d => d.Delivery_Id == delivery.Id).ToList();
+                    List<Orders_Positions> listOfOrdersPositions = _context.Orders_Positions.Where(o => o.Order_id == orderId && o.Deleted_At == null).ToList();
+                    Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderId && d.Deleted_At == null);
+                    List<Deliveries_Dispatches> listOfDeliveryDispatches = _context.Deliveries_Dispatches.Where(d => d.Delivery_Id == delivery.Id && d.Deleted_At == null).ToList();
                     foreach (var deliveryDispatch in listOfDeliveryDispatches)
                     {
-                        Dispatch dispatch = _context.Dispatches.FirstOrDefault(d => d.Id == deliveryDispatch.Dispatch_Id);
+                        Dispatch dispatch = _context.Dispatches.FirstOrDefault(d => d.Id == deliveryDispatch.Dispatch_Id && d.Deleted_At == null);
                         DispatchDetails dispatchDetails = new DispatchDetails();
                         CarrierDispatch carrierDispatch = new CarrierDispatch();
                         ReceiverDispatch receiverDispatch = new ReceiverDispatch();
@@ -42,8 +42,8 @@ namespace Warehouse.Controllers
                         List<Dispatches_Positions> listOfDispatchPositions = new List<Dispatches_Positions>();
                         foreach (var item in listOfOrdersPositions)
                         {
-                            var dispatchPosition = _context.Dispatches_Positions.FirstOrDefault(d => d.Order_Position_Id == item.Id && d.Dispatch_Id == dispatch.Id);
-                            var dispatchesPositionsForOrderPosition = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == item.Id && d.Created_At < dispatchPosition.Created_At).OrderBy(d => d.Created_At).ToList();
+                            var dispatchPosition = _context.Dispatches_Positions.FirstOrDefault(d => d.Order_Position_Id == item.Id && d.Dispatch_Id == dispatch.Id && d.Deleted_At == null);
+                            var dispatchesPositionsForOrderPosition = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == item.Id && d.Created_At < dispatchPosition.Created_At && d.Deleted_At == null).OrderBy(d => d.Created_At).ToList();
                             int? dispatchedAmount = dispatchesPositionsForOrderPosition.Sum(d => d.Amount);
                             decimal? dispatchedWeight = dispatchesPositionsForOrderPosition.Sum(d => d.Weight_Gross);
                             OrderPositionsDispatchInfo orderPositionsDispatchInfo = new OrderPositionsDispatchInfo();
