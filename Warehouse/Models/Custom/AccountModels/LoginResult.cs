@@ -13,5 +13,6 @@ namespace Warehouse.Models.Custom
         public bool Status { get; set; }
         public string Message { get; set; }
         public int ExpirationTime { get; set; }
+        public int UserId { get; set; }
     }
 }

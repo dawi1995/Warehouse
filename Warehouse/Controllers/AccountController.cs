@@ -262,6 +262,7 @@ namespace Warehouse.Controllers
                     loginResult.TokenType = tokenResult.token_type;
                     loginResult.Status = true;
                     loginResult.Role = loggedUser.Role;
+                    loginResult.UserId = loggedUser.Id;
                     loginResult.Message = "Login successfully";
                     loginResult.ExpirationTime = Convert.ToInt32(tokenResult.expires_in);
                 }
