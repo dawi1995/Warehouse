@@ -436,35 +436,50 @@ namespace Warehouse.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("GetUserById")]
-        public UserInformation GetUserById(int userId)
+        [Route("GetUser")]
+        public UserInformation GetUser(int userId = 0)
         {
-            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+            if (userId == 0)
             {
-                UserInformation userInfo = new UserInformation();
-                var user = _context.Users.FirstOrDefault(u => u.Id == userId && u.Deleted_at == null);
-                if (user != null)
+                if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
                 {
-                    userInfo.Id = user.Id;
-                    userInfo.Login = user.Login;
-                    userInfo.Role = user.Role;
-                    userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd-MM-yyyy");
-                    userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd-MM-yyyy");
-                    Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
-                    if (client != null)
-                    {
-                        userInfo.Name = client.Name;
-                        userInfo.Address = client.Address;
-                        userInfo.VAT_Id = client.VAT_Id;
-                        userInfo.Email = client.Email;
-                    }
+                    return UserHelper.GetCurrentUser();
                 }
-                return userInfo;
+                else
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+                }
             }
             else
             {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+                if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+                {
+                    UserInformation userInfo = new UserInformation();
+                    var user = _context.Users.FirstOrDefault(u => u.Id == userId && u.Deleted_at == null);
+                    if (user != null)
+                    {
+                        userInfo.Id = user.Id;
+                        userInfo.Login = user.Login;
+                        userInfo.Role = user.Role;
+                        userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd-MM-yyyy");
+                        userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd-MM-yyyy");
+                        Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
+                        if (client != null)
+                        {
+                            userInfo.Name = client.Name;
+                            userInfo.Address = client.Address;
+                            userInfo.VAT_Id = client.VAT_Id;
+                            userInfo.Email = client.Email;
+                        }
+                    }
+                    return userInfo;
+                }
+                else
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+                }
             }
+           
         }
 
         [Authorize]

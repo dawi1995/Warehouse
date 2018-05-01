@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Web;
 using System.Web.Http;
+using Warehouse.Models.Custom;
 using Warehouse.Models.DAL;
 
 namespace Warehouse.Helpers
@@ -46,6 +47,33 @@ namespace Warehouse.Helpers
             return true;
         }
         
+        public static UserInformation GetCurrentUser()
+        {
+            using (WarehouseEntities _context = new WarehouseEntities())
+            {
+                UserInformation userInfo = new UserInformation();
+                int currentUserId = GetCurrentUserId();
+                var user = _context.Users.FirstOrDefault(u => u.Id == currentUserId && u.Deleted_at == null);
+                if (user != null)
+                {
+                    userInfo.Id = user.Id;
+                    userInfo.Login = user.Login;
+                    userInfo.Role = user.Role;
+                    userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd-MM-yyyy");
+                    userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd-MM-yyyy");
+                    Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
+                    if (client != null)
+                    {
+                        userInfo.Name = client.Name;
+                        userInfo.Address = client.Address;
+                        userInfo.VAT_Id = client.VAT_Id;
+                        userInfo.Email = client.Email;
+                    }
+                }
+                return userInfo;
+            }
+           
+        }
         //public static Registration GetCurrentUser()
         //{
         //    using (WakeParkEntities _context = new WakeParkEntities())
