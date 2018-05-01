@@ -452,7 +452,7 @@ namespace Warehouse.Controllers
             }
             else
             {
-                if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+                if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin }))
                 {
                     UserInformation userInfo = new UserInformation();
                     var user = _context.Users.FirstOrDefault(u => u.Id == userId && u.Deleted_at == null);
