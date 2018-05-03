@@ -253,6 +253,7 @@
     <Compile Include="Models\Custom\DispatchModels\OrderPositionsDispatchInfo.cs" />
     <Compile Include="Models\Custom\DispatchModels\ReceiverDispatch.cs" />
     <Compile Include="Models\Custom\OrderModels\CreateOrder.cs" />
+    <Compile Include="Models\Custom\OrderModels\EditOrdersPositions.cs" />
     <Compile Include="Models\Custom\OrderModels\CreateOrdersPositions.cs" />
     <Compile Include="Models\Custom\OrderModels\EditOrder.cs" />
     <Compile Include="Models\Custom\OrderModels\OrderDetails.cs" />

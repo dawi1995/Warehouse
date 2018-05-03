@@ -289,6 +289,7 @@ namespace Warehouse.Controllers
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin}))
             {
+                DateTime dateOfEdit = DateTime.Now;
                 RequestResult result = new RequestResult();
                 try
                 {
@@ -302,9 +303,46 @@ namespace Warehouse.Controllers
                     orderToEdit.Address = editOrder.Address;
                     orderToEdit.VAT_Id = editOrder.VAT_Id;
                     orderToEdit.Email = editOrder.Email;
-                    orderToEdit.Num_of_Positions = editOrder.Num_of_Positions;
-                    orderToEdit.Edited_At = DateTime.Now;
+                    //orderToEdit.Num_of_Positions = editOrder.Num_of_Positions;
+                    orderToEdit.Edited_At = dateOfEdit;
+                    var orderPositionsFromDB = _context.Orders_Positions.Where(o => o.Order_id == editOrder.Id && o.Deleted_At == null).ToList();
+
+                    //Editing and adding orderPositions
+                    foreach (var orderPosition in editOrder.OrderPositions)
+                    {
+                        foreach (var orderPositionFromDB in orderPositionsFromDB)
+                        {
+                            if (orderPosition.Id == orderPositionFromDB.Id)
+                            {
+                                orderPositionFromDB.Amount = orderPosition.Amount;
+                                orderPositionFromDB.Edited_At = dateOfEdit;
+                                orderPositionFromDB.Name = orderPosition.Name;
+                                orderPositionFromDB.Weight_Gross = orderPosition.Weight_Gross;
+                            }
+                            if (orderPosition.Id == null)
+                            {
+                                Orders_Positions orderPositionsToAdd = new Orders_Positions();
+                                orderPositionsToAdd.Created_At = dateOfEdit;
+                                orderPositionsToAdd.Name = orderPosition.Name;
+                                orderPositionsToAdd.Weight_Gross = orderPosition.Weight_Gross;
+                                orderPositionsToAdd.Amount = orderPosition.Amount;
+                                _context.Orders_Positions.Add(orderPositionsToAdd);
+                            }
+                        }
+                    }
+
+                    //Deleting orderPosition
+                    List<int> listOfIdsToDelete = OrderManager.GetIdstoRemove(editOrder.OrderPositions, orderPositionsFromDB);
+                    foreach (var id in listOfIdsToDelete)
+                    {
+                        var orderPositionToDelete = _context.Orders_Positions.FirstOrDefault(o => o.Id == id);
+                        orderPositionToDelete.Deleted_At = dateOfEdit;
+                    }
+
                     _context.SaveChanges();
+                    orderToEdit.Num_of_Positions = _context.Orders_Positions.Where(o => o.Order_id == editOrder.Id && o.Deleted_At == null).Count();
+                    _context.SaveChanges();
+
                     result.Status = true;
                     result.Message = "Order has been edited";
                 }
