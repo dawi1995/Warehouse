@@ -234,6 +234,7 @@
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\SecurityHelper.cs" />
     <Compile Include="Managers\AccountManager.cs" />
+    <Compile Include="Managers\DispatchManager.cs" />
     <Compile Include="Managers\OrderManager.cs" />
     <Compile Include="Models\Custom\AccountModels\ChangePassword.cs" />
     <Compile Include="Models\Custom\AccountModels\ClientEdit.cs" />
@@ -250,6 +251,8 @@
     <Compile Include="Models\Custom\DeliveryModels\OrderPositionsDeliveryInfo.cs" />
     <Compile Include="Models\Custom\DispatchModels\CarrierDispatch.cs" />
     <Compile Include="Models\Custom\DispatchModels\DispatchDetails.cs" />
+    <Compile Include="Models\Custom\DispatchModels\DispatchList.cs" />
+    <Compile Include="Models\Custom\DispatchModels\DispatchListNumber.cs" />
     <Compile Include="Models\Custom\DispatchModels\OrderPositionsDispatchInfo.cs" />
     <Compile Include="Models\Custom\DispatchModels\ReceiverDispatch.cs" />
     <Compile Include="Models\Custom\OrderModels\CreateOrder.cs" />

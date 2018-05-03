@@ -335,7 +335,7 @@ namespace Warehouse.Controllers
                     List<int> listOfIdsToDelete = OrderManager.GetIdstoRemove(editOrder.OrderPositions, orderPositionsFromDB);
                     foreach (var id in listOfIdsToDelete)
                     {
-                        var orderPositionToDelete = _context.Orders_Positions.FirstOrDefault(o => o.Id == id);
+                        var orderPositionToDelete = _context.Orders_Positions.FirstOrDefault(o => o.Id == id && o.Deleted_At == null);
                         orderPositionToDelete.Deleted_At = dateOfEdit;
                     }
 

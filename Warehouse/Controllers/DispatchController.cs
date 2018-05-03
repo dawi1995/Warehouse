@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Warehouse.Helpers;
+using Warehouse.Managers;
 using Warehouse.Models.Custom;
 using Warehouse.Models.DAL;
 using static Warehouse.Enums;
@@ -18,6 +19,40 @@ namespace Warehouse.Controllers
         public DispatchController()
         {
             _context = new WarehouseEntities();
+        }
+
+        [HttpGet]
+        [Route("GetDispatches")]
+        public DispatchListNumber GetDispatches(int offset = 0, int limit = int.MaxValue, string needle = "")
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin}))
+            {
+                try
+                {
+                    DispatchListNumber result = new DispatchListNumber();
+                    List<Dispatch> listOfDispatchFromDB = _context.Dispatches.Where(d=>d.Deleted_At == null && (d.Car_Id.Contains(needle) || d.Receiver_Name.Contains(needle) || d.Carrier_Name.Contains(needle))).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
+                    foreach (var dispatch in listOfDispatchFromDB)
+                    {
+                        DispatchList dispatchToResult = new DispatchList();
+                        dispatchToResult.Carrier_Name = dispatch.Carrier_Name;
+                        dispatchToResult.Car_Id = dispatch.Car_Id;
+                        dispatchToResult.Creation_Date = dispatch.Creation_Date;
+                        dispatchToResult.Id = dispatch.Id;
+                        dispatchToResult.Receiver_Name = dispatch.Receiver_Name;
+                        result.ListOfDispatches.Add(dispatchToResult);
+                    }
+                    result.NumberOfDispatches = DispatchManager.CountOfDispatches();
+                    return result;
+                } 
+                catch (Exception ex)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
         }
 
         [HttpGet]
