@@ -107,7 +107,7 @@ namespace Warehouse.Controllers
                         dispatchDetails.Id = dispatch.Id;
                         dispatchDetails.Dispatch_Number = dispatch.Dispatch_Number;
                         dispatchDetails.Creation_Date = dispatch.Creation_Date == null ? string.Empty : ((DateTime)(dispatch.Creation_Date)).ToString("dd-MM-yyyy");
-                        dispatchDetails.Car_Id = dispatchDetails.Car_Id;
+                        dispatchDetails.Car_Id = dispatch.Car_Id;
                         dispatchDetails.Carrier = carrierDispatch;
                         dispatchDetails.Receiver = receiverDispatch;
                         dispatchDetails.ListOfOrderPositions = listOfOrderPositionsDispatchInfo;

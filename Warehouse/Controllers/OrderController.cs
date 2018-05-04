@@ -305,6 +305,7 @@ namespace Warehouse.Controllers
                     orderToEdit.Email = editOrder.Email;
                     //orderToEdit.Num_of_Positions = editOrder.Num_of_Positions;
                     orderToEdit.Edited_At = dateOfEdit;
+                    _context.SaveChanges();
                     var orderPositionsFromDB = _context.Orders_Positions.Where(o => o.Order_id == editOrder.Id && o.Deleted_At == null).ToList();
 
                     //Editing and adding orderPositions
@@ -330,6 +331,7 @@ namespace Warehouse.Controllers
                             }
                         }
                     }
+                    _context.SaveChanges();
 
                     //Deleting orderPosition
                     List<int> listOfIdsToDelete = OrderManager.GetIdstoRemove(editOrder.OrderPositions, orderPositionsFromDB);
