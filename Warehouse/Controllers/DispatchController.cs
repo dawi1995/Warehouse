@@ -30,17 +30,19 @@ namespace Warehouse.Controllers
                 try
                 {
                     DispatchListNumber result = new DispatchListNumber();
+                    List<DispatchList> listOfDispatches = new List<DispatchList>();
                     List<Dispatch> listOfDispatchFromDB = _context.Dispatches.Where(d=>d.Deleted_At == null && (d.Car_Id.Contains(needle) || d.Receiver_Name.Contains(needle) || d.Carrier_Name.Contains(needle))).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
                     foreach (var dispatch in listOfDispatchFromDB)
                     {
                         DispatchList dispatchToResult = new DispatchList();
                         dispatchToResult.Carrier_Name = dispatch.Carrier_Name;
                         dispatchToResult.Car_Id = dispatch.Car_Id;
-                        dispatchToResult.Creation_Date = dispatch.Creation_Date;
+                        dispatchToResult.Creation_Date = dispatch.Creation_Date == null ? string.Empty : ((DateTime)dispatch.Creation_Date).ToString("dd-MM-yyyy");
                         dispatchToResult.Id = dispatch.Id;
                         dispatchToResult.Receiver_Name = dispatch.Receiver_Name;
-                        result.ListOfDispatches.Add(dispatchToResult);
+                        listOfDispatches.Add(dispatchToResult);
                     }
+                    result.ListOfDispatches = listOfDispatches;
                     result.NumberOfDispatches = DispatchManager.CountOfDispatches();
                     return result;
                 } 
