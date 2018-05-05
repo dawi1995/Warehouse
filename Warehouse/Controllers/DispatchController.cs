@@ -102,12 +102,7 @@ namespace Warehouse.Controllers
                             listOfDispatchOrders.Add(dispatchOrderList);
 
                         }
-                    }
 
-                    if (dispatchFromDB != null)
-                    {
-                        
-                       
                         carrier.Carrier_Address = dispatchFromDB.Carrier_Address;
                         carrier.Carrier_Email = dispatchFromDB.Carrier_Email;
                         carrier.Carrier_VAT_Id = dispatchFromDB.Carrier_VAT_Id;
