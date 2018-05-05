@@ -58,8 +58,88 @@ namespace Warehouse.Controllers
         }
 
         [HttpGet]
-        [Route("GetOrderDispatch")]
-        public List<DispatchDetails> GetOrderDispatch(int orderId)
+        [Route("GetDispatchDetails")]
+        public DispatchDetailsDispatchInfo GetDispatchDetails(int dispatchId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
+            {
+                DispatchDetailsDispatchInfo result = new DispatchDetailsDispatchInfo();
+                List<DispatchOrderList> listOfDispatchOrders = new List<DispatchOrderList>();
+
+                CarrierDispatch carrier = new CarrierDispatch();
+                ReceiverDispatch receiver = new ReceiverDispatch();
+
+                try
+                {
+                    Dispatch dispatchFromDB = _context.Dispatches.FirstOrDefault(d => d.Id == dispatchId && d.Deleted_At == null);
+                    if (dispatchFromDB != null)
+                    {
+                        List<int> listOfDeliveryIdsForDispatch = DispatchManager.GetListOfDeliveriesIdsForDispatch(dispatchFromDB);
+                        foreach (var deliveryId in listOfDeliveryIdsForDispatch)
+                        {
+                            DispatchOrderList dispatchOrderList = new DispatchOrderList();
+                            Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Id == deliveryId && d.Deleted_At == null);
+                            Order order = _context.Orders.FirstOrDefault(o => o.Id == delivery.Order_Id && o.Deleted_At == null);
+                            List<DispatchPositionsDispatchInfo> listOfDispatchPositions = new List<DispatchPositionsDispatchInfo>();
+
+                            List<Orders_Positions> listOfOrdersPositions = _context.Orders_Positions.Where(o => o.Order_id == order.Id && o.Deleted_At == null).ToList();
+                            foreach (var orderPosition in listOfOrdersPositions)
+                            {
+                                List<Dispatches_Positions> dispatchPositionsFromDB = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == dispatchId && d.Order_Position_Id == orderPosition.Id && d.Deleted_At == null).ToList();
+                                foreach (var dispatchPositionFromDB in dispatchPositionsFromDB)
+                                {
+                                    DispatchPositionsDispatchInfo dispatch = new DispatchPositionsDispatchInfo();
+                                    dispatch.Id = dispatchPositionFromDB.Id;
+                                    dispatch.Amount = dispatchPositionFromDB.Amount;
+                                    dispatch.Weight_Gross = dispatchPositionFromDB.Weight_Gross;
+                                    dispatch.Name = _context.Orders_Positions.FirstOrDefault(o => o.Id == dispatchPositionFromDB.Order_Position_Id && o.Deleted_At == null).Name;
+                                    listOfDispatchPositions.Add(dispatch);
+                                }
+                            }
+                            dispatchOrderList.DeliveryId = delivery.Id;
+                            dispatchOrderList.OrderId = order.Id;
+                            dispatchOrderList.ListOfDispatchPositions = listOfDispatchPositions;
+                            listOfDispatchOrders.Add(dispatchOrderList);
+
+                        }
+                    }
+
+                    if (dispatchFromDB != null)
+                    {
+                        
+                       
+                        carrier.Carrier_Address = dispatchFromDB.Carrier_Address;
+                        carrier.Carrier_Email = dispatchFromDB.Carrier_Email;
+                        carrier.Carrier_VAT_Id = dispatchFromDB.Carrier_VAT_Id;
+                        carrier.Carrier_Name = dispatchFromDB.Carrier_Name;
+                        receiver.Receiver_Address = dispatchFromDB.Receiver_Address;
+                        receiver.Receiver_Email = dispatchFromDB.Receiver_Email;
+                        receiver.Receiver_Name = dispatchFromDB.Receiver_Name;
+                        receiver.Receiver_VAT_Id = dispatchFromDB.Receiver_VAT_Id;
+                        result.Dispatch_Number = dispatchFromDB.Dispatch_Number;
+                        result.Carrier = carrier;
+                        result.Id = dispatchFromDB.Id;
+                        result.ListOfDispatchOrders = listOfDispatchOrders;
+                        result.Receiver = receiver;
+                    }
+                    return result;                 
+                }
+                catch (Exception ex)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("GetOrderDispatches")]
+        public List<DispatchDetails> GetOrderDispatches(int orderId)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             { 
@@ -80,23 +160,26 @@ namespace Warehouse.Controllers
                         foreach (var item in listOfOrdersPositions)
                         {
                             var dispatchPosition = _context.Dispatches_Positions.FirstOrDefault(d => d.Order_Position_Id == item.Id && d.Dispatch_Id == dispatch.Id && d.Deleted_At == null);
-                            var dispatchesPositionsForOrderPosition = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == item.Id && d.Created_At < dispatchPosition.Created_At && d.Deleted_At == null).OrderBy(d => d.Created_At).ToList();
-                            int? dispatchedAmount = dispatchesPositionsForOrderPosition.Sum(d => d.Amount);
-                            decimal? dispatchedWeight = dispatchesPositionsForOrderPosition.Sum(d => d.Weight_Gross);
-                            OrderPositionsDispatchInfo orderPositionsDispatchInfo = new OrderPositionsDispatchInfo();
-                            orderPositionsDispatchInfo.Id = item.Id;
-                            orderPositionsDispatchInfo.Name = item.Name;
-                            orderPositionsDispatchInfo.Amount = item.Amount;
-                            orderPositionsDispatchInfo.Amount_Received = item.Amount_Received;
-                            orderPositionsDispatchInfo.Amount_Before_Dispatch = item.Amount_Received - dispatchedAmount;
-                            orderPositionsDispatchInfo.Amount_Dispatch = dispatchPosition.Amount;
-                            orderPositionsDispatchInfo.Amount_After_Dispatch = orderPositionsDispatchInfo.Amount_Before_Dispatch - orderPositionsDispatchInfo.Amount_Dispatch;
-                            orderPositionsDispatchInfo.Weight_Gross = item.Weight_Gross;
-                            orderPositionsDispatchInfo.Weight_Gross_Received = item.Weight_Gross_Received;
-                            orderPositionsDispatchInfo.Weight_Before_Dispatch = item.Weight_Gross_Received - dispatchedWeight;
-                            orderPositionsDispatchInfo.Weight_Dispatch = dispatchPosition.Weight_Gross;
-                            orderPositionsDispatchInfo.Weight_After_Dispatch = orderPositionsDispatchInfo.Weight_Before_Dispatch - orderPositionsDispatchInfo.Weight_Dispatch;
-                            listOfOrderPositionsDispatchInfo.Add(orderPositionsDispatchInfo);
+                            if (dispatchPosition != null)
+                            {
+                                var dispatchesPositionsForOrderPosition = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == item.Id && d.Created_At < dispatchPosition.Created_At && d.Deleted_At == null).OrderBy(d => d.Created_At).ToList();
+                                int? dispatchedAmount = dispatchesPositionsForOrderPosition.Sum(d => d.Amount);
+                                decimal? dispatchedWeight = dispatchesPositionsForOrderPosition.Sum(d => d.Weight_Gross);
+                                OrderPositionsDispatchInfo orderPositionsDispatchInfo = new OrderPositionsDispatchInfo();
+                                orderPositionsDispatchInfo.Id = item.Id;
+                                orderPositionsDispatchInfo.Name = item.Name;
+                                orderPositionsDispatchInfo.Amount = item.Amount;
+                                orderPositionsDispatchInfo.Amount_Received = item.Amount_Received;
+                                orderPositionsDispatchInfo.Amount_Before_Dispatch = item.Amount_Received - dispatchedAmount;
+                                orderPositionsDispatchInfo.Amount_Dispatch = dispatchPosition.Amount;
+                                orderPositionsDispatchInfo.Amount_After_Dispatch = orderPositionsDispatchInfo.Amount_Before_Dispatch - orderPositionsDispatchInfo.Amount_Dispatch;
+                                orderPositionsDispatchInfo.Weight_Gross = item.Weight_Gross;
+                                orderPositionsDispatchInfo.Weight_Gross_Received = item.Weight_Gross_Received;
+                                orderPositionsDispatchInfo.Weight_Before_Dispatch = item.Weight_Gross_Received - dispatchedWeight;
+                                orderPositionsDispatchInfo.Weight_Dispatch = dispatchPosition.Weight_Gross;
+                                orderPositionsDispatchInfo.Weight_After_Dispatch = orderPositionsDispatchInfo.Weight_Before_Dispatch - orderPositionsDispatchInfo.Weight_Dispatch;
+                                listOfOrderPositionsDispatchInfo.Add(orderPositionsDispatchInfo);
+                            }
                         }
                         carrierDispatch.Carrier_Name = dispatch.Carrier_Name;
                         carrierDispatch.Carrier_Email = dispatch.Carrier_Email;
