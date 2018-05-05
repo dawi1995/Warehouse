@@ -31,7 +31,32 @@ namespace Warehouse.Managers
             }
             return result;
         }
+        public static List<int> GetIdstoRemove(List<EditDispatchPositions> dispatchPositionsFromUser, List<Dispatches_Positions> dispatchPositionsFromDB)
+        {
+            List<int> result = new List<int>();
+            List<int> dispatchpositionsFromUserIds = new List<int>();
+            List<int> dispatchpositionsFromDBIds = new List<int>();
+            foreach (var item in dispatchPositionsFromUser)
+            {
+                if (item.Id != null)
+                {
+                    dispatchpositionsFromUserIds.Add((int)item.Id);
+                }
+            }
+            foreach (var item in dispatchPositionsFromDB)
+            {
+                dispatchpositionsFromDBIds.Add(item.Id);
+            }
+            foreach (var id in dispatchpositionsFromDBIds)
+            {
+                if (!dispatchpositionsFromUserIds.Contains(id))
+                {
+                    result.Add(id);
+                }
 
+            }
+            return result;
+        }
         //public static List<int> GetListOfOrderPositionsIds(List<Orders_Positions> listOfOrderPositions)
         //{
         //    List<int> result = new List<int>();

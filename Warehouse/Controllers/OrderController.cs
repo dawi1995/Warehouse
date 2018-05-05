@@ -278,38 +278,6 @@ namespace Warehouse.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("EditOrdersPosition")]
-        public RequestResult EditOrdersPosition([FromBody]OrderPositionsOrderInfo editOrdersPosition)
-        {
-            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
-            {
-                RequestResult result = new RequestResult();
-                try
-                {
-                    Orders_Positions ordersPositionToEdit = _context.Orders_Positions.FirstOrDefault(o => o.Id == editOrdersPosition.Id);
-                    ordersPositionToEdit.Amount = editOrdersPosition.Amount;
-                    ordersPositionToEdit.Weight_Gross = editOrdersPosition.Weight_Gross;
-                    ordersPositionToEdit.Name = editOrdersPosition.Name;
-                    ordersPositionToEdit.Edited_At = DateTime.Now;
-                    _context.SaveChanges();
-                    result.Status = true;
-                    result.Message = "Orders posistion has been edited";
-                }
-                catch (Exception ex)
-                {
-                    result.Status = false;
-                    result.Message = ex.ToString();
-                }
-                return result;
-
-            }
-            else
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
-            }
-        }
-
         [HttpGet]
         [Route("RemoveOrder")]
         public RequestResult RemoveOrder(int orderId)
@@ -454,6 +422,39 @@ namespace Warehouse.Controllers
         //        {
         //            throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
         //        }
+        //    }
+        //    else
+        //    {
+        //        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+        //    }
+        //}
+
+
+        //[HttpPost]
+        //[Route("EditOrdersPosition")]
+        //public RequestResult EditOrdersPosition([FromBody]OrderPositionsOrderInfo editOrdersPosition)
+        //{
+        //    if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+        //    {
+        //        RequestResult result = new RequestResult();
+        //        try
+        //        {
+        //            Orders_Positions ordersPositionToEdit = _context.Orders_Positions.FirstOrDefault(o => o.Id == editOrdersPosition.Id);
+        //            ordersPositionToEdit.Amount = editOrdersPosition.Amount;
+        //            ordersPositionToEdit.Weight_Gross = editOrdersPosition.Weight_Gross;
+        //            ordersPositionToEdit.Name = editOrdersPosition.Name;
+        //            ordersPositionToEdit.Edited_At = DateTime.Now;
+        //            _context.SaveChanges();
+        //            result.Status = true;
+        //            result.Message = "Orders posistion has been edited";
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            result.Status = false;
+        //            result.Message = ex.ToString();
+        //        }
+        //        return result;
+
         //    }
         //    else
         //    {

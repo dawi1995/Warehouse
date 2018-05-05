@@ -247,6 +247,8 @@
     <Compile Include="Models\Custom\AccountModels\TokenResult.cs" />
     <Compile Include="Models\Custom\AccountModels\UserInformation.cs" />
     <Compile Include="Models\Custom\AccountModels\UsersInformationList.cs" />
+    <Compile Include="Models\Custom\DeliveryModels\CreateDelivery.cs" />
+    <Compile Include="Models\Custom\DeliveryModels\CreateDeliveryPositions.cs" />
     <Compile Include="Models\Custom\DeliveryModels\DeliveryDetails.cs" />
     <Compile Include="Models\Custom\DeliveryModels\OrderPositionsDeliveryInfo.cs" />
     <Compile Include="Models\Custom\DispatchModels\CarrierDispatch.cs" />
@@ -256,6 +258,8 @@
     <Compile Include="Models\Custom\DispatchModels\DispatchListNumber.cs" />
     <Compile Include="Models\Custom\DispatchModels\DispatchOrderList.cs" />
     <Compile Include="Models\Custom\DispatchModels\DispatchPositionsDispatchInfo.cs" />
+    <Compile Include="Models\Custom\DispatchModels\EditDispatch.cs" />
+    <Compile Include="Models\Custom\DispatchModels\EditDispatchPositions.cs" />
     <Compile Include="Models\Custom\DispatchModels\OrderPositionsDispatchInfo.cs" />
     <Compile Include="Models\Custom\DispatchModels\ReceiverDispatch.cs" />
     <Compile Include="Models\Custom\OrderModels\CreateOrder.cs" />

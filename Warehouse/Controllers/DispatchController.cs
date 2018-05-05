@@ -205,5 +205,90 @@ namespace Warehouse.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
         }
+
+        [HttpPost]
+        [Route("EditDispatch")]
+        public RequestResult EditDispatch([FromBody]EditDispatch editDispatch)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+            {
+                DateTime dateOfEdit = DateTime.Now;
+                RequestResult result = new RequestResult();
+                try
+                {
+                    Dispatch dispatchToEdit = _context.Dispatches.FirstOrDefault(o => o.Id == editDispatch.Id && o.Deleted_At == null);
+                    if (dispatchToEdit != null)
+                    {
+                        dispatchToEdit.Carrier_Address = editDispatch.Carrier.Carrier_Address;
+                        dispatchToEdit.Carrier_Email = editDispatch.Carrier.Carrier_Email;
+                        dispatchToEdit.Carrier_Name = editDispatch.Carrier.Carrier_Name;
+                        dispatchToEdit.Carrier_VAT_Id = editDispatch.Carrier.Carrier_VAT_Id;
+                        dispatchToEdit.Car_Id = editDispatch.Car_Id;
+                        dispatchToEdit.Creation_Date = editDispatch.Creation_Date;
+                        dispatchToEdit.Dispatch_Number = editDispatch.Dispatch_Number;
+                        dispatchToEdit.Receiver_Address = editDispatch.Receiver.Receiver_Address;
+                        dispatchToEdit.Receiver_Email = editDispatch.Receiver.Receiver_Email;
+                        dispatchToEdit.Receiver_Name = editDispatch.Receiver.Receiver_Name;
+                        dispatchToEdit.Receiver_VAT_Id = editDispatch.Receiver.Receiver_VAT_Id;
+                        dispatchToEdit.Edited_At = dateOfEdit;
+                        _context.SaveChanges();
+                        var dispatchPositionsFromDB = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == editDispatch.Id && d.Deleted_At == null).ToList();
+
+                        //Editing and adding orderPositions
+                        foreach (var dispatchPosition in editDispatch.DispatchPositions)
+                        {
+                            foreach (var dispatchPositionFromDB in dispatchPositionsFromDB)
+                            {
+                                if (dispatchPosition.Id == dispatchPositionFromDB.Id)
+                                {
+                                    dispatchPositionFromDB.Amount = dispatchPosition.Amount;
+                                    dispatchPositionFromDB.Edited_At = dateOfEdit;
+                                    dispatchPositionFromDB.Weight_Gross = dispatchPosition.Weight_Gross;
+                                }
+                                if (dispatchPosition.Id == null)
+                                {
+                                    Dispatches_Positions dispatchPositionsToAdd = new Dispatches_Positions();
+                                    dispatchPositionsToAdd.Created_At = dateOfEdit;
+                                    dispatchPositionsToAdd.Amount = dispatchPosition.Amount;
+                                    dispatchPositionsToAdd.Weight_Gross = dispatchPosition.Weight_Gross;
+                                    _context.Dispatches_Positions.Add(dispatchPositionsToAdd);
+                                }
+                            }
+                        }
+                        _context.SaveChanges();
+
+                        //Deleting orderPosition
+                        List<int> listOfIdsToDelete = DispatchManager.GetIdstoRemove(editDispatch.DispatchPositions, dispatchPositionsFromDB);
+                        foreach (var id in listOfIdsToDelete)
+                        {
+                            var dispatchPositionToDelete = _context.Dispatches_Positions.FirstOrDefault(d => d.Id == id && d.Deleted_At == null);
+                            dispatchPositionToDelete.Deleted_At = dateOfEdit;
+                        }
+
+                        _context.SaveChanges();
+                        dispatchToEdit.Number_Of_Positions = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == editDispatch.Id && d.Deleted_At == null).Count();
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = "Dispatch not found";
+                    }
+                    result.Status = true;
+                    result.Message = "Order has been edited";
+                }
+                catch (Exception ex)
+                {
+                    result.Status = false;
+                    result.Message = ex.ToString();
+                }
+                return result;
+
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
     }
 }
