@@ -21,7 +21,7 @@ namespace Warehouse.Models.DAL
         public string Delivery_Number { get; set; }
         public Nullable<bool> If_PDF_And_Sent { get; set; }
         public Nullable<bool> If_PDF_Dispatch { get; set; }
-        public Nullable<bool> If_Differntial_Delivery_Dispatch { get; set; }
+        public Nullable<bool> If_Differential_Delivery_Order { get; set; }
         public Nullable<bool> If_PDF_Differential { get; set; }
         public Nullable<bool> If_Delivery_Dispatch_Balanced { get; set; }
         public Nullable<System.DateTime> Created_At { get; set; }

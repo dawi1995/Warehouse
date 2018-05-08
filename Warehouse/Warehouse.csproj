@@ -233,6 +233,7 @@
     </Compile>
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\SecurityHelper.cs" />
+    <Compile Include="Managers\DeliveryManager.cs" />
     <Compile Include="Managers\AccountManager.cs" />
     <Compile Include="Managers\DispatchManager.cs" />
     <Compile Include="Managers\OrderManager.cs" />
@@ -250,6 +251,8 @@
     <Compile Include="Models\Custom\DeliveryModels\CreateDelivery.cs" />
     <Compile Include="Models\Custom\DeliveryModels\CreateDeliveryPositions.cs" />
     <Compile Include="Models\Custom\DeliveryModels\DeliveryDetails.cs" />
+    <Compile Include="Models\Custom\DeliveryModels\DeliveryList.cs" />
+    <Compile Include="Models\Custom\DeliveryModels\DeliveryListNumber.cs" />
     <Compile Include="Models\Custom\DeliveryModels\OrderPositionsDeliveryInfo.cs" />
     <Compile Include="Models\Custom\DispatchModels\CarrierDispatch.cs" />
     <Compile Include="Models\Custom\DispatchModels\DispatchDetailsDispatchInfo.cs" />

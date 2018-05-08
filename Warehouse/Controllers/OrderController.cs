@@ -56,7 +56,7 @@ namespace Warehouse.Controllers
                         var delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == order.Id);
                         if (delivery != null)
                         {
-                            var deliveryDispatch = _context.Deliveries_Dispatches.FirstOrDefault(d => d.Delivery_Id == delivery.Id);
+                            var deliveryDispatch = _context.Deliveries_Dispatches.FirstOrDefault(d => d.Delivery_Id == delivery.Id && d.Deleted_At == null);
                             if (deliveryDispatch != null)
                             {
                                 orderResult.IsDispatched = true;

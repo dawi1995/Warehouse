@@ -54,7 +54,7 @@
           <Property Name="Delivery_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="If_PDF_And_Sent" Type="bit" />
           <Property Name="If_PDF_Dispatch" Type="bit" />
-          <Property Name="If_Differntial_Delivery_Dispatch" Type="bit" />
+          <Property Name="If_Differential_Delivery_Order" Type="bit" />
           <Property Name="If_PDF_Differential" Type="bit" />
           <Property Name="If_Delivery_Dispatch_Balanced" Type="bit" />
           <Property Name="Created_At" Type="datetime" />
@@ -264,7 +264,7 @@
           <Property Name="Delivery_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="If_PDF_And_Sent" Type="Boolean" />
           <Property Name="If_PDF_Dispatch" Type="Boolean" />
-          <Property Name="If_Differntial_Delivery_Dispatch" Type="Boolean" />
+          <Property Name="If_Differential_Delivery_Order" Type="Boolean" />
           <Property Name="If_PDF_Differential" Type="Boolean" />
           <Property Name="If_Delivery_Dispatch_Balanced" Type="Boolean" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
@@ -448,7 +448,7 @@
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
                 <ScalarProperty Name="If_Delivery_Dispatch_Balanced" ColumnName="If_Delivery_Dispatch_Balanced" />
                 <ScalarProperty Name="If_PDF_Differential" ColumnName="If_PDF_Differential" />
-                <ScalarProperty Name="If_Differntial_Delivery_Dispatch" ColumnName="If_Differntial_Delivery_Dispatch" />
+                <ScalarProperty Name="If_Differential_Delivery_Order" ColumnName="If_Differential_Delivery_Order" />
                 <ScalarProperty Name="If_PDF_Dispatch" ColumnName="If_PDF_Dispatch" />
                 <ScalarProperty Name="If_PDF_And_Sent" ColumnName="If_PDF_And_Sent" />
                 <ScalarProperty Name="Delivery_Number" ColumnName="Delivery_Number" />
