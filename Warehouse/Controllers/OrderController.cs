@@ -288,16 +288,27 @@ namespace Warehouse.Controllers
                 try
                 {
                     DateTime dateOfRemove = DateTime.Now;
-                    Order orderToRemove = _context.Orders.FirstOrDefault(o => o.Id == orderId);
-                    List<Orders_Positions> litOfOrdersPositionsToRemove = _context.Orders_Positions.Where(o => o.Order_id == orderId && o.Deleted_At == null).ToList();
-                    foreach (var item in litOfOrdersPositionsToRemove)
+                    Order orderToRemove = _context.Orders.FirstOrDefault(o => o.Id == orderId && o.Deleted_At == null);
+                    if (orderToRemove != null)
                     {
-                        item.Deleted_At = dateOfRemove;
+                        List<Orders_Positions> litOfOrdersPositionsToRemove = _context.Orders_Positions.Where(o => o.Order_id == orderId && o.Deleted_At == null).ToList();
+                        foreach (var item in litOfOrdersPositionsToRemove)
+                        {
+                            item.Deleted_At = dateOfRemove;
+                        }
+                        orderToRemove.Deleted_At = dateOfRemove;
+                        _context.SaveChanges();
+                        result.Status = true;
+                        result.Message = "Order and his orders positions has been removed";
+                        return result;
                     }
-                    orderToRemove.Deleted_At = dateOfRemove;
-                    _context.SaveChanges();
-                    result.Status = true;
-                    result.Message = "Order and his orders positions has been removed";
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = "Order not found";
+                        return result;
+                    }
+                  
                 }
                 catch (Exception ex)
                 {

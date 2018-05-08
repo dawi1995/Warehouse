@@ -290,5 +290,59 @@ namespace Warehouse.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
         }
+
+        [HttpGet]
+        [Route("RemoveDispatch")]
+        public RequestResult RemoveDispatch(int dispatchId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
+            {
+                RequestResult result = new RequestResult();
+                try
+                {
+                    DateTime dateOfRemove = DateTime.Now;
+                    Dispatch dispatchToRemove = _context.Dispatches.FirstOrDefault(o => o.Id == dispatchId && o.Deleted_At == null);
+                    if (dispatchToRemove != null)
+                    {
+                        List<Dispatches_Positions> litOfDispatchesPositionsToRemove = _context.Dispatches_Positions.Where(o => o.Dispatch_Id == dispatchId && o.Deleted_At == null).ToList();
+                        foreach (var item in litOfDispatchesPositionsToRemove)
+                        {
+                            item.Deleted_At = dateOfRemove;
+                        }
+                        dispatchToRemove.Deleted_At = dateOfRemove;
+
+                       List<Deliveries_Dispatches> listOfDeliveryDispatches = _context.Deliveries_Dispatches.Where(d => d.Dispatch_Id == dispatchId && d.Deleted_At == null).ToList();
+                        foreach (var item in listOfDeliveryDispatches)
+                        {
+                            Delivery deliveryToEdit = _context.Deliveries.FirstOrDefault(d => d.Id == item.Delivery_Id && d.Deleted_At == null);
+                            deliveryToEdit.If_Delivery_Dispatch_Balanced = false;
+                            deliveryToEdit.Edited_At = dateOfRemove;
+                        }
+                        _context.SaveChanges();
+                        result.Status = true;
+                        result.Message = "Dispatch and his dispatch positions has been removed";
+                        return result;
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = "Dispatch not found";
+                        return result;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    result.Status = false;
+                    result.Message = ex.ToString();
+                }
+                return result;
+
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
     }
 }
