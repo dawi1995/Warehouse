@@ -248,6 +248,8 @@
     <Compile Include="Models\Custom\AccountModels\TokenResult.cs" />
     <Compile Include="Models\Custom\AccountModels\UserInformation.cs" />
     <Compile Include="Models\Custom\AccountModels\UsersInformationList.cs" />
+    <Compile Include="Models\Custom\DeliveryModels\EditDeliveryPositions.cs" />
+    <Compile Include="Models\Custom\DeliveryModels\EditDelivery.cs" />
     <Compile Include="Models\Custom\DeliveryModels\CreateDelivery.cs" />
     <Compile Include="Models\Custom\DeliveryModels\CreateDeliveryPositions.cs" />
     <Compile Include="Models\Custom\DeliveryModels\DeliveryDetails.cs" />

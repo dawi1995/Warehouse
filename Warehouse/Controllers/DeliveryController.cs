@@ -249,5 +249,107 @@ namespace Warehouse.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
         }
+
+        [HttpPost]
+        [Route("EditDelivery")]
+        public RequestResult EditDelivery([FromBody]EditDelivery editDelivery)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin}))
+            {
+                bool isDifferent = false;
+                RequestResult result = new RequestResult();
+                DateTime dateOfEdit = DateTime.Now;
+                try
+                {
+                    if (_context.Deliveries.OrderByDescending(d => d.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)
+                    {
+                        var counter = _context.Counters.FirstOrDefault(c => c.Name == "DeliveryCounter");
+                        counter.Count = 1;
+                        _context.SaveChanges();
+                    }
+                    Delivery deliveryToEdit = _context.Deliveries.FirstOrDefault(d => d.Id == editDelivery.Id && d.Deleted_At == null);
+                    if (deliveryToEdit != null)
+                    {
+                        deliveryToEdit.Edited_At = dateOfEdit;
+                        deliveryToEdit.Date_Of_Delivery = editDelivery.Date_Of_Delivery;
+                        deliveryToEdit.Delivery_Number = editDelivery.Delivery_Number;
+                        deliveryToEdit.If_Delivery_Dispatch_Balanced = false;
+                        deliveryToEdit.If_PDF_And_Sent = false;
+                        deliveryToEdit.If_PDF_Differential = false;
+                        deliveryToEdit.If_PDF_Dispatch = false;
+                        deliveryToEdit.Transport_Type = editDelivery.Transport_Type;
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = "Delivery not found";
+                        return result;
+                    }
+                   
+                    foreach (var item in editDelivery.DeliveryPositions)
+                    {
+                        Orders_Positions orderPositionToEdit = _context.Orders_Positions.FirstOrDefault(o => o.Id == item.Id && o.Deleted_At == null);
+                        if (orderPositionToEdit != null)
+                        {
+                            orderPositionToEdit.Edited_At = dateOfEdit;
+                            orderPositionToEdit.Amount_Received = item.Amount;
+                            orderPositionToEdit.Weight_Gross_Received = item.Weight_Gross;
+                            if (orderPositionToEdit.Amount != item.Amount || orderPositionToEdit.Weight_Gross != item.Weight_Gross)
+                            {
+                                isDifferent = true;
+                            }
+                        }
+                        else
+                        {
+                            result.Status = false;
+                            result.Message = "Order Position not found";
+                            return result;
+                        }
+                    }
+                    
+                    Order orderToEdit = _context.Orders.FirstOrDefault(o => o.Id == deliveryToEdit.Order_Id && o.Deleted_At == null);
+                    if (orderToEdit != null)
+                    {
+                        orderToEdit.Date_Of_Arrival = editDelivery.Date_Of_Delivery;
+                        orderToEdit.Edited_At = dateOfEdit;
+                        orderToEdit.If_Delivery_Generated = true;
+                        if (isDifferent)
+                        {
+                            deliveryToEdit.If_Differential_Delivery_Order = true;
+                            orderToEdit.Status = (int)OrderStatus.Difference;
+                        }
+                        else
+                        {
+                            deliveryToEdit.If_Differential_Delivery_Order = false;
+                            orderToEdit.Status = (int)OrderStatus.Accepted;
+                        }
+
+                        var deliveryCounter = _context.Counters.FirstOrDefault(c => c.Name == "DeliveryCounter");
+                        deliveryCounter.Count++;
+                        _context.SaveChanges();
+                        result.Status = true;
+                        result.Message = "Delivery has been added";
+                        return result;
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = "Order not found";
+                        return result;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    result.Status = false;
+                    result.Message = ex.ToString();
+                    return result;
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
     }
 }

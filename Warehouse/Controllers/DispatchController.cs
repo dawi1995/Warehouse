@@ -43,7 +43,7 @@ namespace Warehouse.Controllers
                         listOfDispatches.Add(dispatchToResult);
                     }
                     result.ListOfDispatches = listOfDispatches;
-                    result.NumberOfDispatches = DispatchManager.CountOfDispatches();
+                    result.NumberOfDispatches = DispatchManager.CountOfDispatches(needle);
                     return result;
                 } 
                 catch (Exception ex)
