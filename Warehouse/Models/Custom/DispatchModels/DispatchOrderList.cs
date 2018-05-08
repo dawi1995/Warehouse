@@ -9,6 +9,7 @@ namespace Warehouse.Models.Custom
     {
         public int OrderId {get;set;}
         public int DeliveryId { get; set; }
+        public string ATB { get; set; }
         public List<DispatchPositionsDispatchInfo> ListOfDispatchPositions { get; set; }
     }
 }
