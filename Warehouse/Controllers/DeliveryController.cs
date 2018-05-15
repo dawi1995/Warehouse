@@ -351,5 +351,49 @@ namespace Warehouse.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
         }
+
+        [HttpGet]
+        [Route("GetDeliveryState")]
+        public List<DeliveryState> GetDeliveryState(int orderId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
+            {
+                try
+                {
+                    List<DeliveryState> result = new List<DeliveryState>();
+                    Delivery deliveryFromDB = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderId && d.Deleted_At == null);
+                    if (deliveryFromDB != null)
+                    {
+                        List<Orders_Positions> orderPositionFromDB = _context.Orders_Positions.Where(o => o.Order_id == orderId && o.Deleted_At == null).ToList();
+
+                        foreach (var orderPosition in orderPositionFromDB)
+                        {
+                            DeliveryState deliveryState = new DeliveryState();
+                            List<Dispatches_Positions> dispatchPositionsfromDB = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPosition.Id && d.Deleted_At == null).ToList();
+                            int dispatchedAmount = dispatchPositionsfromDB == null ? 0 : (dispatchPositionsfromDB.Sum(d => d.Amount) ?? 0);
+                            decimal dispatchedWeight =dispatchPositionsfromDB == null ? 0 : (dispatchPositionsfromDB.Sum(d => d.Weight_Gross) ?? 0);
+                            deliveryState.Amount = (int)orderPosition.Amount_Received - dispatchedAmount;
+                            deliveryState.Weight_Gross = (decimal)orderPosition.Weight_Gross_Received - dispatchedWeight;
+                            result.Add(deliveryState);
+                        }
+                        return result;
+                    }
+                    else
+                    {
+                        throw new Exception("Not found delivery for this order id.");
+                       // throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Not found delivery for this order id."));
+                    }
+                   
+                }
+                catch (Exception ex)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
     }
 }

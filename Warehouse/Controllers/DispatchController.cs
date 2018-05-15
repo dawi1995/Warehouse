@@ -209,7 +209,7 @@ namespace Warehouse.Controllers
 
         [HttpPost]
         [Route("EditDispatch")]
-        public RequestResult EditDispatch([FromBody]EditDispatch editDispatch)
+        public RequestResult EditDispatch([FromBody]EditDispatch editDispatch, bool isCMR)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
@@ -217,6 +217,34 @@ namespace Warehouse.Controllers
                 RequestResult result = new RequestResult();
                 try
                 {
+                    CMR_Dispatches CMRDispatch = _context.CMR_Dispatches.FirstOrDefault(c => c.Dispatch_Id == editDispatch.CMRId);
+                    if (isCMR)
+                    {
+                        if (CMRDispatch != null)
+                        {
+                            CMRDispatch.Edited_At = dateOfEdit;
+                            CMRDispatch.Destination = editDispatch.CMRDispatch.Destination;
+                            CMRDispatch.Sender_Address = editDispatch.CMRDispatch.Sender_Address;
+                            CMRDispatch.Sender_Email = editDispatch.CMRDispatch.Sender_Email;
+                            CMRDispatch.Sender_Name = editDispatch.CMRDispatch.Sender_Name;
+                            CMRDispatch.Sender_VAT_Id = editDispatch.CMRDispatch.Sender_VAT_Id;
+                            _context.SaveChanges();
+                        }
+                        else
+                        {
+                            CMRDispatch = new CMR_Dispatches();
+                            CMRDispatch.Created_At = dateOfEdit;
+                            CMRDispatch.Destination = editDispatch.CMRDispatch.Destination;
+                            CMRDispatch.Dispatch_Id = 0;
+                            CMRDispatch.Sender_Address = editDispatch.CMRDispatch.Sender_Address;
+                            CMRDispatch.Sender_Email = editDispatch.CMRDispatch.Sender_Email;
+                            CMRDispatch.Sender_Name = editDispatch.CMRDispatch.Sender_Name;
+                            CMRDispatch.Sender_VAT_Id = editDispatch.CMRDispatch.Sender_VAT_Id;
+                            _context.CMR_Dispatches.Add(CMRDispatch);
+                            _context.SaveChanges();
+                        }
+                    }
+                    
                     Dispatch dispatchToEdit = _context.Dispatches.FirstOrDefault(o => o.Id == editDispatch.Id && o.Deleted_At == null);
                     if (dispatchToEdit != null)
                     {
@@ -231,7 +259,11 @@ namespace Warehouse.Controllers
                         dispatchToEdit.Receiver_Email = editDispatch.Receiver.Receiver_Email;
                         dispatchToEdit.Receiver_Name = editDispatch.Receiver.Receiver_Name;
                         dispatchToEdit.Receiver_VAT_Id = editDispatch.Receiver.Receiver_VAT_Id;
-                        dispatchToEdit.Edited_At = dateOfEdit;
+                        dispatchToEdit.Edited_At = dateOfEdit;                
+                        dispatchToEdit.If_CMR = isCMR;
+                        dispatchToEdit.Duty_Doc_Id = editDispatch.Duty_Doc_Id;
+                        dispatchToEdit.CMR_Id = CMRDispatch == null ? null : CMRDispatch.Id.ToString();
+
                         _context.SaveChanges();
                         var dispatchPositionsFromDB = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == editDispatch.Id && d.Deleted_At == null).ToList();
 
@@ -269,6 +301,7 @@ namespace Warehouse.Controllers
                         _context.SaveChanges();
                         dispatchToEdit.Number_Of_Positions = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == editDispatch.Id && d.Deleted_At == null).Count();
                         _context.SaveChanges();
+
                     }
                     else
                     {
@@ -331,6 +364,86 @@ namespace Warehouse.Controllers
                         return result;
                     }
 
+                }
+                catch (Exception ex)
+                {
+                    result.Status = false;
+                    result.Message = ex.ToString();
+                }
+                return result;
+
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateDispatch")]
+        public RequestResult CreateDispatch([FromBody]CreateDispatch newDispatch, bool isCMR)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin }))
+            {
+                RequestResult result = new RequestResult();
+                try
+                {
+                    if (_context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)
+                    {
+                        var counter = _context.Counters.FirstOrDefault(c => c.Name == "DispatchCounter");
+                        counter.Count = 1;
+                        _context.SaveChanges();
+                    }
+                    DateTime dateOfCreate = DateTime.Now;
+                    Dispatch dispatchToAdd = new Dispatch();
+                    CMR_Dispatches cmrDispatch = new CMR_Dispatches();
+                    if (isCMR)
+                    {
+                        cmrDispatch.Created_At = dateOfCreate;
+                        cmrDispatch.Destination = newDispatch.CMRDispatch.Destination;
+                        cmrDispatch.Dispatch_Id = 0;
+                        cmrDispatch.Sender_Address = newDispatch.CMRDispatch.Sender_Address;
+                        cmrDispatch.Sender_Email = newDispatch.CMRDispatch.Sender_Email;
+                        cmrDispatch.Sender_Name = newDispatch.CMRDispatch.Sender_Name;
+                        cmrDispatch.Sender_VAT_Id = newDispatch.CMRDispatch.Sender_VAT_Id;
+                        _context.CMR_Dispatches.Add(cmrDispatch);
+                        _context.SaveChanges();
+                    }
+
+                    dispatchToAdd.Carrier_Address = newDispatch.Carrier.Carrier_Address;
+                    dispatchToAdd.Carrier_Email = newDispatch.Carrier.Carrier_Email;
+                    dispatchToAdd.Carrier_Name = newDispatch.Carrier.Carrier_Name;
+                    dispatchToAdd.Carrier_VAT_Id = newDispatch.Carrier.Carrier_VAT_Id;
+                    dispatchToAdd.Car_Id = newDispatch.Car_Id;
+                    dispatchToAdd.Creation_Date = dateOfCreate;
+                    dispatchToAdd.Dispatch_Number = ((DateTime)dispatchToAdd.Creation_Date).Year.ToString() + "/" + ((DateTime)dispatchToAdd.Creation_Date).Month.ToString() + "/" + _context.Counters.FirstOrDefault(c => c.Name == "DispatchCounter").Count.ToString();
+                    dispatchToAdd.Receiver_Address = newDispatch.Receiver.Receiver_Address;
+                    dispatchToAdd.Receiver_Email = newDispatch.Receiver.Receiver_Email;
+                    dispatchToAdd.Receiver_Name = newDispatch.Receiver.Receiver_Name;
+                    dispatchToAdd.Receiver_VAT_Id = newDispatch.Receiver.Receiver_VAT_Id;
+                    dispatchToAdd.Created_At = dateOfCreate;
+                    dispatchToAdd.CMR_Id = cmrDispatch.Id == null ? null : cmrDispatch.ToString();
+                    dispatchToAdd.Number_Of_Positions = newDispatch.DispatchPositions.Count;
+                    dispatchToAdd.If_PDF_And_Sent = false;
+                    dispatchToAdd.If_CMR_And_Sent = false;
+                    dispatchToAdd.If_CMR = isCMR;
+                    dispatchToAdd.Duty_Doc_Id = newDispatch.Duty_Doc_Id;
+                    _context.Dispatches.Add(dispatchToAdd);
+                    foreach (var item in newDispatch.DispatchPositions)
+                    {
+                        Dispatches_Positions dispatchPostion = new Dispatches_Positions();
+                        dispatchPostion.Amount = item.Amount;
+                        dispatchPostion.Created_At = dateOfCreate;
+                        dispatchPostion.Dispatch_Id = dispatchToAdd.Id;
+                        dispatchPostion.Order_Position_Id = item.OrderPositionId;
+                        dispatchPostion.Weight_Gross = item.Weight_Gross;
+                        _context.Dispatches_Positions.Add(dispatchPostion);
+                    }
+                    cmrDispatch.Dispatch_Id = dispatchToAdd.Id;
+                    _context.SaveChanges();
+
+                    result.Status = true;
+                    result.Message = "Order has been edited";
                 }
                 catch (Exception ex)
                 {

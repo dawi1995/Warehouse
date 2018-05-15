@@ -5,19 +5,14 @@ using System.Web;
 
 namespace Warehouse.Models.Custom
 {
-    public class EditDispatch
+    public class CreateDispatch
     {
-        public int Id { get; set; }
-        public int? CMRId { get; set; }
-        public string Dispatch_Number { get; set; }
-        public string Duty_Doc_Id { get; set; }
-        public DateTime? Creation_Date { get; set; }
         public string Car_Id { get; set; }
+        public string Duty_Doc_Id { get; set; }
         public CarrierDispatch Carrier { get; set; }
         public ReceiverDispatch Receiver { get; set; }
-        public List<EditDispatchPositions> DispatchPositions { get; set; }
+        public List<CreateDispatchPositions> DispatchPositions { get; set; }
         public CMRDispatch CMRDispatch { get; set; }
-
         //public string Duty_Doc_Id { get; set; }
         //public Nullable<int> Number_Of_Positions { get; set; }
         //public string CMR_Id { get; set; }
