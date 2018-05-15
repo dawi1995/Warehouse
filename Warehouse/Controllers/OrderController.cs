@@ -1,5 +1,8 @@
-﻿using System;
+﻿using PdfSharp.Drawing;
+using PdfSharp.Pdf;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -350,6 +353,32 @@ namespace Warehouse.Controllers
                 return result;
 
             }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
+        [HttpGet]
+        [Route("GetOrderPDF")]
+        public byte[] GetOrderPDF(int orderId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
+            {
+                try
+                {
+                    Order orderToPdf = _context.Orders.FirstOrDefault(o => o.Id == orderId);
+                    List<Orders_Positions> orderPositionsToPdf = _context.Orders_Positions.Where(o => o.Id == orderId).ToList();
+                    return PDFManager.GenerateOrderPDF(orderToPdf, orderPositionsToPdf);
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.ToString());
+                }
+
+            }
+
             else
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
