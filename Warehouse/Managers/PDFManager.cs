@@ -60,7 +60,7 @@ namespace Warehouse.Managers
 
 
             //Numer zlecenia
-            graph.DrawString("Data zlecenia/Datum der Bestellung:", titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 83, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Nr zlecenia/Bestellnummer:", titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 83, 0, 0), XStringFormats.TopLeft);
             graph.DrawString(order.Order_Number, contentTableNormal, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 118, 0, 0), XStringFormats.TopLeft);
 
             //Drugi wiersz
