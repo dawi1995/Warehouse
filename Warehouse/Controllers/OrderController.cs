@@ -367,9 +367,17 @@ namespace Warehouse.Controllers
             {
                 try
                 {
-                    Order orderToPdf = _context.Orders.FirstOrDefault(o => o.Id == orderId);
-                    List<Orders_Positions> orderPositionsToPdf = _context.Orders_Positions.Where(o => o.Id == orderId).ToList();
-                    return PDFManager.GenerateOrderPDF(orderToPdf, orderPositionsToPdf);
+                    Order orderToPdf = _context.Orders.FirstOrDefault(o => o.Id == orderId && o.Deleted_At == null);
+                    List<Orders_Positions> orderPositionsToPdf = _context.Orders_Positions.Where(o => o.Id == orderId && o.Deleted_At==null).ToList();
+                    Client clientCreator = _context.Clients.FirstOrDefault(c => c.User_Id == orderToPdf.Creator_Id && c.Deleted_At == null);
+                    string creatorName = "";
+                    if(clientCreator != null)
+                    {
+                        creatorName = clientCreator.Name;
+                    }
+
+                    
+                    return PDFManager.GenerateOrderPDF(orderToPdf, orderPositionsToPdf, creatorName);
 
                 }
                 catch (Exception ex)
