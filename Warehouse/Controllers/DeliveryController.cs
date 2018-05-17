@@ -18,9 +18,11 @@ namespace Warehouse.Controllers
     {
 
         private readonly WarehouseEntities _context;
+        private readonly PDFManager _pdfManager;
         public DeliveryController()
         {
             _context = new WarehouseEntities();
+            _pdfManager = new PDFManager();
         }
 
         [HttpGet]
@@ -391,6 +393,40 @@ namespace Warehouse.Controllers
                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
                 }
             }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
+        [HttpGet]
+        [Route("GetDeliveryPDF")]
+        public byte[] GetDeliveryPDF(int deliveryId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin}))
+            {
+                try
+                {
+                    Delivery deliveryToPdf = _context.Deliveries.FirstOrDefault(d => d.Id == deliveryId);
+                    Order orderToPdf = _context.Orders.FirstOrDefault(o => o.Id == deliveryToPdf.Order_Id && o.Deleted_At == null);
+                    List<Orders_Positions> orderPositionsToPdf = _context.Orders_Positions.Where(o => o.Order_id == deliveryToPdf.Order_Id && o.Deleted_At == null).ToList();
+                    Client clientCreator = _context.Clients.FirstOrDefault(c => c.User_Id == orderToPdf.Creator_Id && c.Deleted_At == null);
+                    string creatorName = "";
+                    if (clientCreator != null)
+                    {
+                        creatorName = clientCreator.Name;
+                    }
+                    // Zmienić creatora na creatora delivery czyli przyjmujacego zamowienie - trzeb dodać w bazie
+                    return _pdfManager.GenerateDeliveryPDF(deliveryToPdf, orderToPdf, orderPositionsToPdf, creatorName);
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.ToString());
+                }
+
+            }
+
             else
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
