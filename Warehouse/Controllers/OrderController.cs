@@ -21,9 +21,11 @@ namespace Warehouse.Controllers
     public class OrderController : ApiController
     {
         private readonly WarehouseEntities _context;
+        private readonly PDFManager _pdfManager;
         public OrderController()
         {
             _context = new WarehouseEntities();
+            _pdfManager = new PDFManager();
         }
 
         [HttpGet]
@@ -377,7 +379,7 @@ namespace Warehouse.Controllers
                     }
 
                     
-                    return PDFManager.GenerateOrderPDF(orderToPdf, orderPositionsToPdf, creatorName);
+                    return _pdfManager.GenerateOrderPDF(orderToPdf, orderPositionsToPdf, creatorName);
 
                 }
                 catch (Exception ex)
