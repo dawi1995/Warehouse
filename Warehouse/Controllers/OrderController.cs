@@ -371,7 +371,7 @@ namespace Warehouse.Controllers
                 {
                     Order orderToPdf = _context.Orders.FirstOrDefault(o => o.Id == orderId && o.Deleted_At == null);
                     List<Orders_Positions> orderPositionsToPdf = _context.Orders_Positions.Where(o => o.Id == orderId && o.Deleted_At==null).ToList();
-                    User userCreator = _context.Users.FirstOrDefault(u => u.Id == orderToPdf.Creator_Id && u.Deleted_At == null);
+                    User userCreator = _context.Users.FirstOrDefault(u => u.Id == orderToPdf.Creator_Id && u.Deleted_at == null);
                     string creatorName = "";
                     if(userCreator != null)
                     {
