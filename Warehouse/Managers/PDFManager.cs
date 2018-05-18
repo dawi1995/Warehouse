@@ -74,7 +74,7 @@ namespace Warehouse.Managers
             //Drugi wiersz
             //ETA
             graph.DrawString("ETA:", _titleTable, XBrushes.Black, new XRect(44, 163, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.Date_Of_Arrival == null ? string.Empty: ((DateTime)order.Date_Of_Arrival).ToString("dd-MM-yyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 198, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.ETA == null ? string.Empty: ((DateTime)order.ETA).ToString("dd-MM-yyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 198, 0, 0), XStringFormats.TopLeft);
 
 
             //Numer kontenera
@@ -295,7 +295,7 @@ namespace Warehouse.Managers
             //Drugi wiersz
             //ETA
             graph.DrawString("ETA:", _titleTable, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.Date_Of_Arrival == null ? string.Empty : ((DateTime)order.Date_Of_Arrival).ToString("dd-MM-yyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight+3+25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.ETA == null ? string.Empty : ((DateTime)order.ETA).ToString("dd-MM-yyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight+3+25, 0, 0), XStringFormats.TopLeft);
 
 
             //Numer kontenera
