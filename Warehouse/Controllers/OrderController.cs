@@ -162,7 +162,7 @@ namespace Warehouse.Controllers
                     newOrder.Pickup_PIN = createOrder.Pickup_PIN;
                     newOrder.Creation_Date = DateTime.Now;
                     newOrder.Creator_Id = UserHelper.GetCurrentUserId();
-                    newOrder.Order_Number = newOrder.Creation_Date.Year.ToString() + "/" + newOrder.Creation_Date.Month.ToString() + "/" + _context.Counters.FirstOrDefault(c => c.Name == "OrderCounter").Count.ToString();
+                    newOrder.Order_Number = _context.Counters.FirstOrDefault(c => c.Name == "OrderCounter").Count.ToString() +"/"+ newOrder.Creation_Date.Month.ToString() + "/" + newOrder.Creation_Date.Year.ToString();
                     newOrder.Name = createOrder.Name;
                     newOrder.Address = createOrder.Address;
                     newOrder.VAT_Id = createOrder.VAT_Id;

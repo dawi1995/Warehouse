@@ -144,7 +144,7 @@ namespace Warehouse.Controllers
                     Delivery newDelivery = new Delivery();
                     newDelivery.Created_At = dateOfCreate;
                     newDelivery.Date_Of_Delivery = dateOfCreate;
-                    newDelivery.Delivery_Number = newDelivery.Date_Of_Delivery.Year.ToString() + "/" + newDelivery.Date_Of_Delivery.Month.ToString() + "/" + _context.Counters.FirstOrDefault(c => c.Name == "DeliveryCounter").Count.ToString();
+                    newDelivery.Delivery_Number = _context.Counters.FirstOrDefault(c => c.Name == "DeliveryCounter").Count.ToString() +"/" +newDelivery.Date_Of_Delivery.Month.ToString() + "/" + newDelivery.Date_Of_Delivery.Year.ToString();
                     newDelivery.If_Delivery_Dispatch_Balanced = false;
                     newDelivery.If_PDF_And_Sent = false;
                     newDelivery.If_PDF_Differential = false;

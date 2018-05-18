@@ -416,7 +416,7 @@ namespace Warehouse.Controllers
                     dispatchToAdd.Carrier_VAT_Id = newDispatch.Carrier.Carrier_VAT_Id;
                     dispatchToAdd.Car_Id = newDispatch.Car_Id;
                     dispatchToAdd.Creation_Date = dateOfCreate;
-                    dispatchToAdd.Dispatch_Number = ((DateTime)dispatchToAdd.Creation_Date).Year.ToString() + "/" + ((DateTime)dispatchToAdd.Creation_Date).Month.ToString() + "/" + _context.Counters.FirstOrDefault(c => c.Name == "DispatchCounter").Count.ToString();
+                    dispatchToAdd.Dispatch_Number = _context.Counters.FirstOrDefault(c => c.Name == "DispatchCounter").Count.ToString() +"/"+ ((DateTime)dispatchToAdd.Creation_Date).Month.ToString() + "/" + ((DateTime)dispatchToAdd.Creation_Date).Year.ToString();
                     dispatchToAdd.Receiver_Address = newDispatch.Receiver.Receiver_Address;
                     dispatchToAdd.Receiver_Email = newDispatch.Receiver.Receiver_Email;
                     dispatchToAdd.Receiver_Name = newDispatch.Receiver.Receiver_Name;
