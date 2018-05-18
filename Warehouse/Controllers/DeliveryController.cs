@@ -374,6 +374,7 @@ namespace Warehouse.Controllers
                             List<Dispatches_Positions> dispatchPositionsfromDB = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPosition.Id && d.Deleted_At == null).ToList();
                             int dispatchedAmount = dispatchPositionsfromDB == null ? 0 : (dispatchPositionsfromDB.Sum(d => d.Amount) ?? 0);
                             decimal dispatchedWeight =dispatchPositionsfromDB == null ? 0 : (dispatchPositionsfromDB.Sum(d => d.Weight_Gross) ?? 0);
+                            deliveryState.Id = orderPosition.Id;
                             deliveryState.Name = orderPosition.Name;
                             deliveryState.Amount = (int)orderPosition.Amount_Received - dispatchedAmount;
                             deliveryState.Weight_Gross = (decimal)orderPosition.Weight_Gross_Received - dispatchedWeight;
