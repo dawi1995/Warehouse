@@ -151,6 +151,7 @@ namespace Warehouse.Controllers
                     newDelivery.If_PDF_Dispatch = false;
                     newDelivery.Order_Id = createDelivery.Order_Id;
                     newDelivery.Transport_Type = createDelivery.Transport_Type;
+                    newDelivery.Creator_Id = UserHelper.GetCurrentUserId();
                     _context.Deliveries.Add(newDelivery);
                     foreach (var item in createDelivery.DeliveryPositions)
                     {
@@ -411,11 +412,11 @@ namespace Warehouse.Controllers
                     Delivery deliveryToPdf = _context.Deliveries.FirstOrDefault(d => d.Id == deliveryId);
                     Order orderToPdf = _context.Orders.FirstOrDefault(o => o.Id == deliveryToPdf.Order_Id && o.Deleted_At == null);
                     List<Orders_Positions> orderPositionsToPdf = _context.Orders_Positions.Where(o => o.Order_id == deliveryToPdf.Order_Id && o.Deleted_At == null).ToList();
-                    Client clientCreator = _context.Clients.FirstOrDefault(c => c.User_Id == orderToPdf.Creator_Id && c.Deleted_At == null);
+                    User userCreator = _context.Users.FirstOrDefault(u => u.Id == deliveryToPdf.Creator_Id && u.Deleted_At == null);
                     string creatorName = "";
-                    if (clientCreator != null)
+                    if (userCreator != null)
                     {
-                        creatorName = clientCreator.Name;
+                        creatorName = userCreator.Login;//Do zmiany na imie i nazwisko
                     }
                     // Zmienić creatora na creatora delivery czyli przyjmujacego zamowienie - trzeb dodać w bazie
                     return _pdfManager.GenerateDeliveryPDF(deliveryToPdf, orderToPdf, orderPositionsToPdf, creatorName);

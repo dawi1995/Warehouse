@@ -57,6 +57,7 @@
           <Property Name="If_Differential_Delivery_Order" Type="bit" />
           <Property Name="If_PDF_Differential" Type="bit" />
           <Property Name="If_Delivery_Dispatch_Balanced" Type="bit" />
+          <Property Name="Creator_Id" Type="int" />
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Edited_At" Type="datetime" />
           <Property Name="Deleted_At" Type="datetime" />
@@ -270,6 +271,7 @@
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+          <Property Name="Creator_Id" Type="Int32" />
         </EntityType>
         <EntityType Name="Deliveries_Dispatches">
           <Key>
@@ -443,6 +445,7 @@
           <EntitySetMapping Name="Deliveries">
             <EntityTypeMapping TypeName="WarehouseModel.Delivery">
               <MappingFragment StoreEntitySet="Deliveries">
+                <ScalarProperty Name="Creator_Id" ColumnName="Creator_Id" />
                 <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
                 <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
