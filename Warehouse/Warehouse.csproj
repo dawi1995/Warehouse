@@ -255,6 +255,7 @@
     <Compile Include="Models\Custom\AccountModels\TokenResult.cs" />
     <Compile Include="Models\Custom\AccountModels\UserInformation.cs" />
     <Compile Include="Models\Custom\AccountModels\UsersInformationList.cs" />
+    <Compile Include="Models\Custom\DeliveryModels\Committee.cs" />
     <Compile Include="Models\Custom\DeliveryModels\DeliveryState.cs" />
     <Compile Include="Models\Custom\DeliveryModels\EditDeliveryPositions.cs" />
     <Compile Include="Models\Custom\DeliveryModels\EditDelivery.cs" />
