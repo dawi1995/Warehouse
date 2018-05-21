@@ -16,6 +16,7 @@ namespace Warehouse.Controllers
     public class DispatchController : ApiController
     {
         private readonly WarehouseEntities _context;
+        private readonly PDFManager _pdfManager;
         public DispatchController()
         {
             _context = new WarehouseEntities();
@@ -428,6 +429,7 @@ namespace Warehouse.Controllers
                     dispatchToAdd.If_CMR_And_Sent = false;
                     dispatchToAdd.If_CMR = isCMR;
                     dispatchToAdd.Duty_Doc_Id = newDispatch.Duty_Doc_Id;
+                    dispatchToAdd.Creator_Id = UserHelper.GetCurrentUserId();
                     _context.Dispatches.Add(dispatchToAdd);
                     foreach (var item in newDispatch.DispatchPositions)
                     {
@@ -453,6 +455,40 @@ namespace Warehouse.Controllers
                 return result;
 
             }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
+
+        [HttpGet]
+        [Route("GetDispatchPDF")]
+        public byte[] GetDispatchPDF(int dispatchId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
+            {
+                try
+                {
+                    DispatchDetailsPDF dispatchInfoToPDF = DispatchManager.GetDispatchDetails(dispatchId);
+                    Dispatch dispatch = _context.Dispatches.FirstOrDefault(d => d.Id == dispatchId && d.Deleted_At == null);
+                    User userCreator = _context.Users.FirstOrDefault(u => u.Id == dispatch.Creator_Id && u.Deleted_at == null);
+                    string creatorName = "";
+                    if (userCreator != null)
+                    {
+                        creatorName = userCreator.Login;//zmienic na imie i nazwisko
+                    }
+
+                    byte[] result = _pdfManager.GenerateDispatchPDF(dispatchInfoToPDF, creatorName);
+                    return result;
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.ToString());
+                }
+
+            }
+
             else
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));

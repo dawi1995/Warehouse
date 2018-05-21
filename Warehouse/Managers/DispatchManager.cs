@@ -57,6 +57,71 @@ namespace Warehouse.Managers
             }
             return result;
         }
+        public static DispatchDetailsPDF GetDispatchDetails(int dispatchId)
+        {
+            DispatchDetailsPDF result = new DispatchDetailsPDF();
+            List<OrderPositionsDispatchInfoPDF> listOfOrderPositionsDispatchInfoPDF = new List<OrderPositionsDispatchInfoPDF>();
+            Dispatch dispatch = _context.Dispatches.FirstOrDefault(d => d.Id == dispatchId && d.Deleted_At == null);
+            CMR_Dispatches cmrDispatch = _context.CMR_Dispatches.FirstOrDefault(c => c.Dispatch_Id == dispatchId && c.Deleted_At == null);
+            List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == dispatchId && d.Deleted_At == null).ToList();
+            
+            foreach (var item in dispatchPositions)
+            {
+                Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == item.Order_Position_Id && o.Deleted_At==null);
+                Order order = _context.Orders.FirstOrDefault(o => o.Id == orderPosition.Order_id && o.Deleted_At == null);
+                OrderPositionsDispatchInfoPDF toAddToList = new OrderPositionsDispatchInfoPDF();
+                int? amountReceived = orderPosition.Amount_Received;
+                decimal? weightReceived = orderPosition.Weight_Gross_Received;
+                List<Dispatches_Positions> listOfdispatchesPositionsForOrderPosition = _context.Dispatches_Positions.Where(d=>d.Order_Position_Id == orderPosition.Id && d.Deleted_At == null && d.Created_At < dispatch.Created_At).ToList();
+                int? amountBeforeDispatch = amountReceived - listOfdispatchesPositionsForOrderPosition.Sum(d => d.Amount);
+                decimal? weightBeforeDispatch = weightReceived = listOfdispatchesPositionsForOrderPosition.Sum(d => d.Weight_Gross);
+                int? amountDispatch = item.Amount;
+                decimal? weightDispatch = item.Weight_Gross;
+                toAddToList.Id = item.Id;
+                toAddToList.ATB = order.ATB;
+                toAddToList.Name = orderPosition.Name;
+                toAddToList.Amount_Received = amountReceived;
+                toAddToList.Weight_Gross_Received = weightReceived;
+                toAddToList.Amount_Before_Dispatch = amountBeforeDispatch;
+                toAddToList.Weight_Before_Dispatch = weightBeforeDispatch;
+                toAddToList.Amount_Dispatch = amountDispatch;
+                toAddToList.Weight_Dispatch = weightDispatch;
+                listOfOrderPositionsDispatchInfoPDF.Add(toAddToList);
+            }
+
+            CarrierDispatch carrierDispatch = new CarrierDispatch();
+            carrierDispatch.Carrier_Address = dispatch.Carrier_Address;
+            carrierDispatch.Carrier_Email = dispatch.Carrier_Email;
+            carrierDispatch.Carrier_Name = dispatch.Carrier_Name;
+            carrierDispatch.Carrier_VAT_Id = dispatch.Carrier_VAT_Id;
+
+            ReceiverDispatch receiverDispatch = new ReceiverDispatch();
+            receiverDispatch.Receiver_Address = dispatch.Receiver_Address;
+            receiverDispatch.Receiver_Email = dispatch.Receiver_Email;
+            receiverDispatch.Receiver_Name = dispatch.Receiver_Name;
+            receiverDispatch.Receiver_VAT_Id = dispatch.Receiver_VAT_Id;
+
+            SenderDispatch senderDispatch = new SenderDispatch();
+            if (cmrDispatch != null)
+            {
+                senderDispatch.Sender_Address = cmrDispatch.Sender_Address;
+                senderDispatch.Sender_Email = cmrDispatch.Sender_Email;
+                senderDispatch.Sender_Name = cmrDispatch.Sender_Name;
+                senderDispatch.Sender_VAT_Id = cmrDispatch.Sender_VAT_Id;
+
+            }
+
+            result.Id = dispatch.Id;
+            result.Dispatch_Number = dispatch.Dispatch_Number;
+            result.Creation_Date = dispatch.Creation_Date == null ? string.Empty : dispatch.Creation_Date.Value.ToString("dd-MM-yyyy");
+            result.Car_Id = dispatch.Car_Id;
+            result.Carrier = carrierDispatch;
+            result.Receiver = receiverDispatch;
+            result.Sender = senderDispatch;
+            result.ListOfOrderPositions = listOfOrderPositionsDispatchInfoPDF;
+
+            return result;
+        }
         //public static List<int> GetListOfOrderPositionsIds(List<Orders_Positions> listOfOrderPositions)
         //{
         //    List<int> result = new List<int>();

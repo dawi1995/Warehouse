@@ -267,6 +267,7 @@
     <Compile Include="Models\Custom\DeliveryModels\OrderPositionsDeliveryInfo.cs" />
     <Compile Include="Models\Custom\DispatchModels\CarrierDispatch.cs" />
     <Compile Include="Models\Custom\DispatchModels\CMRDispatch.cs" />
+    <Compile Include="Models\Custom\DispatchModels\DispatchDetailsPDF.cs" />
     <Compile Include="Models\Custom\DispatchModels\DispatchDetailsDispatchInfo.cs" />
     <Compile Include="Models\Custom\DispatchModels\DispatchDetails.cs" />
     <Compile Include="Models\Custom\DispatchModels\DispatchList.cs" />
@@ -277,7 +278,9 @@
     <Compile Include="Models\Custom\DispatchModels\EditDispatch.cs" />
     <Compile Include="Models\Custom\DispatchModels\CreateDispatchPositions.cs" />
     <Compile Include="Models\Custom\DispatchModels\EditDispatchPositions.cs" />
+    <Compile Include="Models\Custom\DispatchModels\OrderPositionsDispatchInfoPDF.cs" />
     <Compile Include="Models\Custom\DispatchModels\OrderPositionsDispatchInfo.cs" />
+    <Compile Include="Models\Custom\DispatchModels\SenderDispatch.cs" />
     <Compile Include="Models\Custom\DispatchModels\ReceiverDispatch.cs" />
     <Compile Include="Models\Custom\OrderModels\CreateOrder.cs" />
     <Compile Include="Models\Custom\OrderModels\EditOrdersPositions.cs" />
