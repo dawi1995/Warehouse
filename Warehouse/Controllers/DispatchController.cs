@@ -422,7 +422,7 @@ namespace Warehouse.Controllers
                     dispatchToAdd.Receiver_Name = newDispatch.Receiver.Receiver_Name;
                     dispatchToAdd.Receiver_VAT_Id = newDispatch.Receiver.Receiver_VAT_Id;
                     dispatchToAdd.Created_At = dateOfCreate;
-                    dispatchToAdd.CMR_Id = cmrDispatch.Id == null ? null : cmrDispatch.ToString();
+                    dispatchToAdd.CMR_Id = cmrDispatch.Id == null ? null : cmrDispatch.Id.ToString();
                     dispatchToAdd.Number_Of_Positions = newDispatch.DispatchPositions.Count;
                     dispatchToAdd.If_PDF_And_Sent = false;
                     dispatchToAdd.If_CMR_And_Sent = false;
