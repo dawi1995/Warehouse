@@ -242,15 +242,12 @@ namespace Warehouse.Managers
             if (uri.Contains("localhost"))
             {
                 pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
+                orderPdf.Save(pdfFileName);
             }
 
-            orderPdf.Save(pdfFileName);
-            MemoryStream fileMemoryStream = new MemoryStream(File.ReadAllBytes(pdfFileName));
-            byte[] result = fileMemoryStream.ToArray();
-            if (!uri.Contains("localhost"))
-            {
-                File.Delete(pdfFileName);
-            }
+            MemoryStream stream = new MemoryStream();
+            orderPdf.Save(stream, false);
+            byte[] result = stream.ToArray();
 
             return result;
         }
@@ -547,20 +544,16 @@ namespace Warehouse.Managers
             if (uri.Contains("localhost"))
             {
                 pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
+                orderPdf.Save(pdfFileName);
             }
-
-            orderPdf.Save(pdfFileName);
-            MemoryStream fileMemoryStream = new MemoryStream(File.ReadAllBytes(pdfFileName));
-            byte[] result = fileMemoryStream.ToArray();
-            if (!uri.Contains("localhost"))
-            {
-                File.Delete(pdfFileName);
-            }
+            MemoryStream stream = new MemoryStream();
+            orderPdf.Save(stream, false);
+            byte[] result = stream.ToArray();
 
             return result;
         }
 
-        public byte[] GetDifferenceDeliveryPDF(Delivery delivery, Order order, List<Orders_Positions> orderPositions, Committee committee)
+        public byte[] GenerateDifferenceDeliveryPDF(Delivery delivery, Order order, List<Orders_Positions> orderPositions, Committee committee)
         {
             PdfDocument orderPdf = new PdfDocument();
             orderPdf.Info.Title = "DeliveryDifferencePDF";
@@ -898,15 +891,11 @@ namespace Warehouse.Managers
             if (uri.Contains("localhost"))
             {
                 pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
+                orderPdf.Save(pdfFileName);
             }
-
-            orderPdf.Save(pdfFileName);
-            MemoryStream fileMemoryStream = new MemoryStream(File.ReadAllBytes(pdfFileName));
-            byte[] result = fileMemoryStream.ToArray();
-            if (!uri.Contains("localhost"))
-            {
-                File.Delete(pdfFileName);
-            }
+            MemoryStream stream = new MemoryStream();
+            orderPdf.Save(stream, false);
+            byte[] result = stream.ToArray();
 
             return result;
         }
@@ -1264,48 +1253,50 @@ namespace Warehouse.Managers
             if (uri.Contains("localhost"))
             {
                 pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
+                orderPdf.Save(pdfFileName);
             }
-
-            orderPdf.Save(pdfFileName);
-            MemoryStream fileMemoryStream = new MemoryStream(File.ReadAllBytes(pdfFileName));
-            byte[] result = fileMemoryStream.ToArray();
-            if (!uri.Contains("localhost"))
-            {
-                File.Delete(pdfFileName);
-            }
+            MemoryStream stream = new MemoryStream();
+            orderPdf.Save(stream, false);
+            byte[] result = stream.ToArray();
 
             return result;
         }
 
         public byte[] GenerateCMR()
         {
-
-            PdfDocument PDFDoc = PdfSharp.Pdf.IO.PdfReader.Open(System.Web.HttpContext.Current.Request.MapPath("~\\Resources\\CMRPDF.pdf"), PdfDocumentOpenMode.Modify);
-            PDFDoc.Info.Title = "CMRPDF";
-            PdfPage firstPage = PDFDoc.Pages[0];
-            XGraphics graph = XGraphics.FromPdfPage(firstPage);
-            //graph.DrawString("WYDANIE TOWARU/AUSGABE VON WAREN".ToUpper(), _titleFont, XBrushes.Black, new XRect(firstPage.Width.Point / 2, 40, 0, 0), XStringFormats.TopCenter);
-            //for (int Pg = 0; Pg < PDFDoc.Pages.Count; Pg++)
-            //{
-            //    orderPdf.AddPage(PDFDoc.Pages[Pg]);
-            //}
-
-            string uri = HttpContext.Current.Request.Url.AbsoluteUri;
-            string pdfFileName = "CMR_"  + "_" + "_" + DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".pdf";
-            if (uri.Contains("localhost"))
+            try
             {
-                pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
-            }
+                PdfDocument PDFDoc = PdfSharp.Pdf.IO.PdfReader.Open(System.Web.HttpContext.Current.Request.MapPath("~\\Resources\\CMRPDF.pdf"), PdfDocumentOpenMode.Modify);
+                PDFDoc.Info.Title = "CMRPDF";
+                PdfPage firstPage = PDFDoc.Pages[0];
+                XGraphics graph = XGraphics.FromPdfPage(firstPage);
+                //graph.DrawString("WYDANIE TOWARU/AUSGABE VON WAREN".ToUpper(), _titleFont, XBrushes.Black, new XRect(firstPage.Width.Point / 2, 40, 0, 0), XStringFormats.TopCenter);
+                //for (int Pg = 0; Pg < PDFDoc.Pages.Count; Pg++)
+                //{
+                //    orderPdf.AddPage(PDFDoc.Pages[Pg]);
+                //}
 
-            PDFDoc.Save(pdfFileName);
-            MemoryStream fileMemoryStream = new MemoryStream(File.ReadAllBytes(pdfFileName));
-            byte[] result = fileMemoryStream.ToArray();
-            if (!uri.Contains("localhost"))
+                string uri = HttpContext.Current.Request.Url.AbsoluteUri;
+                string pdfFileName = "CMR_" + "_" + "_" + DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".pdf";
+                if (uri.Contains("localhost"))
+                {
+                    pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
+                    PDFDoc.Save(pdfFileName);
+                }
+
+
+                MemoryStream stream = new MemoryStream();
+                PDFDoc.Save(stream, false);
+                byte[] result = stream.ToArray();
+
+                return result;
+            }
+            catch (Exception ex)
             {
-                File.Delete(pdfFileName);
-            }
 
-            return result;
+                throw new Exception(ex.ToString());
+            }
+           
         }
     }
 }

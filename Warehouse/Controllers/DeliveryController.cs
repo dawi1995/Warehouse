@@ -507,7 +507,7 @@ namespace Warehouse.Controllers
                             creatorName = userCreator.Login;//Do zmiany na imie i nazwisko
                         }
                         // Zmienić creatora na creatora delivery czyli przyjmujacego zamowienie - trzeb dodać w bazie
-                        return _pdfManager.GetDifferenceDeliveryPDF(deliveryToPdf, orderToPdf, orderPositionsToPdf, commitee);
+                        return _pdfManager.GenerateDifferenceDeliveryPDF(deliveryToPdf, orderToPdf, orderPositionsToPdf, commitee);
                     }
 
 
