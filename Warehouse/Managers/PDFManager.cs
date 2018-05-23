@@ -1,5 +1,6 @@
 ﻿using PdfSharp.Drawing;
 using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -1266,6 +1267,37 @@ namespace Warehouse.Managers
             }
 
             orderPdf.Save(pdfFileName);
+            MemoryStream fileMemoryStream = new MemoryStream(File.ReadAllBytes(pdfFileName));
+            byte[] result = fileMemoryStream.ToArray();
+            if (!uri.Contains("localhost"))
+            {
+                File.Delete(pdfFileName);
+            }
+
+            return result;
+        }
+
+        public byte[] GenerateCMR()
+        {
+
+            PdfDocument PDFDoc = PdfSharp.Pdf.IO.PdfReader.Open(System.Web.HttpContext.Current.Request.MapPath("~\\Resources\\CMRPDF.pdf"), PdfDocumentOpenMode.Modify);
+            PDFDoc.Info.Title = "CMRPDF";
+            PdfPage firstPage = PDFDoc.Pages[0];
+            XGraphics graph = XGraphics.FromPdfPage(firstPage);
+            //graph.DrawString("WYDANIE TOWARU/AUSGABE VON WAREN".ToUpper(), _titleFont, XBrushes.Black, new XRect(firstPage.Width.Point / 2, 40, 0, 0), XStringFormats.TopCenter);
+            //for (int Pg = 0; Pg < PDFDoc.Pages.Count; Pg++)
+            //{
+            //    orderPdf.AddPage(PDFDoc.Pages[Pg]);
+            //}
+
+            string uri = HttpContext.Current.Request.Url.AbsoluteUri;
+            string pdfFileName = "CMR_"  + "_" + "_" + DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".pdf";
+            if (uri.Contains("localhost"))
+            {
+                pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
+            }
+
+            PDFDoc.Save(pdfFileName);
             MemoryStream fileMemoryStream = new MemoryStream(File.ReadAllBytes(pdfFileName));
             byte[] result = fileMemoryStream.ToArray();
             if (!uri.Contains("localhost"))

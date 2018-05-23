@@ -633,5 +633,30 @@ namespace Warehouse.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
         }
+
+        [HttpGet]
+        [Route("GetCMRPDF")]
+        public byte[] GetCMRPDF(int dispatchId)
+        {
+            if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
+            {
+                try
+                {
+                    byte[] result = _pdfManager.GenerateCMR();
+                    return result;
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.ToString());
+                }
+
+            }
+
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
+            }
+        }
     }
 }
