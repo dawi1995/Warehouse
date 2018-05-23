@@ -18,6 +18,7 @@ namespace Warehouse.Managers
         XFont _contentTableNormal;
         XFont _normalText;
         XFont _smallText;
+        XFont _titleTableSmall;
         //Lines
         XPen _tablePen;
         public PDFManager()
@@ -26,6 +27,7 @@ namespace Warehouse.Managers
             //Fonts
             _titleFont = new XFont("Cambria", 14, XFontStyle.Bold);
             _titleTable = new XFont("Cambria", 10, XFontStyle.Bold);
+            _titleTableSmall = new XFont("Cambria", 7.4, XFontStyle.Bold);
             _contentTableSmall = new XFont("Calibri", 8, XFontStyle.Regular);
             _contentTableNormal = new XFont("Calibri", 10, XFontStyle.Regular);
             _normalText = new XFont("Calibri", 12, XFontStyle.Regular);
@@ -916,69 +918,76 @@ namespace Warehouse.Managers
             XGraphics graph = XGraphics.FromPdfPage(firstPage);
 
             graph.DrawString("WYDANIE TOWARU/AUSGABE VON WAREN".ToUpper(), _titleFont, XBrushes.Black, new XRect(firstPage.Width.Point / 2, 40, 0, 0), XStringFormats.TopCenter);
-
+            double firstColumnWidth = 220;
             double rightMargin = firstPage.Width.Point - 40;
             double firstTableRowHeight = 75;
             //FirstTable
             graph.DrawLine(_tablePen, 40, 80, rightMargin, 80);
             graph.DrawLine(_tablePen, 40, 80 + firstTableRowHeight, rightMargin, 80 + firstTableRowHeight);
             graph.DrawLine(_tablePen, 40, 80 + 2 * firstTableRowHeight, rightMargin, 80 + 2 * firstTableRowHeight);
-            graph.DrawLine(_tablePen, 40, 80 + 3 * firstTableRowHeight, rightMargin, 80 + 3 * firstTableRowHeight);
-            graph.DrawLine(_tablePen, 40, 80 + 3 * firstTableRowHeight, rightMargin, 80 + 3 * firstTableRowHeight);
+            graph.DrawLine(_tablePen, 40, 80 + 3 * firstTableRowHeight, (rightMargin - firstColumnWidth) / 2 + firstColumnWidth, 80 + 3 * firstTableRowHeight);
 
             double firstTableEnd = 80 + 3 * firstTableRowHeight;
 
             graph.DrawLine(_tablePen, 40, 80, 40, firstTableEnd);
-            graph.DrawLine(_tablePen, 190, 80, 190, firstTableEnd);
-            graph.DrawLine(_tablePen, (rightMargin - 190) / 2 + 190, 80, (rightMargin - 190) / 2 + 190, firstTableEnd);
-            graph.DrawLine(_tablePen, rightMargin, 80, rightMargin, firstTableEnd);
+            graph.DrawLine(_tablePen, firstColumnWidth, 80, firstColumnWidth, firstTableEnd);
+            graph.DrawLine(_tablePen, (rightMargin - firstColumnWidth) / 2 + firstColumnWidth, 80, (rightMargin - firstColumnWidth) / 2 + firstColumnWidth, firstTableEnd);
+            graph.DrawLine(_tablePen, rightMargin, 80, rightMargin, firstTableEnd-firstTableRowHeight);
 
 
             //Pierwszy wiersz
             //Zleceniodwaca
-            graph.DrawString("Zleceniodawca/Kunde", _titleTable, XBrushes.Black, new XRect(44, 80 + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Nazwa: " , _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 14, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Adres: " , _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Nadawca/Kunde", _titleTable, XBrushes.Black, new XRect(44, 80 + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Nazwa: Direct Transport and Logistic Germany GMBH", _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 14, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Adres: Berzeliusstrasse 11, 22113 Hamburg, Germany" , _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 25, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("NIP: " , _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 36, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: ", _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 47, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Telefon: ", _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 58, 0, 0), XStringFormats.TopLeft);
 
-            //Data zlecenia
-            graph.DrawString("Data zlecenia/Datum der Bestellung:", _titleTable, XBrushes.Black, new XRect(194, 80 + 3, 0, 0), XStringFormats.TopLeft);
-            //graph.DrawString(order.Creation_Date.Date.ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            //Data wydania
+            graph.DrawString("Data wydania/Ausgabedatum:", _titleTable, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(dispatchInfo.Creation_Date, _contentTableNormal, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
 
-            //Numer zlecenia
-            graph.DrawString("Numer przyjęcia/Annahmenummer:", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 3, 0, 0), XStringFormats.TopLeft);
-            //graph.DrawString(delivery.Delivery_Number, _contentTableNormal, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            //Numer wydania
+            graph.DrawString("Numer wydania/Ausgabenummer:", _titleTable, XBrushes.Black, new XRect((rightMargin - firstColumnWidth) / 2 + firstColumnWidth+4, 80 + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(dispatchInfo.Dispatch_Number, _contentTableNormal, XBrushes.Black, new XRect((rightMargin - firstColumnWidth) / 2 + firstColumnWidth+4, 80 + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
             //Drugi wiersz
-            //ETA
-            graph.DrawString("ETA:", _titleTable, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            //graph.DrawString(order.ETA == null ? string.Empty : ((DateTime)order.ETA).ToString("dd-MM-yyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            //Odbiorca
+            graph.DrawString("Odbiorca/Empfänger:", _titleTable, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Nazwa: "+ dispatchInfo.Receiver.Receiver_Name, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 14, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Adres: "+ dispatchInfo.Receiver.Receiver_Address, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("NIP: "+ dispatchInfo.Receiver.Receiver_VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 36, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Adres e-mail: "+ dispatchInfo.Receiver.Receiver_Email, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 47, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Telefon: ", _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 58, 0, 0), XStringFormats.TopLeft);
 
 
-            //Numer kontenera
-            graph.DrawString("Nr kontenera/ Containernummer:", _titleTable, XBrushes.Black, new XRect(194, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            //graph.DrawString(order.Container_Id, _contentTableNormal, XBrushes.Black, new XRect(194, 80 + firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            //Miejsce Przeznaczenia
+            graph.DrawString("Miejsce przeznaczenia/Ziel:", _titleTable, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(dispatchInfo.Destination, _contentTableNormal, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
-            //Ilość pozycji
-            graph.DrawString("Nr ATB/ATB-Nummer:", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            //graph.DrawString(order.ATB, _contentTableNormal, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            //Nr rej. samochodu
+            graph.DrawString("Nr rej. samochodu/", _titleTable, XBrushes.Black, new XRect((rightMargin - firstColumnWidth) / 2 + firstColumnWidth+4, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Autokennzeichen:", _titleTable, XBrushes.Black, new XRect((rightMargin - firstColumnWidth) / 2 + firstColumnWidth + 4, 80 + firstTableRowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(dispatchInfo.Car_Id, _contentTableNormal, XBrushes.Black, new XRect((rightMargin - firstColumnWidth) / 2 + firstColumnWidth+4, 80 + firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
             //Trzeci wiersz
-            //ATB
-            graph.DrawString("Data zlecenia/", _titleTable, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Datum der Bestellung:", _titleTable, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-            //graph.DrawString(order.Creation_Date.ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            //Dane przewoźnika
+            graph.DrawString("Dane Przewoźnika/", _titleTable, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Angaben zum Beförderer:", _titleTable, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Nazwa: " + dispatchInfo.Carrier.Carrier_Name, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 13, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Adres: "+ dispatchInfo.Carrier.Carrier_Address, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 23, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("NIP: "+ dispatchInfo.Carrier.Carrier_VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 33, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Adres e-mail: "+ dispatchInfo.Carrier.Carrier_Email, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 43, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Telefon: ", _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 53, 0, 0), XStringFormats.TopLeft);
 
-            //PIN
-            graph.DrawString("Nr zlecenia/Bestellnummer:", _titleTable, XBrushes.Black, new XRect(194, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
+
+            //NR dokumentu celnego
+            graph.DrawString("Nr dokumentu celnego/", _titleTable, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Dokumentnummer des Zolls:", _titleTable, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + 2 * firstTableRowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
             //graph.DrawString(order.Order_Number, _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
-            //Terminal
-            graph.DrawString("Nr rej. samochodu/Autokennzeichen:", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("brak danych", _contentTableNormal, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
 
             //Druga tabelka
@@ -988,15 +997,18 @@ namespace Warehouse.Managers
             graph.DrawLine(_tablePen, 190, firstTableEnd + 20 + titleRowHeight, rightMargin, firstTableEnd + 20 + titleRowHeight);
 
             graph.DrawLine(_tablePen, 190, firstTableEnd + 20, 190, firstTableEnd + 20 + titleRowHeight);
-            graph.DrawLine(_tablePen, (rightMargin - 190) / 2 + 190, firstTableEnd + 20, (rightMargin - 190) / 2 + 190, firstTableEnd + 20 + titleRowHeight);
+            graph.DrawLine(_tablePen, (rightMargin - 190) / 3 + 190, firstTableEnd + 20, (rightMargin - 190) / 3 + 190, firstTableEnd + 20 + titleRowHeight);
+            graph.DrawLine(_tablePen, 2*((rightMargin - 190) / 3) + 190, firstTableEnd + 20, 2 * ((rightMargin - 190) / 3) + 190, firstTableEnd + 20 + titleRowHeight);
             graph.DrawLine(_tablePen, rightMargin, firstTableEnd + 20, rightMargin, firstTableEnd + 20 + titleRowHeight);
 
-            graph.DrawString("Ilość wg zlecenia/", _titleTable, XBrushes.Black, new XRect(193, firstTableEnd + 20 + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Menge gemäß der Bestellung", _titleTable, XBrushes.Black, new XRect(193, firstTableEnd + 20 + 3 + 10, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Przyjęto na magazyn/", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 190 + 3, firstTableEnd + 20 + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("An das Lager übernommen", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 190 + 3, firstTableEnd + 20 + 3 + 10, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Przyjęto na magazyn/", _titleTableSmall, XBrushes.Black, new XRect(193, firstTableEnd + 20 + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("An das Lager übernommen", _titleTableSmall, XBrushes.Black, new XRect(193, firstTableEnd + 20 + 3 + 10, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Stan magazynowy/", _titleTableSmall, XBrushes.Black, new XRect((rightMargin - 190) / 3 + 190 + 3, firstTableEnd + 20 + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Lagerstatus", _titleTableSmall, XBrushes.Black, new XRect((rightMargin - 190) / 3 + 190 + 3, firstTableEnd + 20 + 3 + 10, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Ilość wydana/", _titleTableSmall, XBrushes.Black, new XRect(2*((rightMargin - 190) / 3) + 190 + 3, firstTableEnd + 20 + 3, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("der ausgegebene Betrag", _titleTableSmall, XBrushes.Black, new XRect(2*((rightMargin - 190) / 3) + 190 + 3, firstTableEnd + 20 + 3 + 10, 0, 0), XStringFormats.TopLeft);
             //int orderPositionsCount = order.Num_of_Positions;
-            int orderPositionsCount = 3;
+            int orderPositionsCount = dispatchInfo.ListOfOrderPositions.Count;
             double rowHeight = 60;
             int countOfFitIn = 7;
             if (orderPositionsCount < 7)
@@ -1011,7 +1023,7 @@ namespace Warehouse.Managers
 
             double firstColumndWidth = 80;
             double secondColumnWidth = 150 - firstColumndWidth;
-            double restColumnWidth = (rightMargin - (40 + firstColumndWidth + secondColumnWidth)) / 4;
+            double restColumnWidth = (rightMargin - (40 + firstColumndWidth + secondColumnWidth)) / 6;
             double lineYPos = rowHeight;
             double lineYPosSecondPage = rowHeight;
             double tableHeight = 0;
@@ -1025,29 +1037,41 @@ namespace Warehouse.Managers
                 for (int i = 0; i < countOfFitIn; i++)
                 {
                     graph.DrawLine(_tablePen, 40, endOfTitleRow + lineYPos, rightMargin, endOfTitleRow + lineYPos);
-                    graph.DrawString("Nr ATB", _titleTable, XBrushes.Black, new XRect(43, endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("atb1", _contentTableNormal, XBrushes.Black, new XRect(43, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString(string.Format("Poz.{0}/Pos.{0}", i + 1), _titleTable, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    //graph.DrawString(orderPositions[i].Name, _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("testowyName", _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Nr ATB", _titleTableSmall, XBrushes.Black, new XRect(43, endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("test", _contentTableNormal, XBrushes.Black, new XRect(43, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].ATB, _contentTableNormal, XBrushes.Black, new XRect(43, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(string.Format("Poz.{0}/Pos.{0}", i + 1), _titleTableSmall, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Name, _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowyName", _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
 
-                    graph.DrawString("Ilość opakowań/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Anzahl der Pakete", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph.DrawString(orderPositions[i].Amount.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Waga brutto/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Bruttogewicht", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-                    //graph.DrawString(orderPositions[i].Weight_Gross.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Ilość opakowań/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Anzahl der", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Pakete", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 20, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Amount_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Waga brutto/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Bruttogewicht", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Weight_Gross_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
 
-                    graph.DrawString("Ilość opakowań/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Anzahl der Pakete", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph.DrawString(orderPositions[i].Amount_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Waga brutto/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Bruttogewicht", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph.DrawString(orderPositions[i].Weight_Gross_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Ilość opakowań/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Anzahl der", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Pakete", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 20, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Amount_Before_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Waga brutto/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Bruttogewicht", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Weight_Before_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Ilość opakowań/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Anzahl der", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Pakete", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 20, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Amount_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Waga brutto/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Bruttogewicht", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Weight_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
                     lineYPos += rowHeight;
                     tableHeight += rowHeight;
                 }
@@ -1060,6 +1084,8 @@ namespace Warehouse.Managers
                 graph.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 2 * restColumnWidth, endOfTitleRow, 40 + firstColumndWidth + secondColumnWidth + 2 * restColumnWidth, endOfTitleRow + tableHeight);
                 graph.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 3 * restColumnWidth, endOfTitleRow, 40 + firstColumndWidth + secondColumnWidth + 3 * restColumnWidth, endOfTitleRow + tableHeight);
                 graph.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 4 * restColumnWidth, endOfTitleRow, 40 + firstColumndWidth + secondColumnWidth + 4 * restColumnWidth, endOfTitleRow + tableHeight);
+                graph.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 5 * restColumnWidth, endOfTitleRow, 40 + firstColumndWidth + secondColumnWidth + 5 * restColumnWidth, endOfTitleRow + tableHeight);
+                graph.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 6 * restColumnWidth, endOfTitleRow, 40 + firstColumndWidth + secondColumnWidth + 6 * restColumnWidth, endOfTitleRow + tableHeight);
 
                 PdfPage secondPage = orderPdf.AddPage();
                 XGraphics graph2 = XGraphics.FromPdfPage(secondPage);
@@ -1071,32 +1097,48 @@ namespace Warehouse.Managers
                 for (int i = countOfFitIn; i < orderPositionsCount; i++)
                 {
                     graph2.DrawLine(_tablePen, 40, 40 + lineYPosSecondPage, rightMargin, 40 + lineYPosSecondPage);
-                    graph2.DrawString("Nr ATB", _titleTable, XBrushes.Black, new XRect(43, 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph2.DrawString("atb1", _contentTableNormal, XBrushes.Black, new XRect(43, 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph2.DrawString(string.Format("Poz.{0}/Pos.{0}", i + 1), _titleTable, XBrushes.Black, new XRect(43 + firstColumndWidth, 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    //graph2.DrawString(orderPositions[i].Name, _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph2.DrawString("testowyName", _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Nr ATB", _titleTableSmall, XBrushes.Black, new XRect(43, 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    //graph2.DrawString("test", _contentTableNormal, XBrushes.Black, new XRect(43, 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString(dispatchInfo.ListOfOrderPositions[i].ATB, _contentTableNormal, XBrushes.Black, new XRect(43, 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    
+                    graph2.DrawString(string.Format("Poz.{0}/Pos.{0}", i + 1), _titleTableSmall, XBrushes.Black, new XRect(43 + firstColumndWidth, 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString(dispatchInfo.ListOfOrderPositions[i].Name, _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    //graph2.DrawString("testowyName", _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
 
-                    graph2.DrawString("Ilość opakowań/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph2.DrawString("Anzahl der Pakete", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-                    graph2.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph2.DrawString(orderPositions[i].Amount.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph2.DrawString("Waga brutto/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph2.DrawString("Bruttogewicht", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Ilość opakowań/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Anzahl der", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Pakete", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 20, 0, 0), XStringFormats.TopLeft);
+                    //graph2.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString(dispatchInfo.ListOfOrderPositions[i].Amount_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Waga brutto/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Bruttogewicht", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
                    
-                    graph2.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph2.DrawString(orderPositions[i].Weight_Gross.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    //graph2.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString(dispatchInfo.ListOfOrderPositions[i].Weight_Gross_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
 
-                    graph2.DrawString("Ilość opakowań/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph2.DrawString("Anzahl der Pakete", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-                   
-                    graph2.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph2.DrawString(orderPositions[i].Amount_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph2.DrawString("Waga brutto/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph2.DrawString("Bruttogewicht", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Ilość opakowań/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Anzahl der", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Pakete", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 20, 0, 0), XStringFormats.TopLeft);
+
+                    //graph2.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString(dispatchInfo.ListOfOrderPositions[i].Amount_Before_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Waga brutto/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Bruttogewicht", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
                   
-                    graph2.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph2.DrawString(orderPositions[i].Weight_Gross_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    //graph2.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString(dispatchInfo.ListOfOrderPositions[i].Weight_Before_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Ilość opakowań/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Anzahl der", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Pakete", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 20, 0, 0), XStringFormats.TopLeft);
+
+                    //graph2.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString(dispatchInfo.ListOfOrderPositions[i].Amount_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Waga brutto/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString("Bruttogewicht", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+
+                    //graph2.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph2.DrawString(dispatchInfo.ListOfOrderPositions[i].Weight_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), 40 + lineYPosSecondPage - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                
                     lineYPos += rowHeight;
                     tableHeight += rowHeight;
                     tableHeightSecondPage += rowHeight;
@@ -1111,10 +1153,12 @@ namespace Warehouse.Managers
                 graph2.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 2 * restColumnWidth, 40, 40 + firstColumndWidth + secondColumnWidth + 2 * restColumnWidth, 40 + tableHeightSecondPage);
                 graph2.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 3 * restColumnWidth, 40, 40 + firstColumndWidth + secondColumnWidth + 3 * restColumnWidth, 40 + tableHeightSecondPage);
                 graph2.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 4 * restColumnWidth, 40, 40 + firstColumndWidth + secondColumnWidth + 4 * restColumnWidth, 40 + tableHeightSecondPage);
+                graph2.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 5 * restColumnWidth, 40, 40 + firstColumndWidth + secondColumnWidth + 5 * restColumnWidth, 40 + tableHeightSecondPage);
+                graph2.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 6 * restColumnWidth, 40, 40 + firstColumndWidth + secondColumnWidth + 6 * restColumnWidth, 40 + tableHeightSecondPage);
 
                 double endOfSecondTableSecondPage = 40 + tableHeightSecondPage;
                 //Pod tabelką drugą
-                graph2.DrawString("Potwierdzam przyjęcie towaru wykazanego powyżej, do magazynu firmy/Ich bestätige den", _normalText, XBrushes.Black, new XRect(40, endOfSecondTableSecondPage + 20, 0, 0), XStringFormats.TopLeft);
+                graph2.DrawString("Potwierdzam wydanie towaru wykazanego powyżej, z magazynu firmy/Ich bestätige den", _normalText, XBrushes.Black, new XRect(40, endOfSecondTableSecondPage + 20, 0, 0), XStringFormats.TopLeft);
                 graph2.DrawString("Eingang der oben genannten Waren im Lager des Unternehmens:", _normalText, XBrushes.Black, new XRect(40, endOfSecondTableSecondPage + 35, 0, 0), XStringFormats.TopLeft);
                 graph2.DrawString("Direct Transport and Logistic Germany GMBH", _normalText, XBrushes.Black, new XRect(70, endOfSecondTableSecondPage + 65, 0, 0), XStringFormats.TopLeft);
                 graph2.DrawString("Berzeliusstrasse 11", _normalText, XBrushes.Black, new XRect(70, endOfSecondTableSecondPage + 80, 0, 0), XStringFormats.TopLeft);
@@ -1129,41 +1173,57 @@ namespace Warehouse.Managers
                 graph2.DrawLine(_tablePen, rightMargin - 20, endOfSecondTableSecondPage + 95 + 50, rightMargin - 20, endOfSecondTableSecondPage + 95 + 70);
 
                 //Tekst w ramce (osoba zlecająca)
-                graph2.DrawString(string.Format("Osoba przyjmująca/die empfangende Person: {0}", creator), _normalText, XBrushes.Black, new XRect(63, endOfSecondTableSecondPage + 95 + 53, 0, 0), XStringFormats.TopLeft);
+                graph2.DrawString(string.Format("Osoba wydająca/ausstellende Person: {0}", creator), _normalText, XBrushes.Black, new XRect(63, endOfSecondTableSecondPage + 95 + 53, 0, 0), XStringFormats.TopLeft);
             }
             else
             {
                 for (int i = 0; i < orderPositionsCount; i++)
                 {
                     graph.DrawLine(_tablePen, 40, endOfTitleRow + lineYPos, rightMargin, endOfTitleRow + lineYPos);
-                    graph.DrawString("Nr ATB", _titleTable, XBrushes.Black, new XRect(43, endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("atb1", _contentTableNormal, XBrushes.Black, new XRect(43, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString(string.Format("Poz.{0}/Pos.{0}", i + 1), _titleTable, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                  
-                    graph.DrawString("testowyName", _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph.DrawString(orderPositions[i].Name, _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Nr ATB", _titleTableSmall, XBrushes.Black, new XRect(43, endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("test", _contentTableNormal, XBrushes.Black, new XRect(43, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].ATB, _contentTableNormal, XBrushes.Black, new XRect(43, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
 
-                    graph.DrawString("Ilość opakowań/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Anzahl der Pakete", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    
+                    graph.DrawString(string.Format("Poz.{0}/Pos.{0}", i + 1), _titleTableSmall, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
                   
-                    graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph.DrawString(orderPositions[i].Amount.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Waga brutto/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Bruttogewicht", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowyName", _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Name, _contentTableNormal, XBrushes.Black, new XRect(43 + firstColumndWidth, endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+
+                    graph.DrawString("Ilość opakowań/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Anzahl der", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Pakete", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 20, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Amount_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Waga brutto/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Bruttogewicht", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
                  
-                    graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph.DrawString(orderPositions[i].Weight_Gross.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Weight_Gross_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
 
-                    graph.DrawString("Ilość opakowań/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Anzahl der Pakete", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Ilość opakowań/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Anzahl der", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Pakete", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 20, 0, 0), XStringFormats.TopLeft);
+
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Amount_Before_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Waga brutto/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Bruttogewicht", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
                    
-                    graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph.DrawString(orderPositions[i].Amount_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 2 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Waga brutto/", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
-                    graph.DrawString("Bruttogewicht", _titleTable, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-                   
-                    graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
-                    //graph.DrawString(orderPositions[i].Weight_Gross_Received.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Weight_Before_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 3 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+
+                    graph.DrawString("Ilość opakowań/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Anzahl der", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Pakete", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 20, 0, 0), XStringFormats.TopLeft);
+
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Amount_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 4 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Waga brutto/", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString("Bruttogewicht", _titleTableSmall, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
+
+                    //graph.DrawString("testowe", _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchInfo.ListOfOrderPositions[i].Weight_Dispatch.ToString(), _contentTableNormal, XBrushes.Black, new XRect(43 + (firstColumndWidth + secondColumnWidth + 5 * restColumnWidth), endOfTitleRow + lineYPos - rowHeight + 3 + 30, 0, 0), XStringFormats.TopLeft);
                     lineYPos += rowHeight;
                     tableHeight += rowHeight;
                 }
@@ -1176,10 +1236,12 @@ namespace Warehouse.Managers
                 graph.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 2 * restColumnWidth, endOfTitleRow, 40 + firstColumndWidth + secondColumnWidth + 2 * restColumnWidth, endOfTitleRow + tableHeight);
                 graph.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 3 * restColumnWidth, endOfTitleRow, 40 + firstColumndWidth + secondColumnWidth + 3 * restColumnWidth, endOfTitleRow + tableHeight);
                 graph.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 4 * restColumnWidth, endOfTitleRow, 40 + firstColumndWidth + secondColumnWidth + 4 * restColumnWidth, endOfTitleRow + tableHeight);
+                graph.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 5 * restColumnWidth, endOfTitleRow, 40 + firstColumndWidth + secondColumnWidth + 5 * restColumnWidth, endOfTitleRow + tableHeight);
+                graph.DrawLine(_tablePen, 40 + firstColumndWidth + secondColumnWidth + 6 * restColumnWidth, endOfTitleRow, 40 + firstColumndWidth + secondColumnWidth + 6 * restColumnWidth, endOfTitleRow + tableHeight);
 
                 double endOfSecondTable = endOfTitleRow + tableHeight;
                 //Pod tabelką drugą
-                graph.DrawString("Potwierdzam przyjęcie towaru wykazanego powyżej, do magazynu firmy/Ich bestätige den", _normalText, XBrushes.Black, new XRect(40, endOfSecondTable + 20, 0, 0), XStringFormats.TopLeft);
+                graph.DrawString("Potwierdzam wydanie towaru wykazanego powyżej, z magazynu firmy/Ich bestätige den", _normalText, XBrushes.Black, new XRect(40, endOfSecondTable + 20, 0, 0), XStringFormats.TopLeft);
                 graph.DrawString("Eingang der oben genannten Waren im Lager des Unternehmens:", _normalText, XBrushes.Black, new XRect(40, endOfSecondTable + 35, 0, 0), XStringFormats.TopLeft);
                 graph.DrawString("Direct Transport and Logistic Germany GMBH", _normalText, XBrushes.Black, new XRect(70, endOfSecondTable + 65, 0, 0), XStringFormats.TopLeft);
                 graph.DrawString("Berzeliusstrasse 11", _normalText, XBrushes.Black, new XRect(70, endOfSecondTable + 80, 0, 0), XStringFormats.TopLeft);
@@ -1194,10 +1256,10 @@ namespace Warehouse.Managers
                 graph.DrawLine(_tablePen, rightMargin - 20, endOfSecondTable + 95 + 50, rightMargin - 20, endOfSecondTable + 95 + 70);
 
                 //Tekst w ramce (osoba zlecająca)
-                graph.DrawString(string.Format("Osoba przyjmująca/die empfangende Person: {0}", creator), _normalText, XBrushes.Black, new XRect(63, endOfSecondTable + 95 + 53, 0, 0), XStringFormats.TopLeft);
+                graph.DrawString(string.Format("Osoba wydająca/ausstellende Person: {0}", creator), _normalText, XBrushes.Black, new XRect(63, endOfSecondTable + 95 + 53, 0, 0), XStringFormats.TopLeft);
             }
             string uri = HttpContext.Current.Request.Url.AbsoluteUri;
-            string pdfFileName = "Delivery_" + dispatchInfo.Id + "_" + dispatchInfo.Dispatch_Number + "_" + DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".pdf";
+            string pdfFileName = "Dispatch_" + dispatchInfo.Id + "_" + dispatchInfo.Dispatch_Number.Replace("/", "_") + "_" + DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".pdf";
             if (uri.Contains("localhost"))
             {
                 pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;

@@ -24,10 +24,14 @@ namespace Warehouse.Managers
             foreach (var item in listOfDeliveryDispatches)
             {
                 Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Id == item.Delivery_Id);
-                if (!result.Contains(delivery.Id))
+                if (delivery != null)
                 {
-                    result.Add(delivery.Id);
+                    if (!result.Contains(delivery.Id))
+                    {
+                        result.Add(delivery.Id);
+                    }
                 }
+
             }
             return result;
         }
@@ -72,9 +76,10 @@ namespace Warehouse.Managers
                 OrderPositionsDispatchInfoPDF toAddToList = new OrderPositionsDispatchInfoPDF();
                 int? amountReceived = orderPosition.Amount_Received;
                 decimal? weightReceived = orderPosition.Weight_Gross_Received;
-                List<Dispatches_Positions> listOfdispatchesPositionsForOrderPosition = _context.Dispatches_Positions.Where(d=>d.Order_Position_Id == orderPosition.Id && d.Deleted_At == null && d.Created_At < dispatch.Created_At).ToList();
+                DateTime dateDispatch = dispatch.Created_At.Value.AddMilliseconds(-1);//bo znak mniejszośc działa jak <=
+                List<Dispatches_Positions> listOfdispatchesPositionsForOrderPosition = _context.Dispatches_Positions.Where(d=>d.Order_Position_Id == orderPosition.Id && d.Deleted_At == null && d.Created_At.Value < dateDispatch).ToList();
                 int? amountBeforeDispatch = amountReceived - listOfdispatchesPositionsForOrderPosition.Sum(d => d.Amount);
-                decimal? weightBeforeDispatch = weightReceived = listOfdispatchesPositionsForOrderPosition.Sum(d => d.Weight_Gross);
+                decimal? weightBeforeDispatch = weightReceived - listOfdispatchesPositionsForOrderPosition.Sum(d => d.Weight_Gross);
                 int? amountDispatch = item.Amount;
                 decimal? weightDispatch = item.Weight_Gross;
                 toAddToList.Id = item.Id;
@@ -115,6 +120,7 @@ namespace Warehouse.Managers
             result.Dispatch_Number = dispatch.Dispatch_Number;
             result.Creation_Date = dispatch.Creation_Date == null ? string.Empty : dispatch.Creation_Date.Value.ToString("dd-MM-yyyy");
             result.Car_Id = dispatch.Car_Id;
+            result.Destination = cmrDispatch == null ? string.Empty : cmrDispatch.Destination;
             result.Carrier = carrierDispatch;
             result.Receiver = receiverDispatch;
             result.Sender = senderDispatch;

@@ -20,6 +20,7 @@ namespace Warehouse.Controllers
         public DispatchController()
         {
             _context = new WarehouseEntities();
+            _pdfManager = new PDFManager();
         }
 
         [HttpGet]
@@ -69,6 +70,7 @@ namespace Warehouse.Controllers
 
                 CarrierDispatch carrier = new CarrierDispatch();
                 ReceiverDispatch receiver = new ReceiverDispatch();
+                CMRDispatch cmrToResult = new CMRDispatch();
 
                 try
                 {
@@ -80,7 +82,25 @@ namespace Warehouse.Controllers
                         {
                             DispatchOrderList dispatchOrderList = new DispatchOrderList();
                             Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Id == deliveryId && d.Deleted_At == null);
-                            Order order = _context.Orders.FirstOrDefault(o => o.Id == delivery.Order_Id && o.Deleted_At == null);
+                            //if (delivery != null)
+                            //{
+                                Order order = _context.Orders.FirstOrDefault(o => o.Id == delivery.Order_Id && o.Deleted_At == null);
+                            //}
+
+                            Dispatch dispatch = _context.Dispatches.FirstOrDefault(d => d.Id == dispatchId && d.Deleted_At == null);
+                            if (dispatch.CMR_Id != null)
+                            {
+                                int cmrId = Convert.ToInt32(dispatch.CMR_Id);
+                                CMR_Dispatches cmrDispatch = _context.CMR_Dispatches.FirstOrDefault(c => c.Id == cmrId && c.Deleted_At == null);
+                                cmrToResult.Commodity_Type = cmrDispatch.Commodity_Type;
+                                cmrToResult.Destination = cmrDispatch.Destination;
+                                cmrToResult.Sender_Address = cmrDispatch.Sender_Address;
+                                cmrToResult.Sender_Email = cmrDispatch.Sender_Email;
+                                cmrToResult.Sender_Name = cmrDispatch.Sender_Name;
+                                cmrToResult.Sender_VAT_Id = cmrDispatch.Sender_VAT_Id;
+
+                            }
+
                             List<DispatchPositionsDispatchInfo> listOfDispatchPositions = new List<DispatchPositionsDispatchInfo>();
 
                             List<Orders_Positions> listOfOrdersPositions = _context.Orders_Positions.Where(o => o.Order_id == order.Id && o.Deleted_At == null).ToList();
@@ -89,12 +109,12 @@ namespace Warehouse.Controllers
                                 List<Dispatches_Positions> dispatchPositionsFromDB = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == dispatchId && d.Order_Position_Id == orderPosition.Id && d.Deleted_At == null).ToList();
                                 foreach (var dispatchPositionFromDB in dispatchPositionsFromDB)
                                 {
-                                    DispatchPositionsDispatchInfo dispatch = new DispatchPositionsDispatchInfo();
-                                    dispatch.Id = dispatchPositionFromDB.Id;
-                                    dispatch.Amount = dispatchPositionFromDB.Amount;
-                                    dispatch.Weight_Gross = dispatchPositionFromDB.Weight_Gross;
-                                    dispatch.Name = _context.Orders_Positions.FirstOrDefault(o => o.Id == dispatchPositionFromDB.Order_Position_Id && o.Deleted_At == null).Name;
-                                    listOfDispatchPositions.Add(dispatch);
+                                    DispatchPositionsDispatchInfo dispatchPosition = new DispatchPositionsDispatchInfo();
+                                    dispatchPosition.Id = dispatchPositionFromDB.Id;
+                                    dispatchPosition.Amount = dispatchPositionFromDB.Amount;
+                                    dispatchPosition.Weight_Gross = dispatchPositionFromDB.Weight_Gross;
+                                    dispatchPosition.Name = _context.Orders_Positions.FirstOrDefault(o => o.Id == dispatchPositionFromDB.Order_Position_Id && o.Deleted_At == null).Name;
+                                    listOfDispatchPositions.Add(dispatchPosition);
                                 }
                             }
                             dispatchOrderList.DeliveryId = delivery.Id;
@@ -118,6 +138,10 @@ namespace Warehouse.Controllers
                         result.Id = dispatchFromDB.Id;
                         result.ListOfDispatchOrders = listOfDispatchOrders;
                         result.Receiver = receiver;
+                        result.isCMR = dispatchFromDB.If_CMR;
+                        result.CmrDispatch = cmrToResult;
+                        result.Duty_Doc_Id = dispatchFromDB.Duty_Doc_Id;
+                        result.Car_Id = dispatchFromDB.Car_Id;
                     }
                     return result;                 
                 }
@@ -271,6 +295,7 @@ namespace Warehouse.Controllers
                         //Editing and adding orderPositions
                         foreach (var dispatchPosition in editDispatch.DispatchPositions)
                         {
+                           
                             foreach (var dispatchPositionFromDB in dispatchPositionsFromDB)
                             {
                                 if (dispatchPosition.Id == dispatchPositionFromDB.Id)
@@ -278,6 +303,25 @@ namespace Warehouse.Controllers
                                     dispatchPositionFromDB.Amount = dispatchPosition.Amount;
                                     dispatchPositionFromDB.Edited_At = dateOfEdit;
                                     dispatchPositionFromDB.Weight_Gross = dispatchPosition.Weight_Gross;
+                                    _context.SaveChanges();
+                                    Dispatches_Positions dispatchPositionForParameter = _context.Dispatches_Positions.FirstOrDefault(d => d.Id == dispatchPosition.Id && d.Deleted_At == null);
+                                    Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == dispatchPositionForParameter.Order_Position_Id && o.Deleted_At == null);
+                                    Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderPosition.Order_id && d.Deleted_At == null);
+                                    List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id).ToList();
+                                    bool isBalanced = true;
+                                    foreach (var orderPositionForOrder in listOfOrdersPositionsForOrderPosition)
+                                    {
+                                        List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPositionForOrder.Id).ToList();
+                                        if (orderPositionForOrder.Amount_Received != dispatchPositions.Sum(d => d.Amount))
+                                        {
+                                            isBalanced = false;
+                                        }
+                                    }
+                                    if (isBalanced)
+                                    {
+                                        delivery.If_Delivery_Dispatch_Balanced = true;
+                                    }
+                                    _context.SaveChanges();
                                 }
                                 if (dispatchPosition.Id == null)
                                 {
@@ -286,8 +330,38 @@ namespace Warehouse.Controllers
                                     dispatchPositionsToAdd.Amount = dispatchPosition.Amount;
                                     dispatchPositionsToAdd.Weight_Gross = dispatchPosition.Weight_Gross;
                                     _context.Dispatches_Positions.Add(dispatchPositionsToAdd);
+                                    Dispatches_Positions dispatchPositionForParameter = _context.Dispatches_Positions.FirstOrDefault(d => d.Id == dispatchPositionsToAdd.Id && d.Deleted_At == null);
+                                    Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == dispatchPositionForParameter.Order_Position_Id && o.Deleted_At == null);
+                                    Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderPosition.Order_id && d.Deleted_At == null);
+                                    List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id).ToList();
+                                    bool isBalanced = true;
+                                    foreach (var orderPositionForOrder in listOfOrdersPositionsForOrderPosition)
+                                    {
+                                        List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPositionForOrder.Id).ToList();
+                                        if (orderPositionForOrder.Amount_Received != dispatchPositions.Sum(d => d.Amount))
+                                        {
+                                            isBalanced = false;
+                                        }
+                                    }
+                                    if (isBalanced)
+                                    {
+                                        delivery.If_Delivery_Dispatch_Balanced = true;
+                                    }
+                                    _context.SaveChanges();
+                                    if (_context.Deliveries_Dispatches.FirstOrDefault(d => d.Delivery_Id == delivery.Id && d.Dispatch_Id == editDispatch.Id && d.Deleted_At == null) == null)
+                                    {
+                                        Deliveries_Dispatches deliveryDispatch = new Deliveries_Dispatches();
+                                        deliveryDispatch.Created_At = dateOfEdit;
+                                        deliveryDispatch.Dispatch_Id = (int)editDispatch.Id;
+                                        deliveryDispatch.Delivery_Id = delivery.Id;
+                                        _context.Deliveries_Dispatches.Add(deliveryDispatch);
+                                        _context.SaveChanges();
+                                    }
                                 }
+
                             }
+
+                            
                         }
                         _context.SaveChanges();
 
@@ -297,6 +371,31 @@ namespace Warehouse.Controllers
                         {
                             var dispatchPositionToDelete = _context.Dispatches_Positions.FirstOrDefault(d => d.Id == id && d.Deleted_At == null);
                             dispatchPositionToDelete.Deleted_At = dateOfEdit;
+                            Dispatches_Positions dispatchPositionForParameter = _context.Dispatches_Positions.FirstOrDefault(d => d.Id == id && d.Deleted_At == null);
+                            Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == dispatchPositionForParameter.Order_Position_Id && o.Deleted_At == null);
+                            Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderPosition.Order_id && d.Deleted_At == null);
+                            delivery.If_Delivery_Dispatch_Balanced = false;
+                            _context.SaveChanges();
+
+
+                            //sprawdzam czy jakiś orderPOsition z delivery dla tego dispatchPositions należy do tego dispatcha
+                            bool isDeliveryDispatch = false;
+                            List<int> orderPositionsForDeliveryIds = _context.Orders_Positions.Where(o => o.Order_id == delivery.Order_Id).Select(o=>o.Id).ToList();
+                            List<int> listOfdispatchPositionsIds = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == editDispatch.Id).Select(d=>d.Id).ToList();
+                            foreach (var item in orderPositionsForDeliveryIds)
+                            {
+                                if (listOfdispatchPositionsIds.Contains(item))
+                                {
+                                    isDeliveryDispatch = true;
+                                }
+                            }
+
+                            if (!isDeliveryDispatch)
+                            {
+                                Deliveries_Dispatches deliveryDispatch = _context.Deliveries_Dispatches.FirstOrDefault(d => d.Delivery_Id == delivery.Id && d.Dispatch_Id == editDispatch.Id);
+                                deliveryDispatch.Deleted_At = dateOfEdit;
+                                _context.SaveChanges();
+                            }
                         }
 
                         _context.SaveChanges();
@@ -389,7 +488,7 @@ namespace Warehouse.Controllers
                 RequestResult result = new RequestResult();
                 try
                 {
-                    if (_context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)
+                    if (_context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault() == null || _context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)
                     {
                         var counter = _context.Counters.FirstOrDefault(c => c.Name == "DispatchCounter");
                         counter.Count = 1;
@@ -398,6 +497,35 @@ namespace Warehouse.Controllers
                     DateTime dateOfCreate = DateTime.Now;
                     Dispatch dispatchToAdd = new Dispatch();
                     CMR_Dispatches cmrDispatch = new CMR_Dispatches();
+                    dispatchToAdd.Carrier_Address = newDispatch.Carrier.Carrier_Address;
+                    dispatchToAdd.Carrier_Email = newDispatch.Carrier.Carrier_Email;
+                    dispatchToAdd.Carrier_Name = newDispatch.Carrier.Carrier_Name;
+                    dispatchToAdd.Carrier_VAT_Id = newDispatch.Carrier.Carrier_VAT_Id;
+                    dispatchToAdd.Car_Id = newDispatch.Car_Id;
+                    dispatchToAdd.Creation_Date = dateOfCreate;
+                    dispatchToAdd.Dispatch_Number = _context.Counters.FirstOrDefault(c => c.Name == "DispatchCounter").Count.ToString() + "/" + ((DateTime)dispatchToAdd.Creation_Date).Month.ToString() + "/" + ((DateTime)dispatchToAdd.Creation_Date).Year.ToString();
+                    dispatchToAdd.Receiver_Address = newDispatch.Receiver.Receiver_Address;
+                    dispatchToAdd.Receiver_Email = newDispatch.Receiver.Receiver_Email;
+                    dispatchToAdd.Receiver_Name = newDispatch.Receiver.Receiver_Name;
+                    dispatchToAdd.Receiver_VAT_Id = newDispatch.Receiver.Receiver_VAT_Id;
+                    dispatchToAdd.Created_At = dateOfCreate;
+                    if (isCMR)
+                    {
+                        dispatchToAdd.CMR_Id = cmrDispatch.Id == null ? null : cmrDispatch.Id.ToString();
+                    }
+                    else
+                    {
+                        dispatchToAdd.CMR_Id = null;
+                    }
+
+                    dispatchToAdd.Number_Of_Positions = newDispatch.DispatchPositions.Count;
+                    dispatchToAdd.If_PDF_And_Sent = false;
+                    dispatchToAdd.If_CMR_And_Sent = false;
+                    dispatchToAdd.If_CMR = isCMR;
+                    dispatchToAdd.Duty_Doc_Id = newDispatch.Duty_Doc_Id;
+                    dispatchToAdd.Creator_Id = UserHelper.GetCurrentUserId();
+                    _context.Dispatches.Add(dispatchToAdd);
+                    _context.SaveChanges();
                     if (isCMR)
                     {
                         cmrDispatch.Created_At = dateOfCreate;
@@ -407,45 +535,56 @@ namespace Warehouse.Controllers
                         cmrDispatch.Sender_Email = newDispatch.CMRDispatch.Sender_Email;
                         cmrDispatch.Sender_Name = newDispatch.CMRDispatch.Sender_Name;
                         cmrDispatch.Sender_VAT_Id = newDispatch.CMRDispatch.Sender_VAT_Id;
+                        cmrDispatch.Dispatch_Id = dispatchToAdd.Id;
                         _context.CMR_Dispatches.Add(cmrDispatch);
                         _context.SaveChanges();
                     }
-
-                    dispatchToAdd.Carrier_Address = newDispatch.Carrier.Carrier_Address;
-                    dispatchToAdd.Carrier_Email = newDispatch.Carrier.Carrier_Email;
-                    dispatchToAdd.Carrier_Name = newDispatch.Carrier.Carrier_Name;
-                    dispatchToAdd.Carrier_VAT_Id = newDispatch.Carrier.Carrier_VAT_Id;
-                    dispatchToAdd.Car_Id = newDispatch.Car_Id;
-                    dispatchToAdd.Creation_Date = dateOfCreate;
-                    dispatchToAdd.Dispatch_Number = _context.Counters.FirstOrDefault(c => c.Name == "DispatchCounter").Count.ToString() +"/"+ ((DateTime)dispatchToAdd.Creation_Date).Month.ToString() + "/" + ((DateTime)dispatchToAdd.Creation_Date).Year.ToString();
-                    dispatchToAdd.Receiver_Address = newDispatch.Receiver.Receiver_Address;
-                    dispatchToAdd.Receiver_Email = newDispatch.Receiver.Receiver_Email;
-                    dispatchToAdd.Receiver_Name = newDispatch.Receiver.Receiver_Name;
-                    dispatchToAdd.Receiver_VAT_Id = newDispatch.Receiver.Receiver_VAT_Id;
-                    dispatchToAdd.Created_At = dateOfCreate;
-                    dispatchToAdd.CMR_Id = cmrDispatch.Id == null ? null : cmrDispatch.Id.ToString();
-                    dispatchToAdd.Number_Of_Positions = newDispatch.DispatchPositions.Count;
-                    dispatchToAdd.If_PDF_And_Sent = false;
-                    dispatchToAdd.If_CMR_And_Sent = false;
-                    dispatchToAdd.If_CMR = isCMR;
-                    dispatchToAdd.Duty_Doc_Id = newDispatch.Duty_Doc_Id;
-                    dispatchToAdd.Creator_Id = UserHelper.GetCurrentUserId();
-                    _context.Dispatches.Add(dispatchToAdd);
                     foreach (var item in newDispatch.DispatchPositions)
                     {
                         Dispatches_Positions dispatchPostion = new Dispatches_Positions();
                         dispatchPostion.Amount = item.Amount;
                         dispatchPostion.Created_At = dateOfCreate;
                         dispatchPostion.Dispatch_Id = dispatchToAdd.Id;
-                        dispatchPostion.Order_Position_Id = item.OrderPositionId;
+                        dispatchPostion.Order_Position_Id = item.Id;
                         dispatchPostion.Weight_Gross = item.Weight_Gross;
                         _context.Dispatches_Positions.Add(dispatchPostion);
-                    }
-                    cmrDispatch.Dispatch_Id = dispatchToAdd.Id;
-                    _context.SaveChanges();
+                        _context.SaveChanges();
 
+                        Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == item.Id && o.Deleted_At == null);
+
+
+                        Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderPosition.Order_id && d.Deleted_At == null);
+                        if (_context.Deliveries_Dispatches.FirstOrDefault(d => d.Delivery_Id == delivery.Id && d.Dispatch_Id == dispatchToAdd.Id && d.Deleted_At == null) == null)
+                        {
+                            Deliveries_Dispatches deliveryDispatch = new Deliveries_Dispatches();
+                            deliveryDispatch.Created_At = dateOfCreate;
+                            deliveryDispatch.Dispatch_Id = (int)dispatchPostion.Dispatch_Id;
+                            deliveryDispatch.Delivery_Id = delivery.Id;
+                            _context.Deliveries_Dispatches.Add(deliveryDispatch);
+                            _context.SaveChanges();
+                        }
+
+                        List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id).ToList();
+                        bool isBalanced = true;
+                        foreach (var orderPositionForOrder in listOfOrdersPositionsForOrderPosition)
+                        {
+                            List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPositionForOrder.Id).ToList();
+                            if (orderPositionForOrder.Amount_Received != dispatchPositions.Sum(d => d.Amount))
+                            {
+                                isBalanced = false;
+                            }
+                        }
+                        if (isBalanced)
+                        {
+                            delivery.If_Delivery_Dispatch_Balanced = true;
+                        }
+                    }
+                    var orderCounter = _context.Counters.FirstOrDefault(c => c.Name == "DispatchCounter");
+                    orderCounter.Count++;
+                    _context.SaveChanges();
                     result.Status = true;
                     result.Message = "Order has been edited";
+
                 }
                 catch (Exception ex)
                 {

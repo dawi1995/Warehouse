@@ -27,16 +27,47 @@ namespace Warehouse.Controllers
 
         [HttpGet]
         [Route("GetDeliveries")]
-        public DeliveryListNumber GetDeliveries(int offset = 0, int limit = int.MaxValue, string needle = "")
+        public DeliveryListNumber GetDeliveries(int offset = 0, int limit = int.MaxValue, string needle = "", bool isCreatingDispatch = false, int dispatchId = 0)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin}))
             {
+                dynamic allDeliveries;
+                if (!isCreatingDispatch)
+                {
+                     allDeliveries = (from deliveries in _context.Deliveries
+                                     join orders in _context.Orders on deliveries.Order_Id equals orders.Id into q
+                                     from orders in q.DefaultIfEmpty()
+                                     where (deliveries.Deleted_At == null
+                                     && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle) || orders.Name.Contains(needle)))
+                                     select new { Delivery = deliveries, Order = orders }).OrderByDescending(d => d.Delivery.Date_Of_Delivery).Skip(offset).Take(limit);
+                }
+                else
+                {
+                    if (dispatchId == 0)
+                    {
+                        allDeliveries = (from deliveries in _context.Deliveries
+                                         join orders in _context.Orders on deliveries.Order_Id equals orders.Id into q
+                                         from orders in q.DefaultIfEmpty()
+                                         where (deliveries.Deleted_At == null
+                                         && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle) || orders.Name.Contains(needle))
+                                         && deliveries.If_Delivery_Dispatch_Balanced == false)
+                                         select new { Delivery = deliveries, Order = orders }).OrderByDescending(d => d.Delivery.Date_Of_Delivery).Skip(offset).Take(limit);
+                    }
+                    else
+                    {
+                        List<int> deliveryDispatchIds = _context.Deliveries_Dispatches.Where(d => d.Dispatch_Id == dispatchId && d.Deleted_At == null).Select(d => d.Delivery_Id).ToList();
+                        allDeliveries = (from deliveries in _context.Deliveries
+                                         join orders in _context.Orders on deliveries.Order_Id equals orders.Id into q
+                                         from orders in q.DefaultIfEmpty()
+                                         where (deliveries.Deleted_At == null
+                                         && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle) || orders.Name.Contains(needle))
+                                         && (deliveries.If_Delivery_Dispatch_Balanced == false || deliveryDispatchIds.Contains(deliveries.Id)))
+                                         select new { Delivery = deliveries, Order = orders }).OrderByDescending(d => d.Delivery.Date_Of_Delivery).Skip(offset).Take(limit);
+                    }
+
+                }
                 //List<Delivery> listOfDeliveries = new List<Delivery>();
-                var allDeliveries = (from deliveries in _context.Deliveries
-                               join orders in _context.Orders on deliveries.Order_Id equals orders.Id into q
-                               from orders in q.DefaultIfEmpty()
-                               where (deliveries.Deleted_At == null && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle) || orders.Name.Contains(needle)))
-                               select new { Delivery = deliveries, Order = orders }).OrderByDescending(d => d.Delivery.Date_Of_Delivery).Skip(offset).Take(limit);
+
 
                 DeliveryListNumber result = new DeliveryListNumber();             
                 try
@@ -55,7 +86,9 @@ namespace Warehouse.Controllers
                         deliveryResult.IsBalancedDeliveryDispatch = item.Delivery.If_Delivery_Dispatch_Balanced;
                         deliveryResult.IsDifferentDeliveryOrder = item.Delivery.If_Differential_Delivery_Order;
 
-                        var deliveryDispatch = _context.Deliveries_Dispatches.FirstOrDefault(d => d.Delivery_Id == item.Delivery.Id && d.Deleted_At == null);
+                        int deliveryId = item.Delivery.Id;
+                        // gdzie masz te przedmioty, któe znajdują się w magazynie? Wyszukaj je funkcją strzałkową. Tylko, te które mają ID 
+                        Deliveries_Dispatches deliveryDispatch = _context.Deliveries_Dispatches.FirstOrDefault(d => d.Delivery_Id == deliveryId && d.Deleted_At == null);
                         if (deliveryDispatch != null)
                         {
                             deliveryResult.IsDispatched = true;
@@ -69,7 +102,7 @@ namespace Warehouse.Controllers
                     }
 
                     result.ListOfDeliveries = listOfDeliveryResult;
-                    result.NumberOfDeliveries = DeliveryManager.CountOfDeliveries(needle);
+                    result.NumberOfDeliveries = DeliveryManager.CountOfDeliveries(needle, isCreatingDispatch, dispatchId);
                     return result;
                 }
                 catch (Exception ex)
@@ -135,7 +168,7 @@ namespace Warehouse.Controllers
                 DateTime dateOfCreate = DateTime.Now;
                 try
                 {
-                    if (_context.Deliveries.OrderByDescending(d => d.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)
+                    if (_context.Deliveries.OrderByDescending(d => d.Created_At).FirstOrDefault() == null || _context.Deliveries.OrderByDescending(d => d.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)
                     {
                         var counter = _context.Counters.FirstOrDefault(c => c.Name == "DeliveryCounter");
                         counter.Count = 1;
@@ -357,7 +390,7 @@ namespace Warehouse.Controllers
 
         [HttpGet]
         [Route("GetDeliveryState")]
-        public List<DeliveryState> GetDeliveryState(int orderId)
+        public List<DeliveryState> GetDeliveryState(int orderId, int dispatchId = 0)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
@@ -367,8 +400,13 @@ namespace Warehouse.Controllers
                     Delivery deliveryFromDB = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderId && d.Deleted_At == null);
                     if (deliveryFromDB != null)
                     {
+                        List<int?> listOfDispatchesPositionsOrderPositionsIds = new List<int?>();
                         List<Orders_Positions> orderPositionFromDB = _context.Orders_Positions.Where(o => o.Order_id == orderId && o.Deleted_At == null).ToList();
+                        if (dispatchId != 0)
+                        {
 
+                            listOfDispatchesPositionsOrderPositionsIds = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == dispatchId).Select(d=>d.Order_Position_Id).ToList();
+                        }
                         foreach (var orderPosition in orderPositionFromDB)
                         {
                             DeliveryState deliveryState = new DeliveryState();
@@ -379,7 +417,17 @@ namespace Warehouse.Controllers
                             deliveryState.Name = orderPosition.Name;
                             deliveryState.Amount = (int)orderPosition.Amount_Received - dispatchedAmount;
                             deliveryState.Weight_Gross = (decimal)orderPosition.Weight_Gross_Received - dispatchedWeight;
-                            result.Add(deliveryState);
+                            if (listOfDispatchesPositionsOrderPositionsIds != null && listOfDispatchesPositionsOrderPositionsIds.Contains(orderPosition.Id))
+                            {
+                                Dispatches_Positions dispatchPositionsToAdd = _context.Dispatches_Positions.FirstOrDefault(d => d.Order_Position_Id == orderPosition.Id);
+                                deliveryState.Amount += (int)dispatchPositionsToAdd.Amount;
+                                deliveryState.Weight_Gross += (int)dispatchPositionsToAdd.Weight_Gross;
+                            }
+
+                            if (deliveryState.Amount > 0)
+                            {
+                                result.Add(deliveryState);
+                            }
                         }
                         return result;
                     }

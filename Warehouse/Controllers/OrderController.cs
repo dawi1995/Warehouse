@@ -151,7 +151,7 @@ namespace Warehouse.Controllers
                 RequestResult result = new RequestResult();
                 try
                 {
-                    if (_context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)
+                    if (_context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault() == null || _context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)
                     {
                         var counter = _context.Counters.FirstOrDefault(c => c.Name == "OrderCounter");
                         counter.Count = 1;
