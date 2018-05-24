@@ -451,7 +451,9 @@ namespace Warehouse.Controllers
                             Delivery deliveryToEdit = _context.Deliveries.FirstOrDefault(d => d.Id == item.Delivery_Id && d.Deleted_At == null);
                             deliveryToEdit.If_Delivery_Dispatch_Balanced = false;
                             deliveryToEdit.Edited_At = dateOfRemove;
+                            item.Deleted_At = dateOfRemove;
                         }
+                        
                         _context.SaveChanges();
                         result.Status = true;
                         result.Message = "Dispatch and his dispatch positions has been removed";
@@ -511,7 +513,18 @@ namespace Warehouse.Controllers
                     dispatchToAdd.Created_At = dateOfCreate;
                     if (isCMR)
                     {
+                        cmrDispatch.Created_At = dateOfCreate;
+                        cmrDispatch.Destination = newDispatch.CMRDispatch.Destination;
+                        cmrDispatch.Dispatch_Id = 0;
+                        cmrDispatch.Sender_Address = newDispatch.CMRDispatch.Sender_Address;
+                        cmrDispatch.Sender_Email = newDispatch.CMRDispatch.Sender_Email;
+                        cmrDispatch.Sender_Name = newDispatch.CMRDispatch.Sender_Name;
+                        cmrDispatch.Sender_VAT_Id = newDispatch.CMRDispatch.Sender_VAT_Id;
+                        cmrDispatch.Dispatch_Id = dispatchToAdd.Id;
+                        _context.CMR_Dispatches.Add(cmrDispatch);
+                        _context.SaveChanges();
                         dispatchToAdd.CMR_Id = cmrDispatch.Id == null ? null : cmrDispatch.Id.ToString();
+                        _context.SaveChanges();
                     }
                     else
                     {
@@ -526,19 +539,6 @@ namespace Warehouse.Controllers
                     dispatchToAdd.Creator_Id = UserHelper.GetCurrentUserId();
                     _context.Dispatches.Add(dispatchToAdd);
                     _context.SaveChanges();
-                    if (isCMR)
-                    {
-                        cmrDispatch.Created_At = dateOfCreate;
-                        cmrDispatch.Destination = newDispatch.CMRDispatch.Destination;
-                        cmrDispatch.Dispatch_Id = 0;
-                        cmrDispatch.Sender_Address = newDispatch.CMRDispatch.Sender_Address;
-                        cmrDispatch.Sender_Email = newDispatch.CMRDispatch.Sender_Email;
-                        cmrDispatch.Sender_Name = newDispatch.CMRDispatch.Sender_Name;
-                        cmrDispatch.Sender_VAT_Id = newDispatch.CMRDispatch.Sender_VAT_Id;
-                        cmrDispatch.Dispatch_Id = dispatchToAdd.Id;
-                        _context.CMR_Dispatches.Add(cmrDispatch);
-                        _context.SaveChanges();
-                    }
                     foreach (var item in newDispatch.DispatchPositions)
                     {
                         Dispatches_Positions dispatchPostion = new Dispatches_Positions();
