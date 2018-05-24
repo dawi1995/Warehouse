@@ -142,6 +142,7 @@ namespace Warehouse.Controllers
                         result.CmrDispatch = cmrToResult;
                         result.Duty_Doc_Id = dispatchFromDB.Duty_Doc_Id;
                         result.Car_Id = dispatchFromDB.Car_Id;
+                        result.Creation_Date = dispatchFromDB.Creation_Date == null ? string.Empty : dispatchFromDB.Creation_Date.Value.ToString("dd-MM-yyyy");
                     }
                     return result;                 
                 }

@@ -8,6 +8,7 @@ namespace Warehouse.Models.Custom
     public class DispatchDetailsDispatchInfo
     {
         public int Id { get; set; }
+        public string Creation_Date { get; set; }
         public string Dispatch_Number { get; set; }
         public string Duty_Doc_Id { get; set; }
         public string Car_Id { get; set; }
