@@ -385,7 +385,7 @@ namespace Warehouse.Controllers
                     {
                         _pdfManager.SendEmail("Order_" + orderToPdf.Order_Number, result);
                     }
-                    return result
+                    return result;
 
                 }
                 catch (Exception ex)
