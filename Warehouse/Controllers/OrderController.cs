@@ -366,7 +366,7 @@ namespace Warehouse.Controllers
 
         [HttpGet]
         [Route("GetOrderPDF")]
-        public byte[] GetOrderPDF(int orderId)
+        public byte[] GetOrderPDF(int orderId, bool ifSendEmail = false)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
@@ -380,9 +380,12 @@ namespace Warehouse.Controllers
                     {
                         creatorName = userCreator.Login;//zmienic na imie i nazwisko
                     }
-
-                    
-                    return _pdfManager.GenerateOrderPDF(orderToPdf, orderPositionsToPdf, creatorName);
+                    byte[] result = _pdfManager.GenerateOrderPDF(orderToPdf, orderPositionsToPdf, creatorName);
+                    if (ifSendEmail)
+                    {
+                        _pdfManager.SendEmail("Order_" + orderToPdf.Order_Number, result);
+                    }
+                    return result
 
                 }
                 catch (Exception ex)

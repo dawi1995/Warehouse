@@ -451,7 +451,7 @@ namespace Warehouse.Controllers
 
         [HttpGet]
         [Route("GetDeliveryPDF")]
-        public byte[] GetDeliveryPDF(int deliveryId)
+        public byte[] GetDeliveryPDF(int deliveryId, bool ifSendEmail)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin}))
             {
@@ -466,8 +466,14 @@ namespace Warehouse.Controllers
                     {
                         creatorName = userCreator.Login;//Do zmiany na imie i nazwisko
                     }
+
+                    byte[] result = _pdfManager.GenerateDeliveryPDF(deliveryToPdf, orderToPdf, orderPositionsToPdf, creatorName);
+                    if (ifSendEmail)
+                    {
+                        _pdfManager.SendEmail("Delivery_" + deliveryToPdf.Delivery_Number, result);
+                    }
                     // Zmienić creatora na creatora delivery czyli przyjmujacego zamowienie - trzeb dodać w bazie
-                    return _pdfManager.GenerateDeliveryPDF(deliveryToPdf, orderToPdf, orderPositionsToPdf, creatorName);
+                    return result;
 
                 }
                 catch (Exception ex)
@@ -485,7 +491,7 @@ namespace Warehouse.Controllers
 
         [HttpPost]
         [Route("GetDifferenceDeliveryPDF")]
-        public byte[] GetDifferenceDeliveryPDF(int deliveryId, [FromBody]Committee commitee)
+        public byte[] GetDifferenceDeliveryPDF([FromBody]Committee commitee, int deliveryId, bool ifSendEmail = false)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin }))
             {
@@ -506,8 +512,13 @@ namespace Warehouse.Controllers
                         {
                             creatorName = userCreator.Login;//Do zmiany na imie i nazwisko
                         }
+                        byte[] result = _pdfManager.GenerateDifferenceDeliveryPDF(deliveryToPdf, orderToPdf, orderPositionsToPdf, commitee);
+                        if (ifSendEmail)
+                        {
+                            _pdfManager.SendEmail("Difference_" + deliveryToPdf.Delivery_Number, result);
+                        }
                         // Zmienić creatora na creatora delivery czyli przyjmujacego zamowienie - trzeb dodać w bazie
-                        return _pdfManager.GenerateDifferenceDeliveryPDF(deliveryToPdf, orderToPdf, orderPositionsToPdf, commitee);
+                        return result;
                     }
 
 

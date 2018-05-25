@@ -522,6 +522,7 @@ namespace Warehouse.Controllers
                         cmrDispatch.Sender_Name = newDispatch.CMRDispatch.Sender_Name;
                         cmrDispatch.Sender_VAT_Id = newDispatch.CMRDispatch.Sender_VAT_Id;
                         cmrDispatch.Dispatch_Id = dispatchToAdd.Id;
+                        cmrDispatch.Commodity_Type = newDispatch.CMRDispatch.Commodity_Type;
                         _context.CMR_Dispatches.Add(cmrDispatch);
                         _context.SaveChanges();
                         dispatchToAdd.CMR_Id = cmrDispatch.Id == null ? null : cmrDispatch.Id.ToString();
@@ -603,7 +604,7 @@ namespace Warehouse.Controllers
 
         [HttpGet]
         [Route("GetDispatchPDF")]
-        public byte[] GetDispatchPDF(int dispatchId)
+        public byte[] GetDispatchPDF(int dispatchId, bool ifSendEmail = false)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
@@ -619,6 +620,10 @@ namespace Warehouse.Controllers
                     }
 
                     byte[] result = _pdfManager.GenerateDispatchPDF(dispatchInfoToPDF, creatorName);
+                    if (ifSendEmail)
+                    {
+                        _pdfManager.SendEmail("Dispatch_" + dispatch.Dispatch_Number, result);
+                    }
                     return result;
 
                 }
@@ -637,14 +642,51 @@ namespace Warehouse.Controllers
 
         [HttpGet]
         [Route("GetCMRPDF")]
-        public byte[] GetCMRPDF(int dispatchId)
+        public byte[] GetCMRPDF(int dispatchId, bool ifSendEmail = false)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
                 try
                 {
-                    byte[] result = _pdfManager.GenerateCMR();
-                    return result;
+                    Dispatch dispatchToPDF = _context.Dispatches.FirstOrDefault(d => d.Id == dispatchId && d.Deleted_At == null);
+                    if (dispatchToPDF != null)
+                    {
+                        List<Dispatches_Positions> dispatchPositionsFromDB = _context.Dispatches_Positions.Where(d=>d.Dispatch_Id == dispatchId && d.Deleted_At == null).ToList();
+                        int CMRId = Convert.ToInt32(dispatchToPDF.CMR_Id);
+                        CMR_Dispatches CMRDispatchToPDF = _context.CMR_Dispatches.FirstOrDefault(c => c.Id == CMRId);
+                        List<DispatchPositionsDispatchInfo> listOfDispatchPositionsToPDF = new List<DispatchPositionsDispatchInfo>();
+                        foreach (var item in dispatchPositionsFromDB)
+                        {
+                            Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == item.Order_Position_Id && o.Deleted_At == null);
+                            if (orderPosition != null)
+                            {
+                                DispatchPositionsDispatchInfo dispatchPosition = new DispatchPositionsDispatchInfo();
+                                dispatchPosition.Amount = item.Amount;
+                                dispatchPosition.Weight_Gross = item.Weight_Gross;
+                                dispatchPosition.Name = orderPosition.Name;
+                                listOfDispatchPositionsToPDF.Add(dispatchPosition);
+
+                            }
+                            else
+                            {
+                                throw new Exception("Not found orderPosition for dispatchPosition");
+                            }
+
+
+                        }
+
+                        byte[] result = _pdfManager.GenerateCMR(dispatchToPDF, listOfDispatchPositionsToPDF, CMRDispatchToPDF);
+                        if (ifSendEmail)
+                        {
+                            _pdfManager.SendEmail("CMR"+dispatchToPDF.Dispatch_Number, result);
+                        }
+                        return result;
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Dispatch not found"));
+                    }
+
 
                 }
                 catch (Exception ex)

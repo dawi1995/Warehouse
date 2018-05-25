@@ -5,7 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Web;
+using System.Web.Http.Routing;
 using Warehouse.Models.Custom;
 using Warehouse.Models.DAL;
 
@@ -20,8 +24,12 @@ namespace Warehouse.Managers
         XFont _normalText;
         XFont _smallText;
         XFont _titleTableSmall;
+        XFont _numberCMR;
+        XFont _titleCMR;
+        XFont _contentCMR;
         //Lines
         XPen _tablePen;
+        
         public PDFManager()
         {
             //Assets
@@ -33,6 +41,11 @@ namespace Warehouse.Managers
             _contentTableNormal = new XFont("Calibri", 10, XFontStyle.Regular);
             _normalText = new XFont("Calibri", 12, XFontStyle.Regular);
             _smallText = _contentTableNormal;
+
+            //CMR
+            _numberCMR = new XFont("Arial", 18, XFontStyle.Regular);
+            _titleCMR = new XFont("Arial", 8, XFontStyle.Regular);
+            _contentCMR = new XFont("Arial", 6, XFontStyle.Regular);
             //Lines
             _tablePen = new XPen(XColors.Black, 1);
         }
@@ -239,15 +252,17 @@ namespace Warehouse.Managers
 
             string uri = HttpContext.Current.Request.Url.AbsoluteUri;
             string pdfFileName = "Order_"+order.Id+"_"+order.Name+"_" + DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".pdf";
+            MemoryStream stream = new MemoryStream();
+            orderPdf.Save(stream, false);
+            orderPdf.Close();
+
+            byte[] result = stream.ToArray();
+
             if (uri.Contains("localhost"))
             {
                 pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
-                orderPdf.Save(pdfFileName);
+                File.WriteAllBytes(pdfFileName, result);
             }
-
-            MemoryStream stream = new MemoryStream();
-            orderPdf.Save(stream, false);
-            byte[] result = stream.ToArray();
 
             return result;
         }
@@ -541,14 +556,17 @@ namespace Warehouse.Managers
             }
             string uri = HttpContext.Current.Request.Url.AbsoluteUri;
             string pdfFileName = "Delivery_"+delivery.Id + "_" + order.Name +"_"+ DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".pdf";
+            MemoryStream stream = new MemoryStream();
+            orderPdf.Save(stream, false);
+            orderPdf.Close();
+
+            byte[] result = stream.ToArray();
+
             if (uri.Contains("localhost"))
             {
                 pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
-                orderPdf.Save(pdfFileName);
+                File.WriteAllBytes(pdfFileName, result);
             }
-            MemoryStream stream = new MemoryStream();
-            orderPdf.Save(stream, false);
-            byte[] result = stream.ToArray();
 
             return result;
         }
@@ -888,14 +906,17 @@ namespace Warehouse.Managers
             }
             string uri = HttpContext.Current.Request.Url.AbsoluteUri;
             string pdfFileName = "DeliveryDifference_" + delivery.Id + "_" + order.Name + "_" + DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".pdf";
+            MemoryStream stream = new MemoryStream();
+            orderPdf.Save(stream, false);
+            orderPdf.Close();
+
+            byte[] result = stream.ToArray();
+
             if (uri.Contains("localhost"))
             {
                 pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
-                orderPdf.Save(pdfFileName);
+                File.WriteAllBytes(pdfFileName, result);
             }
-            MemoryStream stream = new MemoryStream();
-            orderPdf.Save(stream, false);
-            byte[] result = stream.ToArray();
 
             return result;
         }
@@ -1250,44 +1271,128 @@ namespace Warehouse.Managers
             }
             string uri = HttpContext.Current.Request.Url.AbsoluteUri;
             string pdfFileName = "Dispatch_" + dispatchInfo.Id + "_" + dispatchInfo.Dispatch_Number.Replace("/", "_") + "_" + DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".pdf";
+
+            MemoryStream stream = new MemoryStream();
+            orderPdf.Save(stream, false);
+            orderPdf.Close();
+
+            byte[] result = stream.ToArray();
+
             if (uri.Contains("localhost"))
             {
                 pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
-                orderPdf.Save(pdfFileName);
+                File.WriteAllBytes(pdfFileName, result);
             }
-            MemoryStream stream = new MemoryStream();
-            orderPdf.Save(stream, false);
-            byte[] result = stream.ToArray();
-
+         
             return result;
         }
 
-        public byte[] GenerateCMR()
+        public byte[] GenerateCMR(Dispatch dispatchToPDF, List<DispatchPositionsDispatchInfo> dispatchPositionsToPDF, CMR_Dispatches CMRDispatchToPDF)
         {
             try
             {
-                PdfDocument PDFDoc = PdfSharp.Pdf.IO.PdfReader.Open(System.Web.HttpContext.Current.Request.MapPath("~\\Resources\\CMRPDF.pdf"), PdfDocumentOpenMode.Modify);
+
+                PdfDocument PDFDoc = PdfSharp.Pdf.IO.PdfReader.Open(System.Web.HttpContext.Current.Request.MapPath("~\\Resources\\CMRPDF.pdf"), PdfDocumentOpenMode.Import);
+
                 PDFDoc.Info.Title = "CMRPDF";
                 PdfPage firstPage = PDFDoc.Pages[0];
-                XGraphics graph = XGraphics.FromPdfPage(firstPage);
-                //graph.DrawString("WYDANIE TOWARU/AUSGABE VON WAREN".ToUpper(), _titleFont, XBrushes.Black, new XRect(firstPage.Width.Point / 2, 40, 0, 0), XStringFormats.TopCenter);
-                //for (int Pg = 0; Pg < PDFDoc.Pages.Count; Pg++)
-                //{
-                //    orderPdf.AddPage(PDFDoc.Pages[Pg]);
-                //}
+                PdfDocument newPDFDoc = new PdfDocument();
+                List<CMRTitles> listOfTitlesPage = new List<CMRTitles>();
+                CMRTitles sender = new CMRTitles{PLTitle = "Egzemplarz dla nadawcy", ENTitle="Copy for sender", DETitle= "Exemplar fur den Absender" };
+                CMRTitles consignee = new CMRTitles { PLTitle = "Egzemplarz dla odbiorcy", ENTitle = "Copy for consignee,", DETitle = "Exemplar fur den Empfanger" };
+                CMRTitles carrier = new CMRTitles { PLTitle = "Egzemplarz dla przewoźnika", ENTitle = "Copy for carrier", DETitle = "Exemplar fur den Frachtfuhrer" };
+                listOfTitlesPage.Add(sender);
+                listOfTitlesPage.Add(consignee);
+                listOfTitlesPage.Add(carrier);
+
+                for (int i = 0; i < 5; i++)
+                {
+                    PdfPage page = newPDFDoc.AddPage(firstPage);
+                    XGraphics graph = XGraphics.FromPdfPage(page);
+
+                    //Titles
+                    double numberXPos = 22;
+                    double numberYPos = 17;
+                    if (i<3)
+                    {
+                        graph.DrawString((i + 1).ToString(), _numberCMR, XBrushes.Black, new XRect(numberXPos, numberYPos, 0, 0), XStringFormats.TopLeft);
+                        graph.DrawString(listOfTitlesPage[i].PLTitle, _titleCMR, XBrushes.Black, new XRect(numberXPos + 14, numberYPos - 1, 0, 0), XStringFormats.TopLeft);
+                        graph.DrawString(listOfTitlesPage[i].ENTitle +", "+ listOfTitlesPage[i].DETitle, _titleCMR, XBrushes.Black, new XRect(numberXPos + 14, numberYPos + 12, 0, 0), XStringFormats.TopLeft);
+                    }
+
+                    //Sender
+                    double leftMargin1_5 = 54;
+                    double senderStartY = 70;
+                    graph.DrawString(CMRDispatchToPDF.Sender_Name, _contentCMR, XBrushes.Black, new XRect(leftMargin1_5, senderStartY, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(CMRDispatchToPDF.Sender_Address, _contentCMR, XBrushes.Black, new XRect(leftMargin1_5, senderStartY+10, 0, 0), XStringFormats.TopLeft);
+
+                    //Receiver
+                    double receiverStartY = 135;
+                    graph.DrawString(dispatchToPDF.Receiver_Name, _contentCMR, XBrushes.Black, new XRect(leftMargin1_5, receiverStartY, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchToPDF.Receiver_Address, _contentCMR, XBrushes.Black, new XRect(leftMargin1_5, receiverStartY + 10, 0, 0), XStringFormats.TopLeft);
+
+                    //Carrier
+                    double leftMargin16 = 312;
+                    double carrierStartY = 135;
+                    graph.DrawString(dispatchToPDF.Carrier_Name, _contentCMR, XBrushes.Black, new XRect(leftMargin16, carrierStartY, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dispatchToPDF.Carrier_Address, _contentCMR, XBrushes.Black, new XRect(leftMargin16, carrierStartY + 10, 0, 0), XStringFormats.TopLeft);
+
+                    //Destination
+                    double destStartY = 198;
+                    graph.DrawString(CMRDispatchToPDF.Destination, _contentCMR, XBrushes.Black, new XRect(leftMargin1_5, destStartY, 0, 0), XStringFormats.TopLeft);
+
+
+                    //Place and date of dispatch
+                    double placeDateDispStartY = 240;
+                    string createDT = dispatchToPDF.Creation_Date == null ? string.Empty : dispatchToPDF.Creation_Date.Value.ToString("dd-MM-yyy");
+                    graph.DrawString("miejsce załadowania, " + createDT, _contentCMR, XBrushes.Black, new XRect(leftMargin1_5, placeDateDispStartY, 0, 0), XStringFormats.TopLeft);
+
+                    //Place and date of establishment
+                    double placeDateEstablishStartY = 700;
+                    string dateEstablishment = DateTime.Now.ToString("dd-MM-yyyy");
+                    graph.DrawString("miejsce wystawienia", _contentCMR, XBrushes.Black, new XRect(leftMargin1_5, placeDateEstablishStartY, 0, 0), XStringFormats.TopLeft);
+                    graph.DrawString(dateEstablishment, _contentCMR, XBrushes.Black, new XRect(leftMargin1_5 + 103, placeDateEstablishStartY, 0, 0), XStringFormats.TopLeft);
+
+                    //Dispatch positions
+                    //int countOfDispatchPositions = 20;
+                    int countOfDispatchPositions = dispatchPositionsToPDF.Count;
+                    double startXDispPos = 334;
+                    double countOfItemsYPos = leftMargin1_5 + 82;
+                    double namesOfPositionsYPos = leftMargin1_5 + 244;
+                    double weightOfPositionsYPos = leftMargin1_5 + 390;
+                    double rowHeight = 7;
+                    double currentHeight = 0;
+                    for (int j = 0; j < countOfDispatchPositions; j++)
+                    {
+                        graph.DrawString(dispatchPositionsToPDF[j].Amount.ToString(), _contentCMR, XBrushes.Black, new XRect(countOfItemsYPos, startXDispPos + currentHeight, 0, 0), XStringFormats.TopLeft);
+                        graph.DrawString(dispatchPositionsToPDF[j].Name, _contentCMR, XBrushes.Black, new XRect(namesOfPositionsYPos, startXDispPos + currentHeight, 0, 0), XStringFormats.TopLeft);
+                        graph.DrawString(dispatchPositionsToPDF[j].Weight_Gross.ToString(), _contentCMR, XBrushes.Black, new XRect(weightOfPositionsYPos, startXDispPos + currentHeight, 0, 0), XStringFormats.TopLeft);
+                        //graph.DrawString("liczba", _contentCMR, XBrushes.Black, new XRect(countOfItemsYPos, startXDispPos + currentHeight, 0, 0), XStringFormats.TopLeft);
+                        //graph.DrawString("nazwa", _contentCMR, XBrushes.Black, new XRect(namesOfPositionsYPos, startXDispPos + currentHeight, 0, 0), XStringFormats.TopLeft);
+                        //graph.DrawString("waga", _contentCMR, XBrushes.Black, new XRect(weightOfPositionsYPos, startXDispPos + currentHeight, 0, 0), XStringFormats.TopLeft);
+                        currentHeight += rowHeight;
+                    }
+                    graph.Dispose();
+
+                }
+                //PdfPage pageClone = (PdfPage)PDFDoc.Pages[0].Clone();
+
 
                 string uri = HttpContext.Current.Request.Url.AbsoluteUri;
                 string pdfFileName = "CMR_" + "_" + "_" + DateTime.Now.ToString("dd-MM-yyyy_HHmmss") + ".pdf";
+
+                MemoryStream stream = new MemoryStream();
+                newPDFDoc.Save(stream, false);
+                newPDFDoc.Close();
+
+                byte[] result = stream.ToArray();
+
                 if (uri.Contains("localhost"))
                 {
                     pdfFileName = @"C:\Users\dawid\Desktop\PDFWarehouse\" + pdfFileName;
-                    PDFDoc.Save(pdfFileName);
+                    File.WriteAllBytes(pdfFileName, result);
                 }
 
-
-                MemoryStream stream = new MemoryStream();
-                PDFDoc.Save(stream, false);
-                byte[] result = stream.ToArray();
 
                 return result;
             }
@@ -1297,6 +1402,37 @@ namespace Warehouse.Managers
                 throw new Exception(ex.ToString());
             }
            
+        }
+
+        public void SendEmail(string subjectForPDF, byte[] PDFFile, string receiverAddress = "dawidsonb95@gmail.com")
+        {
+
+            var fromAddress = new MailAddress("warehousedeveloper2018@gmail.com", "Direct Transport and Logistic Germany GMBH");
+            var toAddress = new MailAddress(receiverAddress);
+            const string fromPassword = "DawEm2018";
+            string subject = subjectForPDF;
+            string body = "";
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            };
+            Attachment att = new Attachment(new MemoryStream(PDFFile), "PDF.pdf");
+            att.ContentType.MediaType = MediaTypeNames.Application.Pdf;
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body,
+            })
+            {
+                message.Attachments.Add(att);
+                smtp.Send(message);
+            }
         }
     }
 }
