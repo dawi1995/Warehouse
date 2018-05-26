@@ -334,11 +334,11 @@ namespace Warehouse.Controllers
                                     Dispatches_Positions dispatchPositionForParameter = _context.Dispatches_Positions.FirstOrDefault(d => d.Id == dispatchPositionsToAdd.Id && d.Deleted_At == null);
                                     Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == dispatchPositionForParameter.Order_Position_Id && o.Deleted_At == null);
                                     Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderPosition.Order_id && d.Deleted_At == null);
-                                    List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id).ToList();
+                                    List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id && o.Deleted_At==null).ToList();
                                     bool isBalanced = true;
                                     foreach (var orderPositionForOrder in listOfOrdersPositionsForOrderPosition)
                                     {
-                                        List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPositionForOrder.Id).ToList();
+                                        List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPositionForOrder.Id && d.Deleted_At==null).ToList();
                                         if (orderPositionForOrder.Amount_Received != dispatchPositions.Sum(d => d.Amount))
                                         {
                                             isBalanced = false;
@@ -565,11 +565,11 @@ namespace Warehouse.Controllers
                             _context.SaveChanges();
                         }
 
-                        List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id).ToList();
+                        List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id && o.Deleted_At==null).ToList();
                         bool isBalanced = true;
                         foreach (var orderPositionForOrder in listOfOrdersPositionsForOrderPosition)
                         {
-                            List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPositionForOrder.Id).ToList();
+                            List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPositionForOrder.Id && d.Deleted_At==null).ToList();
                             if (orderPositionForOrder.Amount_Received != dispatchPositions.Sum(d => d.Amount))
                             {
                                 isBalanced = false;

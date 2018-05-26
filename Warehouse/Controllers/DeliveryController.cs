@@ -416,12 +416,10 @@ namespace Warehouse.Controllers
                             deliveryState.Id = orderPosition.Id;
                             deliveryState.Name = orderPosition.Name;
                             deliveryState.Amount = (int)orderPosition.Amount_Received - dispatchedAmount;
-                            deliveryState.Weight_Gross = (decimal)orderPosition.Weight_Gross_Received - dispatchedWeight;
                             if (listOfDispatchesPositionsOrderPositionsIds != null && listOfDispatchesPositionsOrderPositionsIds.Contains(orderPosition.Id))
                             {
                                 Dispatches_Positions dispatchPositionsToAdd = _context.Dispatches_Positions.FirstOrDefault(d => d.Order_Position_Id == orderPosition.Id);
                                 deliveryState.Amount += (int)dispatchPositionsToAdd.Amount;
-                                deliveryState.Weight_Gross += (int)dispatchPositionsToAdd.Weight_Gross;
                             }
 
                             if (deliveryState.Amount > 0)
