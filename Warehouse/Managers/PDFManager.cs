@@ -74,12 +74,13 @@ namespace Warehouse.Managers
 
             //Pierwszy wiersz
             //Zleceniodwaca
+            string phoneNumber = order.PhoneNumber == null ? string.Empty : order.PhoneNumber;
             graph.DrawString("Zleceniodawca/Kunde", _contentTableSmall, XBrushes.Black, new XRect(44, 83, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Nazwa: " + order.Name, _contentTableSmall, XBrushes.Black, new XRect(44, 96, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres: " + order.Address, _contentTableSmall, XBrushes.Black, new XRect(44, 107, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("NIP: " + order.VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 118, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: " + order.Email, _contentTableSmall, XBrushes.Black, new XRect(44, 129, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Telefon: ", _contentTableSmall, XBrushes.Black, new XRect(44, 140, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Telefon: " + phoneNumber, _contentTableSmall, XBrushes.Black, new XRect(44, 140, 0, 0), XStringFormats.TopLeft);
 
             //Data zlecenia
             graph.DrawString("Data zlecenia/Datum der Bestellung:", _titleTable, XBrushes.Black, new XRect(194, 83, 0, 0), XStringFormats.TopLeft);
@@ -105,14 +106,14 @@ namespace Warehouse.Managers
             graph.DrawString(order.Num_of_Positions.ToString(), _contentTableNormal, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 198, 0, 0), XStringFormats.TopLeft);
 
             //Trzeci wiersz
-            //AT
+            //ATB
             graph.DrawString(order.ATB, _titleTable, XBrushes.Black, new XRect(44, 243, 0, 0), XStringFormats.TopLeft);
 
             //PIN
             graph.DrawString("PIN: "+order.Pickup_PIN, _titleTable, XBrushes.Black, new XRect(194, 243, 0, 0), XStringFormats.TopLeft);
 
             //Terminal
-            graph.DrawString("Terminal: ", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 243, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Terminal: "+order.Terminal, _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 243, 0, 0), XStringFormats.TopLeft);
 
 
             //Druga tabelka
@@ -198,7 +199,7 @@ namespace Warehouse.Managers
                 graph2.DrawLine(_tablePen, rightMargin - 20, endOfSecondTableSecondPage + 95 + 60, rightMargin - 20, endOfSecondTableSecondPage + 95 + 80);
 
                 //Tekst w ramce (osoba zlecająca)
-                graph2.DrawString(string.Format("Osoba zlecająca/ die bestellende Person: {0}", creator), _normalText, XBrushes.Black, new XRect(63, endOfSecondTableSecondPage + 95 + 63, 0, 0), XStringFormats.TopLeft);
+                graph2.DrawString(string.Format("Osoba zlecająca/die bestellende Person: {0}", creator), _normalText, XBrushes.Black, new XRect(63, endOfSecondTableSecondPage + 95 + 63, 0, 0), XStringFormats.TopLeft);
             }
             else
             {
@@ -247,7 +248,7 @@ namespace Warehouse.Managers
                 graph.DrawLine(_tablePen, rightMargin - 20, endOfSecondTable + 95 + 60, rightMargin - 20, endOfSecondTable + 95 + 80);
 
                 //Tekst w ramce (osoba zlecająca)
-                graph.DrawString(string.Format("Osoba zlecająca/ die bestellende Person: {0}", creator), _normalText, XBrushes.Black, new XRect(63, endOfSecondTable + 95 + 63, 0, 0), XStringFormats.TopLeft);
+                graph.DrawString(string.Format("Osoba zlecająca/die bestellende Person: {0}", creator), _normalText, XBrushes.Black, new XRect(63, endOfSecondTable + 95 + 63, 0, 0), XStringFormats.TopLeft);
             }
 
             string uri = HttpContext.Current.Request.Url.AbsoluteUri;
@@ -274,7 +275,7 @@ namespace Warehouse.Managers
             PdfPage firstPage = orderPdf.AddPage();
             XGraphics graph = XGraphics.FromPdfPage(firstPage);
 
-            graph.DrawString("PRZYJĘCIE TOWARU/ WARENEINGANG".ToUpper(), _titleFont, XBrushes.Black, new XRect(firstPage.Width.Point / 2, 40, 0, 0), XStringFormats.TopCenter);
+            graph.DrawString("PRZYJĘCIE TOWARU/WARENEINGANG".ToUpper(), _titleFont, XBrushes.Black, new XRect(firstPage.Width.Point / 2, 40, 0, 0), XStringFormats.TopCenter);
 
             double rightMargin = firstPage.Width.Point - 40;
             double firstTableRowHeight = 80;
@@ -294,12 +295,13 @@ namespace Warehouse.Managers
 
             //Pierwszy wiersz
             //Zleceniodwaca
+            string phoneNumber = order.PhoneNumber == null ? string.Empty : order.PhoneNumber;
             graph.DrawString("Zleceniodawca/Kunde", _titleTable, XBrushes.Black, new XRect(44, 80+3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Nazwa: " + order.Name, _contentTableSmall, XBrushes.Black, new XRect(44, 80+14, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres: " + order.Address, _contentTableSmall, XBrushes.Black, new XRect(44, 80+25, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("NIP: " + order.VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80+36, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: " + order.Email, _contentTableSmall, XBrushes.Black, new XRect(44, 80+47, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Telefon: ", _contentTableSmall, XBrushes.Black, new XRect(44, 80+58, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Telefon: "+ phoneNumber, _contentTableSmall, XBrushes.Black, new XRect(44, 80+58, 0, 0), XStringFormats.TopLeft);
 
             //Data zlecenia
             graph.DrawString("Data zlecenia/Datum der Bestellung:", _titleTable, XBrushes.Black, new XRect(194, 80+3, 0, 0), XStringFormats.TopLeft);
@@ -334,9 +336,10 @@ namespace Warehouse.Managers
             graph.DrawString("Nr zlecenia/Bestellnummer:", _titleTable, XBrushes.Black, new XRect(194, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString(order.Order_Number, _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
+            string carId = delivery.Car_Id == null ? string.Empty : delivery.Car_Id;
             //Terminal
             graph.DrawString("Nr rej. samochodu/Autokennzeichen:", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("brak danych", _contentTableNormal, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(carId, _contentTableNormal, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
 
             //Druga tabelka
@@ -598,12 +601,13 @@ namespace Warehouse.Managers
 
             //Pierwszy wiersz
             //Zleceniodwaca
+            string phoneNumber = order.PhoneNumber == null ? string.Empty : order.PhoneNumber;
             graph.DrawString("Zleceniodawca/Kunde", _titleTable, XBrushes.Black, new XRect(44, 80 + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Nazwa: " + order.Name, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 14, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres: " + order.Address, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 25, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("NIP: " + order.VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 36, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: " + order.Email, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 47, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Telefon: ", _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 58, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Telefon: " + phoneNumber, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 58, 0, 0), XStringFormats.TopLeft);
 
             //Data protokołu rozbieżności
             graph.DrawString("Data protokołu rozbieżności/", _titleTable, XBrushes.Black, new XRect(194, 80 + 3, 0, 0), XStringFormats.TopLeft);
@@ -615,8 +619,7 @@ namespace Warehouse.Managers
             //graph.DrawString(order.Creation_Date.Date.ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
             //Numer zlecenia
-            graph.DrawString("Numer protokołu rozbieżności/", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Die Protokollnummer der Diskrepanz", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 3 + 10, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Numer przyjęcia/Annahmenummer:", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString(delivery.Delivery_Number, _contentTableNormal, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
             ////Numer zlecenia
@@ -650,8 +653,9 @@ namespace Warehouse.Managers
             graph.DrawString(order.Order_Number, _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
             //Nr rejestracykny samochodu
+            string carId = delivery.Car_Id == null ? string.Empty : delivery.Car_Id;
             graph.DrawString("Nr rej. samochodu/Autokennzeichen:", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("brak danych", _contentTableNormal, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(carId, _contentTableNormal, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
 
             //Druga tabelka
@@ -966,12 +970,13 @@ namespace Warehouse.Managers
 
             //Drugi wiersz
             //Odbiorca
+            string receiverPhoneNumber = dispatchInfo.Receiver.Receiver_PhoneNumber == null ? string.Empty : dispatchInfo.Receiver.Receiver_PhoneNumber;
             graph.DrawString("Odbiorca/Empfänger:", _titleTable, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Nazwa: "+ dispatchInfo.Receiver.Receiver_Name, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 14, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres: "+ dispatchInfo.Receiver.Receiver_Address, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 25, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("NIP: "+ dispatchInfo.Receiver.Receiver_VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 36, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: "+ dispatchInfo.Receiver.Receiver_Email, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 47, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Telefon: ", _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 58, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Telefon: "+ receiverPhoneNumber, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 58, 0, 0), XStringFormats.TopLeft);
 
 
             //Miejsce Przeznaczenia
@@ -985,19 +990,20 @@ namespace Warehouse.Managers
 
             //Trzeci wiersz
             //Dane przewoźnika
+            string carrierPhoneNumber = dispatchInfo.Carrier.Carrier_PhoneNumber == null ? string.Empty : dispatchInfo.Receiver.Receiver_PhoneNumber;
             graph.DrawString("Dane Przewoźnika/", _titleTable, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Angaben zum Beförderer:", _titleTable, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Nazwa: " + dispatchInfo.Carrier.Carrier_Name, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 13, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres: "+ dispatchInfo.Carrier.Carrier_Address, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 23, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("NIP: "+ dispatchInfo.Carrier.Carrier_VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 33, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: "+ dispatchInfo.Carrier.Carrier_Email, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 43, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("Telefon: ", _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 53, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("Telefon: " + carrierPhoneNumber, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 53, 0, 0), XStringFormats.TopLeft);
 
 
             //NR dokumentu celnego
             graph.DrawString("Nr dokumentu celnego/", _titleTable, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Dokumentnummer des Zolls:", _titleTable, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + 2 * firstTableRowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-            //graph.DrawString(order.Order_Number, _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(dispatchInfo.Duty_Doc_Id, _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
 
 

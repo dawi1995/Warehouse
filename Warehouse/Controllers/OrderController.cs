@@ -58,6 +58,7 @@ namespace Warehouse.Controllers
                         orderResult.Creation_Date = order.Creation_Date == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");                    
                         orderResult.Status = order.Status;
                         orderResult.Name = order.Name;
+                        orderResult.Terminal = order.Terminal;
                         var delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == order.Id);
                         if (delivery != null)
                         {
@@ -128,6 +129,7 @@ namespace Warehouse.Controllers
                     result.Pickup_PIN = orderFromDB.Pickup_PIN;
                     result.ETA = orderFromDB.ETA == null ? string.Empty : orderFromDB.ETA.Value.ToString("dd-MM-yyyy");
                     result.Orderer = orderer;
+                    result.Terminal = orderFromDB.Terminal;
                     result.ListOfOrderPositions = listOfOrderPositions;
                     return result;
                 }
@@ -170,6 +172,7 @@ namespace Warehouse.Controllers
                     newOrder.Email = createOrder.Email;
                     newOrder.ETA = createOrder.ETA;
                     newOrder.Num_of_Positions = createOrder.OrderPositions.Count;
+                    newOrder.Terminal = createOrder.Terminal;
                     newOrder.If_PDF_And_Sent = false;
                     newOrder.If_Delivery_Generated = false;
                     newOrder.Status = (int)OrderStatus.Reported;
@@ -228,6 +231,7 @@ namespace Warehouse.Controllers
                     orderToEdit.VAT_Id = editOrder.VAT_Id;
                     orderToEdit.Email = editOrder.Email;
                     orderToEdit.ETA = editOrder.ETA;
+                    orderToEdit.Terminal = editOrder.Terminal;
                     //orderToEdit.Num_of_Positions = editOrder.Num_of_Positions;
                     orderToEdit.Edited_At = dateOfEdit;
                     _context.SaveChanges();
@@ -381,7 +385,7 @@ namespace Warehouse.Controllers
                     string creatorName = "";
                     if(userCreator != null)
                     {
-                        creatorName = userCreator.Login;//zmienic na imie i nazwisko
+                        creatorName = userCreator.Name + " " + userCreator.Surname;//zmienic na imie i nazwisko
                     }
                     byte[] result = _pdfManager.GenerateOrderPDF(orderToPdf, orderPositionsToPdf, creatorName);
                     if (ifSendEmail)

@@ -45,7 +45,7 @@ namespace Warehouse.Controllers
                 {
                     if (_accountRepository.IsLoginFree(registration.Login))
                     {
-                        User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now };
+                        User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now, Name=registration.Name, Surname=registration.Surname };
                         _context.Users.Add(userToAdd);
                         _context.SaveChanges();
                         requestResult.Status = true;
@@ -85,10 +85,10 @@ namespace Warehouse.Controllers
                 {
                     if (_accountRepository.IsLoginFree(registration.Login))
                     {
-                        User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now };
+                        User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Name=registration.UserName, Surname=registration.UserSurname, Created_at = DateTime.Now };
                         _context.Users.Add(userToAdd);
                         _context.SaveChanges();
-                        Client clientToAdd = new Client { Name = registration.Name, Address = registration.Address, VAT_Id = registration.VAT_Id, Email = registration.Email, User_Id = userToAdd.Id, Created_At = userToAdd.Created_at };
+                        Client clientToAdd = new Client { Name = registration.Name, Address = registration.Address, VAT_Id = registration.VAT_Id, Email = registration.Email, User_Id = userToAdd.Id, Created_At = userToAdd.Created_at, PhoneNumber=registration.PhoneNumber };
                         _context.Clients.Add(clientToAdd);
                         _context.SaveChanges();
                         requestResult.Status = true;
@@ -143,6 +143,8 @@ namespace Warehouse.Controllers
                         userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
                     }
                     userToEdit.Role = registration.Role;
+                    userToEdit.Name = registration.Name;
+                    userToEdit.Surname = registration.Surname;
                     userToEdit.Edited_at = DateTime.Now;
                     _context.SaveChanges();
                     requestResult.Status = true;
@@ -195,12 +197,15 @@ namespace Warehouse.Controllers
                         userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
                     }
                     userToEdit.Role = registration.Role;
+                    userToEdit.Name = registration.UserName;
+                    userToEdit.Surname = registration.UserSurname;
                     userToEdit.Edited_at = DateTime.Now;
                     Client clientToEdit = _context.Clients.FirstOrDefault(c => c.User_Id == registration.Id);
                     clientToEdit.Name = registration.Name;
                     clientToEdit.Address = registration.Address;
                     clientToEdit.VAT_Id = registration.VAT_Id;
                     clientToEdit.Email = registration.Email;
+                    clientToEdit.PhoneNumber = registration.PhoneNumber;
                     clientToEdit.Edited_At = userToEdit.Edited_at;
                     _context.SaveChanges();
                     requestResult.Status = true;
@@ -397,6 +402,9 @@ namespace Warehouse.Controllers
                     userInfo.Address = user.Client == null ? string.Empty : user.Client.Address;
                     userInfo.VAT_Id = user.Client == null ? string.Empty : user.Client.VAT_Id;
                     userInfo.Email = user.Client == null ? string.Empty : user.Client.Email;
+                    userInfo.PhoneNumber = user.Client == null ? string.Empty : user.Client.PhoneNumber;
+                    userInfo.UserName = user.User.Name == null ? string.Empty : user.User.Name;
+                    userInfo.UserSurname = user.User.Surname == null ? string.Empty : user.User.Surname;
                     listOfUsersInfo.Add(userInfo);
 
                 }
@@ -461,6 +469,8 @@ namespace Warehouse.Controllers
                         userInfo.Id = user.Id;
                         userInfo.Login = user.Login;
                         userInfo.Role = user.Role;
+                        userInfo.UserName = user.Name;
+                        userInfo.UserSurname = user.Surname;
                         userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd-MM-yyyy");
                         userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd-MM-yyyy");
                         Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
@@ -470,6 +480,7 @@ namespace Warehouse.Controllers
                             userInfo.Address = client.Address;
                             userInfo.VAT_Id = client.VAT_Id;
                             userInfo.Email = client.Email;
+                            userInfo.PhoneNumber = client.PhoneNumber;
                         }
                     }
                     return userInfo;

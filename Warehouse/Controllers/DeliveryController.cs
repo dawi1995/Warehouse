@@ -143,6 +143,7 @@ namespace Warehouse.Controllers
                     result.Date_Of_Delivery = deliveryFromDB.Date_Of_Delivery == null ? string.Empty : ((DateTime)deliveryFromDB.Date_Of_Delivery).ToString("dd-MM-yyyy");
                     result.Delivery_Number = deliveryFromDB.Delivery_Number;
                     result.Transport_Type = deliveryFromDB.Transport_Type;
+                    result.Car_Id = deliveryFromDB.Car_Id;
                     result.ListOfOrderPositions = listOfOrderPositions;
                     return result;
                 }
@@ -184,6 +185,7 @@ namespace Warehouse.Controllers
                     newDelivery.If_PDF_Dispatch = false;
                     newDelivery.Order_Id = createDelivery.Order_Id;
                     newDelivery.Transport_Type = createDelivery.Transport_Type;
+                    newDelivery.Car_Id = createDelivery.Car_Id;
                     newDelivery.Creator_Id = UserHelper.GetCurrentUserId();
                     _context.Deliveries.Add(newDelivery);
                     foreach (var item in createDelivery.DeliveryPositions)
@@ -212,6 +214,10 @@ namespace Warehouse.Controllers
                         orderToEdit.Date_Of_Arrival = dateOfCreate;
                         orderToEdit.Edited_At = dateOfCreate;
                         orderToEdit.If_Delivery_Generated = true;
+
+                        if(createDelivery.ATB != null)
+                            orderToEdit.ATB = createDelivery.ATB;
+
                         if (isDifferent)
                         {
                             newDelivery.If_Differential_Delivery_Order = true;
@@ -309,6 +315,7 @@ namespace Warehouse.Controllers
                         deliveryToEdit.Edited_At = dateOfEdit;
                         deliveryToEdit.Date_Of_Delivery = editDelivery.Date_Of_Delivery;
                         deliveryToEdit.Delivery_Number = editDelivery.Delivery_Number;
+                        deliveryToEdit.Car_Id = editDelivery.Car_Id;
                         deliveryToEdit.If_Delivery_Dispatch_Balanced = false;
                         deliveryToEdit.If_PDF_And_Sent = false;
                         deliveryToEdit.If_PDF_Differential = false;
@@ -405,7 +412,7 @@ namespace Warehouse.Controllers
                         if (dispatchId != 0)
                         {
 
-                            listOfDispatchesPositionsOrderPositionsIds = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == dispatchId).Select(d=>d.Order_Position_Id).ToList();
+                            listOfDispatchesPositionsOrderPositionsIds = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == dispatchId && d.Deleted_At==null).Select(d=>d.Order_Position_Id).ToList();
                         }
                         foreach (var orderPosition in orderPositionFromDB)
                         {
@@ -418,7 +425,7 @@ namespace Warehouse.Controllers
                             deliveryState.Amount = (int)orderPosition.Amount_Received - dispatchedAmount;
                             if (listOfDispatchesPositionsOrderPositionsIds != null && listOfDispatchesPositionsOrderPositionsIds.Contains(orderPosition.Id))
                             {
-                                Dispatches_Positions dispatchPositionsToAdd = _context.Dispatches_Positions.FirstOrDefault(d => d.Order_Position_Id == orderPosition.Id);
+                                Dispatches_Positions dispatchPositionsToAdd = _context.Dispatches_Positions.FirstOrDefault(d => d.Order_Position_Id == orderPosition.Id && d.Deleted_At==null);
                                 deliveryState.Amount += (int)dispatchPositionsToAdd.Amount;
                             }
 
@@ -449,20 +456,20 @@ namespace Warehouse.Controllers
 
         [HttpGet]
         [Route("GetDeliveryPDF")]
-        public byte[] GetDeliveryPDF(int deliveryId, bool ifSendEmail)
+        public byte[] GetDeliveryPDF(int orderId, bool ifSendEmail)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin}))
             {
                 try
                 {
-                    Delivery deliveryToPdf = _context.Deliveries.FirstOrDefault(d => d.Id == deliveryId);
+                    Delivery deliveryToPdf = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderId);
                     Order orderToPdf = _context.Orders.FirstOrDefault(o => o.Id == deliveryToPdf.Order_Id && o.Deleted_At == null);
                     List<Orders_Positions> orderPositionsToPdf = _context.Orders_Positions.Where(o => o.Order_id == deliveryToPdf.Order_Id && o.Deleted_At == null).ToList();
                     User userCreator = _context.Users.FirstOrDefault(u => u.Id == deliveryToPdf.Creator_Id && u.Deleted_at == null);
                     string creatorName = "";
                     if (userCreator != null)
                     {
-                        creatorName = userCreator.Login;//Do zmiany na imie i nazwisko
+                        creatorName = userCreator.Name + " " + userCreator.Surname;//Do zmiany na imie i nazwisko
                     }
 
                     byte[] result = _pdfManager.GenerateDeliveryPDF(deliveryToPdf, orderToPdf, orderPositionsToPdf, creatorName);
@@ -489,13 +496,13 @@ namespace Warehouse.Controllers
 
         [HttpPost]
         [Route("GetDifferenceDeliveryPDF")]
-        public byte[] GetDifferenceDeliveryPDF([FromBody]Committee commitee, int deliveryId, bool ifSendEmail = false)
+        public byte[] GetDifferenceDeliveryPDF([FromBody]Committee commitee, int orderId, bool ifSendEmail = false)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin }))
             {
                 try
                 {
-                    Delivery deliveryToPdf = _context.Deliveries.FirstOrDefault(d => d.Id == deliveryId);
+                    Delivery deliveryToPdf = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderId && d.Deleted_At == null);
                     if (deliveryToPdf != null && !(bool)deliveryToPdf.If_Differential_Delivery_Order)
                     {
                         throw new Exception("This delivery is the same like order");

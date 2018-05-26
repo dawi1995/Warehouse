@@ -22,19 +22,21 @@ namespace Warehouse.Models.DAL
         public string Carrier_Address { get; set; }
         public string Carrier_VAT_Id { get; set; }
         public string Carrier_Email { get; set; }
+        public string Carrier_PhoneNumber { get; set; }
         public string Receiver_Name { get; set; }
         public string Receiver_Address { get; set; }
         public string Receiver_VAT_Id { get; set; }
         public string Receiver_Email { get; set; }
+        public string Receiver_PhoneNumber { get; set; }
         public string Duty_Doc_Id { get; set; }
         public Nullable<int> Number_Of_Positions { get; set; }
         public string CMR_Id { get; set; }
         public Nullable<bool> If_PDF_And_Sent { get; set; }
         public Nullable<bool> If_CMR_And_Sent { get; set; }
         public Nullable<bool> If_CMR { get; set; }
+        public Nullable<int> Creator_Id { get; set; }
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Edited_At { get; set; }
         public Nullable<System.DateTime> Deleted_At { get; set; }
-        public Nullable<int> Creator_Id { get; set; }
     }
 }

@@ -24,9 +24,10 @@ namespace Warehouse.Models.DAL
         public Nullable<bool> If_Differential_Delivery_Order { get; set; }
         public Nullable<bool> If_PDF_Differential { get; set; }
         public Nullable<bool> If_Delivery_Dispatch_Balanced { get; set; }
+        public string Car_Id { get; set; }
+        public Nullable<int> Creator_Id { get; set; }
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Edited_At { get; set; }
         public Nullable<System.DateTime> Deleted_At { get; set; }
-        public Nullable<int> Creator_Id { get; set; }
     }
 }

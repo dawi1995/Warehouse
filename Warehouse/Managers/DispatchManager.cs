@@ -124,6 +124,7 @@ namespace Warehouse.Managers
             result.Carrier = carrierDispatch;
             result.Receiver = receiverDispatch;
             result.Sender = senderDispatch;
+            result.Duty_Doc_Id = dispatch.Duty_Doc_Id;
             result.ListOfOrderPositions = listOfOrderPositionsDispatchInfoPDF;
 
             return result;

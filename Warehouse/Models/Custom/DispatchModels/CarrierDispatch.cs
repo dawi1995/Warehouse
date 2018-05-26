@@ -11,5 +11,6 @@ namespace Warehouse.Models.Custom
         public string Carrier_Address { get; set; }
         public string Carrier_VAT_Id { get; set; }
         public string Carrier_Email { get; set; }
+        public string Carrier_PhoneNumber { get; set; }
     }
 }

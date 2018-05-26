@@ -11,5 +11,6 @@ namespace Warehouse.Models.Custom
         public string Receiver_Address { get; set; }
         public string Receiver_VAT_Id { get; set; }
         public string Receiver_Email { get; set; }
+        public string Receiver_PhoneNumber { get; set; }
     }
 }

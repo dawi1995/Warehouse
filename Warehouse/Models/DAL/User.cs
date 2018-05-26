@@ -18,6 +18,8 @@ namespace Warehouse.Models.DAL
         public string Login { get; set; }
         public string Password { get; set; }
         public int Role { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
         public Nullable<System.DateTime> Created_at { get; set; }
         public Nullable<System.DateTime> Edited_at { get; set; }
         public Nullable<System.DateTime> Deleted_at { get; set; }

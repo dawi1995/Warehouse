@@ -129,10 +129,12 @@ namespace Warehouse.Controllers
                         carrier.Carrier_Email = dispatchFromDB.Carrier_Email;
                         carrier.Carrier_VAT_Id = dispatchFromDB.Carrier_VAT_Id;
                         carrier.Carrier_Name = dispatchFromDB.Carrier_Name;
+                        carrier.Carrier_PhoneNumber = dispatchFromDB.Carrier_PhoneNumber;
                         receiver.Receiver_Address = dispatchFromDB.Receiver_Address;
                         receiver.Receiver_Email = dispatchFromDB.Receiver_Email;
                         receiver.Receiver_Name = dispatchFromDB.Receiver_Name;
                         receiver.Receiver_VAT_Id = dispatchFromDB.Receiver_VAT_Id;
+                        receiver.Receiver_PhoneNumber = dispatchFromDB.Receiver_PhoneNumber;
                         result.Dispatch_Number = dispatchFromDB.Dispatch_Number;
                         result.Carrier = carrier;
                         result.Id = dispatchFromDB.Id;
@@ -207,10 +209,12 @@ namespace Warehouse.Controllers
                         carrierDispatch.Carrier_Email = dispatch.Carrier_Email;
                         carrierDispatch.Carrier_Address = dispatch.Carrier_Address;
                         carrierDispatch.Carrier_VAT_Id = dispatch.Carrier_VAT_Id;
+                        carrierDispatch.Carrier_PhoneNumber = dispatch.Carrier_PhoneNumber;
                         receiverDispatch.Receiver_Name = dispatch.Receiver_Name;
                         receiverDispatch.Receiver_Email = dispatch.Receiver_Email;
                         receiverDispatch.Receiver_Address = dispatch.Receiver_Address;
                         receiverDispatch.Receiver_VAT_Id = dispatch.Receiver_VAT_Id;
+                        receiverDispatch.Receiver_PhoneNumber = dispatch.Receiver_PhoneNumber;
                         dispatchDetails.Id = dispatch.Id;
                         dispatchDetails.Dispatch_Number = dispatch.Dispatch_Number;
                         dispatchDetails.Creation_Date = dispatch.Creation_Date == null ? string.Empty : ((DateTime)(dispatch.Creation_Date)).ToString("dd-MM-yyyy");
@@ -278,6 +282,7 @@ namespace Warehouse.Controllers
                         dispatchToEdit.Carrier_Email = editDispatch.Carrier.Carrier_Email;
                         dispatchToEdit.Carrier_Name = editDispatch.Carrier.Carrier_Name;
                         dispatchToEdit.Carrier_VAT_Id = editDispatch.Carrier.Carrier_VAT_Id;
+                        dispatchToEdit.Carrier_PhoneNumber = editDispatch.Carrier.Carrier_PhoneNumber;
                         dispatchToEdit.Car_Id = editDispatch.Car_Id;
                         dispatchToEdit.Creation_Date = editDispatch.Creation_Date;
                         dispatchToEdit.Dispatch_Number = editDispatch.Dispatch_Number;
@@ -285,6 +290,7 @@ namespace Warehouse.Controllers
                         dispatchToEdit.Receiver_Email = editDispatch.Receiver.Receiver_Email;
                         dispatchToEdit.Receiver_Name = editDispatch.Receiver.Receiver_Name;
                         dispatchToEdit.Receiver_VAT_Id = editDispatch.Receiver.Receiver_VAT_Id;
+                        dispatchToEdit.Receiver_PhoneNumber = editDispatch.Receiver.Receiver_PhoneNumber;
                         dispatchToEdit.Edited_At = dateOfEdit;                
                         dispatchToEdit.If_CMR = isCMR;
                         dispatchToEdit.Duty_Doc_Id = editDispatch.Duty_Doc_Id;
@@ -308,11 +314,11 @@ namespace Warehouse.Controllers
                                     dispatchPositionFromDB.Weight_Gross = dispatchPosition.Amount* orderPosition.Unit_Weight;
                                     _context.SaveChanges();
                                     Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderPosition.Order_id && d.Deleted_At == null);
-                                    List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id).ToList();
+                                    List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id && o.Deleted_At==null).ToList();
                                     bool isBalanced = true;
                                     foreach (var orderPositionForOrder in listOfOrdersPositionsForOrderPosition)
                                     {
-                                        List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPositionForOrder.Id).ToList();
+                                        List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Order_Position_Id == orderPositionForOrder.Id && d.Deleted_At==null).ToList();
                                         if (orderPositionForOrder.Amount_Received != dispatchPositions.Sum(d => d.Amount))
                                         {
                                             isBalanced = false;
@@ -381,8 +387,8 @@ namespace Warehouse.Controllers
 
                             //sprawdzam czy jakiś orderPOsition z delivery dla tego dispatchPositions należy do tego dispatcha
                             bool isDeliveryDispatch = false;
-                            List<int> orderPositionsForDeliveryIds = _context.Orders_Positions.Where(o => o.Order_id == delivery.Order_Id).Select(o=>o.Id).ToList();
-                            List<int> listOfdispatchPositionsIds = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == editDispatch.Id).Select(d=>d.Id).ToList();
+                            List<int> orderPositionsForDeliveryIds = _context.Orders_Positions.Where(o => o.Order_id == delivery.Order_Id && o.Deleted_At == null).Select(o=>o.Id).ToList();
+                            List<int> listOfdispatchPositionsIds = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == editDispatch.Id && d.Deleted_At == null).Select(d=>d.Id).ToList();
                             foreach (var item in orderPositionsForDeliveryIds)
                             {
                                 if (listOfdispatchPositionsIds.Contains(item))
@@ -393,7 +399,7 @@ namespace Warehouse.Controllers
 
                             if (!isDeliveryDispatch)
                             {
-                                Deliveries_Dispatches deliveryDispatch = _context.Deliveries_Dispatches.FirstOrDefault(d => d.Delivery_Id == delivery.Id && d.Dispatch_Id == editDispatch.Id);
+                                Deliveries_Dispatches deliveryDispatch = _context.Deliveries_Dispatches.FirstOrDefault(d => d.Delivery_Id == delivery.Id && d.Dispatch_Id == editDispatch.Id && d.Deleted_At == null);
                                 deliveryDispatch.Deleted_At = dateOfEdit;
                                 _context.SaveChanges();
                             }
@@ -504,6 +510,7 @@ namespace Warehouse.Controllers
                     dispatchToAdd.Carrier_Email = newDispatch.Carrier.Carrier_Email;
                     dispatchToAdd.Carrier_Name = newDispatch.Carrier.Carrier_Name;
                     dispatchToAdd.Carrier_VAT_Id = newDispatch.Carrier.Carrier_VAT_Id;
+                    dispatchToAdd.Carrier_PhoneNumber = newDispatch.Carrier.Carrier_PhoneNumber;
                     dispatchToAdd.Car_Id = newDispatch.Car_Id;
                     dispatchToAdd.Creation_Date = dateOfCreate;
                     dispatchToAdd.Dispatch_Number = _context.Counters.FirstOrDefault(c => c.Name == "DispatchCounter").Count.ToString() + "/" + ((DateTime)dispatchToAdd.Creation_Date).Month.ToString() + "/" + ((DateTime)dispatchToAdd.Creation_Date).Year.ToString();
@@ -511,6 +518,7 @@ namespace Warehouse.Controllers
                     dispatchToAdd.Receiver_Email = newDispatch.Receiver.Receiver_Email;
                     dispatchToAdd.Receiver_Name = newDispatch.Receiver.Receiver_Name;
                     dispatchToAdd.Receiver_VAT_Id = newDispatch.Receiver.Receiver_VAT_Id;
+                    dispatchToAdd.Receiver_PhoneNumber = newDispatch.Receiver.Receiver_PhoneNumber;
                     dispatchToAdd.Created_At = dateOfCreate;
                     if (isCMR)
                     {

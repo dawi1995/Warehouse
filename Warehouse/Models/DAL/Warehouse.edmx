@@ -15,6 +15,7 @@
           <Property Name="VAT_Id" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="User_Id" Type="int" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Edited_At" Type="datetime" />
           <Property Name="Deleted_At" Type="datetime" />
@@ -57,6 +58,7 @@
           <Property Name="If_Differential_Delivery_Order" Type="bit" />
           <Property Name="If_PDF_Differential" Type="bit" />
           <Property Name="If_Delivery_Dispatch_Balanced" Type="bit" />
+          <Property Name="Car_Id" Type="nvarchar" MaxLength="50" />
           <Property Name="Creator_Id" Type="int" />
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Edited_At" Type="datetime" />
@@ -85,10 +87,12 @@
           <Property Name="Carrier_Address" Type="nvarchar" MaxLength="50" />
           <Property Name="Carrier_VAT_Id" Type="nvarchar" MaxLength="50" />
           <Property Name="Carrier_Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Carrier_PhoneNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Receiver_Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Receiver_Address" Type="nvarchar" MaxLength="50" />
           <Property Name="Receiver_VAT_Id" Type="nvarchar" MaxLength="50" />
           <Property Name="Receiver_Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Receiver_PhoneNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Duty_Doc_Id" Type="nvarchar" MaxLength="50" />
           <Property Name="Number_Of_Positions" Type="int" />
           <Property Name="CMR_Id" Type="nvarchar" MaxLength="50" />
@@ -119,7 +123,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Container_Id" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ATB" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ATB" Type="nvarchar" MaxLength="50" />
           <Property Name="Pickup_PIN" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Date_Of_Arrival" Type="date" />
           <Property Name="Creation_Date" Type="datetime" Nullable="false" />
@@ -134,6 +138,8 @@
           <Property Name="If_Delivery_Generated" Type="bit" />
           <Property Name="Status" Type="int" />
           <Property Name="ETA" Type="date" />
+          <Property Name="Terminal" Type="nvarchar" MaxLength="50" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Edited_At" Type="datetime" />
           <Property Name="Deleted_At" Type="datetime" />
@@ -183,6 +189,8 @@
           <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Role" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="50" />
           <Property Name="Created_at" Type="datetime" />
           <Property Name="Edited_at" Type="datetime" />
           <Property Name="Deleted_at" Type="datetime" />
@@ -229,6 +237,7 @@
           <Property Name="VAT_Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="User_Id" Type="Int32" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
@@ -271,10 +280,11 @@
           <Property Name="If_Differential_Delivery_Order" Type="Boolean" />
           <Property Name="If_PDF_Differential" Type="Boolean" />
           <Property Name="If_Delivery_Dispatch_Balanced" Type="Boolean" />
+          <Property Name="Car_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Creator_Id" Type="Int32" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
-          <Property Name="Creator_Id" Type="Int32" />
         </EntityType>
         <EntityType Name="Deliveries_Dispatches">
           <Key>
@@ -299,20 +309,22 @@
           <Property Name="Carrier_Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Carrier_VAT_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Carrier_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Carrier_PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Receiver_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Receiver_Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Receiver_VAT_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Receiver_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Receiver_PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Duty_Doc_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Number_Of_Positions" Type="Int32" />
           <Property Name="CMR_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="If_PDF_And_Sent" Type="Boolean" />
           <Property Name="If_CMR_And_Sent" Type="Boolean" />
           <Property Name="If_CMR" Type="Boolean" />
+          <Property Name="Creator_Id" Type="Int32" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
-          <Property Name="Creator_Id" Type="Int32" />
         </EntityType>
         <EntityType Name="Dispatches_Positions">
           <Key>
@@ -333,7 +345,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Container_Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ATB" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ATB" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Pickup_PIN" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Date_Of_Arrival" Type="DateTime" Precision="0" />
           <Property Name="Creation_Date" Type="DateTime" Nullable="false" Precision="3" />
@@ -347,10 +359,12 @@
           <Property Name="If_PDF_And_Sent" Type="Boolean" />
           <Property Name="If_Delivery_Generated" Type="Boolean" />
           <Property Name="Status" Type="Int32" />
+          <Property Name="ETA" Type="DateTime" Precision="0" />
+          <Property Name="Terminal" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
-          <Property Name="ETA" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="Orders_Positions">
           <Key>
@@ -358,15 +372,15 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Order_id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Amount" Type="Int32" Nullable="false" />
           <Property Name="Weight_Gross" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
           <Property Name="Amount_Received" Type="Int32" />
           <Property Name="Weight_Gross_Received" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="Unit_Weight" Type="Decimal" Precision="18" Scale="4" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Unit_Weight" Type="Decimal" Precision="18" Scale="4" />
         </EntityType>
         <EntityType Name="Protocols_of_Difference">
           <Key>
@@ -397,6 +411,8 @@
           <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Role" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Created_at" Type="DateTime" Precision="3" />
           <Property Name="Edited_at" Type="DateTime" Precision="3" />
           <Property Name="Deleted_at" Type="DateTime" Precision="3" />
@@ -413,6 +429,7 @@
                 <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
                 <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
                 <ScalarProperty Name="User_Id" ColumnName="User_Id" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="VAT_Id" ColumnName="VAT_Id" />
@@ -451,10 +468,11 @@
           <EntitySetMapping Name="Deliveries">
             <EntityTypeMapping TypeName="WarehouseModel.Delivery">
               <MappingFragment StoreEntitySet="Deliveries">
-                <ScalarProperty Name="Creator_Id" ColumnName="Creator_Id" />
                 <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
                 <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Creator_Id" ColumnName="Creator_Id" />
+                <ScalarProperty Name="Car_Id" ColumnName="Car_Id" />
                 <ScalarProperty Name="If_Delivery_Dispatch_Balanced" ColumnName="If_Delivery_Dispatch_Balanced" />
                 <ScalarProperty Name="If_PDF_Differential" ColumnName="If_PDF_Differential" />
                 <ScalarProperty Name="If_Differential_Delivery_Order" ColumnName="If_Differential_Delivery_Order" />
@@ -483,20 +501,22 @@
           <EntitySetMapping Name="Dispatches">
             <EntityTypeMapping TypeName="WarehouseModel.Dispatch">
               <MappingFragment StoreEntitySet="Dispatches">
-                <ScalarProperty Name="Creator_Id" ColumnName="Creator_Id" />
                 <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
                 <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Creator_Id" ColumnName="Creator_Id" />
                 <ScalarProperty Name="If_CMR" ColumnName="If_CMR" />
                 <ScalarProperty Name="If_CMR_And_Sent" ColumnName="If_CMR_And_Sent" />
                 <ScalarProperty Name="If_PDF_And_Sent" ColumnName="If_PDF_And_Sent" />
                 <ScalarProperty Name="CMR_Id" ColumnName="CMR_Id" />
                 <ScalarProperty Name="Number_Of_Positions" ColumnName="Number_Of_Positions" />
                 <ScalarProperty Name="Duty_Doc_Id" ColumnName="Duty_Doc_Id" />
+                <ScalarProperty Name="Receiver_PhoneNumber" ColumnName="Receiver_PhoneNumber" />
                 <ScalarProperty Name="Receiver_Email" ColumnName="Receiver_Email" />
                 <ScalarProperty Name="Receiver_VAT_Id" ColumnName="Receiver_VAT_Id" />
                 <ScalarProperty Name="Receiver_Address" ColumnName="Receiver_Address" />
                 <ScalarProperty Name="Receiver_Name" ColumnName="Receiver_Name" />
+                <ScalarProperty Name="Carrier_PhoneNumber" ColumnName="Carrier_PhoneNumber" />
                 <ScalarProperty Name="Carrier_Email" ColumnName="Carrier_Email" />
                 <ScalarProperty Name="Carrier_VAT_Id" ColumnName="Carrier_VAT_Id" />
                 <ScalarProperty Name="Carrier_Address" ColumnName="Carrier_Address" />
@@ -525,10 +545,12 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="WarehouseModel.Order">
               <MappingFragment StoreEntitySet="Orders">
-                <ScalarProperty Name="ETA" ColumnName="ETA" />
                 <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
                 <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Terminal" ColumnName="Terminal" />
+                <ScalarProperty Name="ETA" ColumnName="ETA" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="If_Delivery_Generated" ColumnName="If_Delivery_Generated" />
                 <ScalarProperty Name="If_PDF_And_Sent" ColumnName="If_PDF_And_Sent" />
@@ -551,15 +573,15 @@
           <EntitySetMapping Name="Orders_Positions">
             <EntityTypeMapping TypeName="WarehouseModel.Orders_Positions">
               <MappingFragment StoreEntitySet="Orders_Positions">
-                <ScalarProperty Name="Unit_Weight" ColumnName="Unit_Weight" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
                 <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Unit_Weight" ColumnName="Unit_Weight" />
                 <ScalarProperty Name="Weight_Gross_Received" ColumnName="Weight_Gross_Received" />
                 <ScalarProperty Name="Amount_Received" ColumnName="Amount_Received" />
                 <ScalarProperty Name="Weight_Gross" ColumnName="Weight_Gross" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Order_id" ColumnName="Order_id" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -594,6 +616,8 @@
                 <ScalarProperty Name="Deleted_at" ColumnName="Deleted_at" />
                 <ScalarProperty Name="Edited_at" ColumnName="Edited_at" />
                 <ScalarProperty Name="Created_at" ColumnName="Created_at" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Role" ColumnName="Role" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Login" ColumnName="Login" />
