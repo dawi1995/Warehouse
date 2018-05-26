@@ -193,8 +193,8 @@ namespace Warehouse.Controllers
                         {
                             orderPositionToEdit.Edited_At = dateOfCreate;
                             orderPositionToEdit.Amount_Received = item.Amount;
-                            orderPositionToEdit.Weight_Gross_Received = item.Weight_Gross;
-                            if (orderPositionToEdit.Amount != item.Amount || orderPositionToEdit.Weight_Gross != item.Weight_Gross)
+                            orderPositionToEdit.Weight_Gross_Received = item.Amount * orderPositionToEdit.Unit_Weight;
+                            if (orderPositionToEdit.Amount != item.Amount)
                             {
                                 isDifferent = true;
                             }
@@ -329,8 +329,8 @@ namespace Warehouse.Controllers
                         {
                             orderPositionToEdit.Edited_At = dateOfEdit;
                             orderPositionToEdit.Amount_Received = item.Amount;
-                            orderPositionToEdit.Weight_Gross_Received = item.Weight_Gross;
-                            if (orderPositionToEdit.Amount != item.Amount || orderPositionToEdit.Weight_Gross != item.Weight_Gross)
+                            orderPositionToEdit.Weight_Gross_Received = item.Amount* orderPositionToEdit.Unit_Weight;
+                            if (orderPositionToEdit.Amount != item.Amount)
                             {
                                 isDifferent = true;
                             }

@@ -144,14 +144,15 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Order_id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Amount" Type="int" Nullable="false" />
           <Property Name="Weight_Gross" Type="decimal" Precision="18" Scale="4" Nullable="false" />
           <Property Name="Amount_Received" Type="int" />
           <Property Name="Weight_Gross_Received" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="Unit_Weight" Type="decimal" Precision="18" Scale="4" />
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Edited_At" Type="datetime" />
           <Property Name="Deleted_At" Type="datetime" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Protocols_of_Difference">
           <Key>
@@ -365,6 +366,7 @@
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Unit_Weight" Type="Decimal" Precision="18" Scale="4" />
         </EntityType>
         <EntityType Name="Protocols_of_Difference">
           <Key>
@@ -549,6 +551,7 @@
           <EntitySetMapping Name="Orders_Positions">
             <EntityTypeMapping TypeName="WarehouseModel.Orders_Positions">
               <MappingFragment StoreEntitySet="Orders_Positions">
+                <ScalarProperty Name="Unit_Weight" ColumnName="Unit_Weight" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
                 <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />

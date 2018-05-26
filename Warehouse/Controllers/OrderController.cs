@@ -184,6 +184,7 @@ namespace Warehouse.Controllers
                         newOrderPosition.Amount = orderPosition.Amount;
                         newOrderPosition.Weight_Gross = orderPosition.Weight_Gross;
                         newOrderPosition.Created_At = newOrder.Created_At;
+                        newOrderPosition.Unit_Weight = orderPosition.Weight_Gross / orderPosition.Amount;
                         _context.Orders_Positions.Add(newOrderPosition);
                     }
                     var orderCounter = _context.Counters.FirstOrDefault(c => c.Name == "OrderCounter");
@@ -243,6 +244,7 @@ namespace Warehouse.Controllers
                                 orderPositionFromDB.Edited_At = dateOfEdit;
                                 orderPositionFromDB.Name = orderPosition.Name;
                                 orderPositionFromDB.Weight_Gross = orderPosition.Weight_Gross;
+                                orderPositionFromDB.Unit_Weight = orderPosition.Weight_Gross / orderPosition.Amount;
                             }
                             if (orderPosition.Id == null)
                             {
@@ -251,6 +253,7 @@ namespace Warehouse.Controllers
                                 orderPositionsToAdd.Name = orderPosition.Name;
                                 orderPositionsToAdd.Weight_Gross = orderPosition.Weight_Gross;
                                 orderPositionsToAdd.Amount = orderPosition.Amount;
+                                orderPositionsToAdd.Unit_Weight = orderPosition.Weight_Gross / orderPosition.Amount;
                                 _context.Orders_Positions.Add(orderPositionsToAdd);
                             }
                         }

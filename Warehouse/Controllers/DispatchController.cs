@@ -301,12 +301,12 @@ namespace Warehouse.Controllers
                             {
                                 if (dispatchPosition.Id == dispatchPositionFromDB.Id)
                                 {
-                                    dispatchPositionFromDB.Amount = dispatchPosition.Amount;
-                                    dispatchPositionFromDB.Edited_At = dateOfEdit;
-                                    dispatchPositionFromDB.Weight_Gross = dispatchPosition.Weight_Gross;
-                                    _context.SaveChanges();
                                     Dispatches_Positions dispatchPositionForParameter = _context.Dispatches_Positions.FirstOrDefault(d => d.Id == dispatchPosition.Id && d.Deleted_At == null);
                                     Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == dispatchPositionForParameter.Order_Position_Id && o.Deleted_At == null);
+                                    dispatchPositionFromDB.Amount = dispatchPosition.Amount;
+                                    dispatchPositionFromDB.Edited_At = dateOfEdit;
+                                    dispatchPositionFromDB.Weight_Gross = dispatchPosition.Amount* orderPosition.Unit_Weight;
+                                    _context.SaveChanges();
                                     Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderPosition.Order_id && d.Deleted_At == null);
                                     List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id).ToList();
                                     bool isBalanced = true;
@@ -329,7 +329,7 @@ namespace Warehouse.Controllers
                                     Dispatches_Positions dispatchPositionsToAdd = new Dispatches_Positions();
                                     dispatchPositionsToAdd.Created_At = dateOfEdit;
                                     dispatchPositionsToAdd.Amount = dispatchPosition.Amount;
-                                    dispatchPositionsToAdd.Weight_Gross = dispatchPosition.Weight_Gross;
+                                    dispatchPositionsToAdd.Weight_Gross = dispatchPosition.Weight_Gross;//Do zmiany jak ustalimy sposób edycji dispatchPositions
                                     _context.Dispatches_Positions.Add(dispatchPositionsToAdd);
                                     Dispatches_Positions dispatchPositionForParameter = _context.Dispatches_Positions.FirstOrDefault(d => d.Id == dispatchPositionsToAdd.Id && d.Deleted_At == null);
                                     Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == dispatchPositionForParameter.Order_Position_Id && o.Deleted_At == null);
@@ -543,16 +543,15 @@ namespace Warehouse.Controllers
                     _context.SaveChanges();
                     foreach (var item in newDispatch.DispatchPositions)
                     {
+                        Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == item.Id && o.Deleted_At == null);
                         Dispatches_Positions dispatchPostion = new Dispatches_Positions();
                         dispatchPostion.Amount = item.Amount;
                         dispatchPostion.Created_At = dateOfCreate;
                         dispatchPostion.Dispatch_Id = dispatchToAdd.Id;
                         dispatchPostion.Order_Position_Id = item.Id;
-                        dispatchPostion.Weight_Gross = item.Weight_Gross;
+                        dispatchPostion.Weight_Gross = item.Amount * orderPosition.Unit_Weight;
                         _context.Dispatches_Positions.Add(dispatchPostion);
                         _context.SaveChanges();
-
-                        Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == item.Id && o.Deleted_At == null);
 
 
                         Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderPosition.Order_id && d.Deleted_At == null);
