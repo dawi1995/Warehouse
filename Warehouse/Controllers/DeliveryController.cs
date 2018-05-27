@@ -259,7 +259,7 @@ namespace Warehouse.Controllers
 
         [HttpGet]
         [Route("RemoveDelivery")]
-        public RequestResult RemoveOrder(int orderId)
+        public RequestResult RemoveDelivery(int deliveryId)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
@@ -267,16 +267,21 @@ namespace Warehouse.Controllers
                 try
                 {
                     DateTime dateOfRemove = DateTime.Now;
-                    Order orderToRemove = _context.Orders.FirstOrDefault(o => o.Id == orderId);
-                    List<Orders_Positions> litOfOrdersPositionsToRemove = _context.Orders_Positions.Where(o => o.Order_id == orderId && o.Deleted_At == null).ToList();
-                    foreach (var item in litOfOrdersPositionsToRemove)
+                    Delivery deliveryToRemove = _context.Deliveries.FirstOrDefault(d => d.Id == deliveryId && d.Deleted_At == null);
+                    deliveryToRemove.Deleted_At = dateOfRemove;
+                    Order orderToEdit = _context.Orders.FirstOrDefault(o => o.Id == deliveryToRemove.Order_Id && o.Deleted_At == null);
+                    orderToEdit.Date_Of_Arrival = null;
+                    orderToEdit.Edited_At = dateOfRemove;
+                    List<Orders_Positions> litOfOrdersPositionsToEdit = _context.Orders_Positions.Where(o => o.Order_id == orderToEdit.Id && o.Deleted_At == null).ToList();
+                    foreach (var item in litOfOrdersPositionsToEdit)
                     {
-                        item.Deleted_At = dateOfRemove;
+                        item.Edited_At = dateOfRemove;
+                        item.Amount_Received = null;
+                        item.Weight_Gross_Received = null;
                     }
-                    orderToRemove.Deleted_At = dateOfRemove;
                     _context.SaveChanges();
                     result.Status = true;
-                    result.Message = "Order and his orders positions has been removed";
+                    result.Message = "Delivery and his orders positions has been removed";
                 }
                 catch (Exception ex)
                 {

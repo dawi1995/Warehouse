@@ -45,7 +45,7 @@ namespace Warehouse.Controllers
                 {
                     if (_accountRepository.IsLoginFree(registration.Login))
                     {
-                        User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now, Name=registration.Name, Surname=registration.Surname };
+                        User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Created_at = DateTime.Now, Name=registration.UserName, Surname=registration.UserSurname };
                         _context.Users.Add(userToAdd);
                         _context.SaveChanges();
                         requestResult.Status = true;
@@ -143,8 +143,8 @@ namespace Warehouse.Controllers
                         userToEdit.Password = SecurityHelper.EncodePassword(registration.Password, SecurityHelper.SALT);
                     }
                     userToEdit.Role = registration.Role;
-                    userToEdit.Name = registration.Name;
-                    userToEdit.Surname = registration.Surname;
+                    userToEdit.Name = registration.UserName;
+                    userToEdit.Surname = registration.UserSurname;
                     userToEdit.Edited_at = DateTime.Now;
                     _context.SaveChanges();
                     requestResult.Status = true;
