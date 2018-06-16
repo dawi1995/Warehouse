@@ -272,6 +272,7 @@ namespace Warehouse.Controllers
                     Order orderToEdit = _context.Orders.FirstOrDefault(o => o.Id == deliveryToRemove.Order_Id && o.Deleted_At == null);
                     orderToEdit.Date_Of_Arrival = null;
                     orderToEdit.Edited_At = dateOfRemove;
+                    orderToEdit.Status = (int)OrderStatus.Reported;
                     List<Orders_Positions> litOfOrdersPositionsToEdit = _context.Orders_Positions.Where(o => o.Order_id == orderToEdit.Id && o.Deleted_At == null).ToList();
                     foreach (var item in litOfOrdersPositionsToEdit)
                     {
