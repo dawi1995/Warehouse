@@ -259,7 +259,7 @@ namespace Warehouse.Controllers
 
         [HttpGet]
         [Route("RemoveDelivery")]
-        public RequestResult RemoveDelivery(int deliveryId)
+        public RequestResult RemoveDelivery(int orderId)
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
@@ -267,7 +267,7 @@ namespace Warehouse.Controllers
                 try
                 {
                     DateTime dateOfRemove = DateTime.Now;
-                    Delivery deliveryToRemove = _context.Deliveries.FirstOrDefault(d => d.Id == deliveryId && d.Deleted_At == null);
+                    Delivery deliveryToRemove = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderId && d.Deleted_At == null);
                     deliveryToRemove.Deleted_At = dateOfRemove;
                     Order orderToEdit = _context.Orders.FirstOrDefault(o => o.Id == deliveryToRemove.Order_Id && o.Deleted_At == null);
                     orderToEdit.Date_Of_Arrival = null;

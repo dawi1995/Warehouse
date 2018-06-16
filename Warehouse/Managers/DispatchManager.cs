@@ -49,7 +49,7 @@ namespace Warehouse.Managers
             }
             foreach (var item in dispatchPositionsFromDB)
             {
-                dispatchpositionsFromDBIds.Add(item.Id);
+                dispatchpositionsFromDBIds.Add((int)item.Order_Position_Id);
             }
             foreach (var id in dispatchpositionsFromDBIds)
             {
