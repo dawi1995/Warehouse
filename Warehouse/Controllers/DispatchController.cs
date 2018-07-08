@@ -501,8 +501,12 @@ namespace Warehouse.Controllers
                             deliveryToEdit.Edited_At = dateOfRemove;
                             item.Deleted_At = dateOfRemove;
                         }
-                        CMR_Dispatches cmrToRemove = _context.CMR_Dispatches.FirstOrDefault(c => c.Dispatch_Id == dispatchId);
-                        cmrToRemove.Deleted_At = dateOfRemove;
+                        int CMRId = Convert.ToInt32(dispatchToRemove.CMR_Id);
+                        CMR_Dispatches cmrToRemove = _context.CMR_Dispatches.FirstOrDefault(c => c.Id == CMRId);
+                        if (cmrToRemove != null)
+                        {
+                            cmrToRemove.Deleted_At = dateOfRemove;
+                        }
                         _context.SaveChanges();
                         result.Status = true;
                         result.Message = "Dispatch, his dispatch positions and his CMR has been removed";

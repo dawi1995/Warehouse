@@ -152,13 +152,17 @@ namespace Warehouse.Controllers
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
                 RequestResult result = new RequestResult();
-                Regex ATBregex = new Regex("ATB[0-9]{18}");
-                if (!ATBregex.IsMatch(createOrder.ATB))
+                if (createOrder.ATB != null)
                 {
-                    result.Status = false;
-                    result.Message = "ATB is in wrong format";
-                    return result;
+                    Regex ATBregex = new Regex("ATB[0-9]{18}");
+                    if (!ATBregex.IsMatch(createOrder.ATB))
+                    {
+                        result.Status = false;
+                        result.Message = "ATB is in wrong format";
+                        return result;
+                    }
                 }
+
                 try
                 {
                     if (_context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault() == null || _context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)
@@ -226,13 +230,17 @@ namespace Warehouse.Controllers
             {
                 DateTime dateOfEdit = DateTime.Now;
                 RequestResult result = new RequestResult();
-                Regex ATBregex = new Regex("ATB[0-9]{18}");
-                if (!ATBregex.IsMatch(editOrder.ATB))
+                if (editOrder.ATB != null)
                 {
-                    result.Status = false;
-                    result.Message = "ATB is in wrong format";
-                    return result;
+                    Regex ATBregex = new Regex("ATB[0-9]{18}");
+                    if (!ATBregex.IsMatch(editOrder.ATB))
+                    {
+                        result.Status = false;
+                        result.Message = "ATB is in wrong format";
+                        return result;
+                    }
                 }
+
                 try
                 {
                     Order orderToEdit = _context.Orders.FirstOrDefault(o => o.Id == editOrder.Id);

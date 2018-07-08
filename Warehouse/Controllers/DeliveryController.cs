@@ -39,7 +39,7 @@ namespace Warehouse.Controllers
                                      join orders in _context.Orders on deliveries.Order_Id equals orders.Id into q
                                      from orders in q.DefaultIfEmpty()
                                      where (deliveries.Deleted_At == null
-                                     && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle) || orders.Name.Contains(needle)))
+                                     && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle)))
                                      select new { Delivery = deliveries, Order = orders }).OrderByDescending(d => d.Delivery.Date_Of_Delivery).Skip(offset).Take(limit);
                 }
                 else
@@ -50,7 +50,7 @@ namespace Warehouse.Controllers
                                          join orders in _context.Orders on deliveries.Order_Id equals orders.Id into q
                                          from orders in q.DefaultIfEmpty()
                                          where (deliveries.Deleted_At == null
-                                         && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle) || orders.Name.Contains(needle))
+                                         && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle))
                                          && deliveries.If_Delivery_Dispatch_Balanced == false)
                                          select new { Delivery = deliveries, Order = orders }).OrderByDescending(d => d.Delivery.Date_Of_Delivery).Skip(offset).Take(limit);
                     }
@@ -61,7 +61,7 @@ namespace Warehouse.Controllers
                                          join orders in _context.Orders on deliveries.Order_Id equals orders.Id into q
                                          from orders in q.DefaultIfEmpty()
                                          where (deliveries.Deleted_At == null
-                                         && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle) || orders.Name.Contains(needle))
+                                         && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle))
                                          && (deliveries.If_Delivery_Dispatch_Balanced == false || deliveryDispatchIds.Contains(deliveries.Id)))
                                          select new { Delivery = deliveries, Order = orders }).OrderByDescending(d => d.Delivery.Date_Of_Delivery).Skip(offset).Take(limit);
                     }
@@ -166,13 +166,17 @@ namespace Warehouse.Controllers
             {
                 bool isDifferent = false;
                 RequestResult result = new RequestResult();
-                Regex ATBregex = new Regex("ATB[0-9]{18}");
-                if (!ATBregex.IsMatch(createDelivery.ATB))
+                if (createDelivery.ATB != null)
                 {
-                    result.Status = false;
-                    result.Message = "ATB is in wrong format";
-                    return result;
+                    Regex ATBregex = new Regex("ATB[0-9]{18}");
+                    if (!ATBregex.IsMatch(createDelivery.ATB))
+                    {
+                        result.Status = false;
+                        result.Message = "ATB is in wrong format";
+                        return result;
+                    }
                 }
+
                 DateTime dateOfCreate = DateTime.Now;
                 try
                 {
