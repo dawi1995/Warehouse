@@ -7,9 +7,9 @@ namespace Warehouse.Models.Custom
 {
     public class DispatchOrderList
     {
-        public int OrderId {get;set;}
-        public int DeliveryId { get; set; }
-        public string ATB { get; set; }
+        public string Order_Number {get;set;}
+        public string Delivery_Number { get; set; }
+        public string ContainerId { get; set; }
         public List<DispatchPositionsDispatchInfo> ListOfDispatchPositions { get; set; }
     }
 }

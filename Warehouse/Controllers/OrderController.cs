@@ -151,12 +151,13 @@ namespace Warehouse.Controllers
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
-                Regex ATBregex = new Regex("ATB[0-9].{17}");
-                //if (Regex.IsMatch(createOrder.ATB, ATBregex))
-                //{
-
-                //}
                 RequestResult result = new RequestResult();
+                Regex ATBregex = new Regex("ATB[0-9].{17}");
+                if (!ATBregex.IsMatch(createOrder.ATB))
+                {
+                    result.Status = false;
+                    result.Message = "ATB is in wrong format";
+                }
                 try
                 {
                     if (_context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault() == null || _context.Orders.OrderByDescending(o => o.Created_At).FirstOrDefault().Created_At.Value.Month != DateTime.Now.Month)

@@ -119,9 +119,9 @@ namespace Warehouse.Controllers
                                     listOfDispatchPositions.Add(dispatchPosition);
                                 }
                             }
-                            dispatchOrderList.DeliveryId = delivery.Id;
-                            dispatchOrderList.OrderId = order.Id;
-                            dispatchOrderList.ATB = order.ATB;
+                            dispatchOrderList.Delivery_Number = delivery.Delivery_Number;
+                            dispatchOrderList.Order_Number = order.Order_Number;
+                            dispatchOrderList.ContainerId = order.Container_Id;
                             dispatchOrderList.ListOfDispatchPositions = listOfDispatchPositions;
                             listOfDispatchOrders.Add(dispatchOrderList);
 
