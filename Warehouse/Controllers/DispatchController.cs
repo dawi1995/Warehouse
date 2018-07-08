@@ -43,6 +43,7 @@ namespace Warehouse.Controllers
                         dispatchToResult.Id = dispatch.Id;
                         dispatchToResult.Receiver_Name = dispatch.Receiver_Name;
                         dispatchToResult.IsCMR = dispatch.If_CMR == null ? false : dispatch.If_CMR.Value;
+                        dispatchToResult.Dispatch_Number = dispatch.Dispatch_Number;
                         listOfDispatches.Add(dispatchToResult);
                     }
                     result.ListOfDispatches = listOfDispatches;

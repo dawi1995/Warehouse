@@ -12,6 +12,8 @@ namespace Warehouse.Models.Custom
         public string Car_Id { get; set; }
         public string Carrier_Name { get; set; }
         public string Receiver_Name { get; set; }
+        public string Dispatch_Number { get; set; }
         public bool IsCMR { get; set; }
+
     }
 }

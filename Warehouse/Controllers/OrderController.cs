@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using Warehouse.Helpers;
@@ -150,6 +151,11 @@ namespace Warehouse.Controllers
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
+                Regex ATBregex = new Regex("ATB[0-9].{17}");
+                //if (Regex.IsMatch(createOrder.ATB, ATBregex))
+                //{
+
+                //}
                 RequestResult result = new RequestResult();
                 try
                 {
