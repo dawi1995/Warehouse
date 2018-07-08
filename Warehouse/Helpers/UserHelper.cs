@@ -23,7 +23,7 @@ namespace Warehouse.Helpers
         {
             using (WarehouseEntities _context = new WarehouseEntities())
             {
-                string name = GetCurrentUserName();
+                string name = UserHelper.GetCurrentUserName();
                 User user = _context.Users.Where(u => u.Login == name).FirstOrDefault();
                 return user.Id;
             }
@@ -32,7 +32,7 @@ namespace Warehouse.Helpers
         {
             using (WarehouseEntities _context = new WarehouseEntities())
             {
-                string name = GetCurrentUserName();
+                string name = UserHelper.GetCurrentUserName();
                 User user = _context.Users.Where(u => u.Login == name).FirstOrDefault();
                 return user.Role;
             }
@@ -40,7 +40,7 @@ namespace Warehouse.Helpers
         public static bool IsAuthorize(List<int> accesUserRoles)
         {
             
-            if (!accesUserRoles.Contains(GetCurrentUserRole()))
+            if (!accesUserRoles.Contains(UserHelper.GetCurrentUserRole()))
             {
                 return false;
             }
@@ -52,7 +52,7 @@ namespace Warehouse.Helpers
             using (WarehouseEntities _context = new WarehouseEntities())
             {
                 UserInformation userInfo = new UserInformation();
-                int currentUserId = GetCurrentUserId();
+                int currentUserId = UserHelper.GetCurrentUserId();
                 var user = _context.Users.FirstOrDefault(u => u.Id == currentUserId && u.Deleted_at == null);
                 if (user != null)
                 {
