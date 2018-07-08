@@ -94,7 +94,7 @@ namespace Warehouse.Managers
             //Drugi wiersz
             //ETA
             graph.DrawString("ETA:", _titleTable, XBrushes.Black, new XRect(44, 163, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.ETA == null ? string.Empty: ((DateTime)order.ETA).ToString("dd-MM-yyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 198, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.ETA == null ? string.Empty: ((DateTime)order.ETA).ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 198, 0, 0), XStringFormats.TopLeft);
 
 
             //Numer kontenera
@@ -315,7 +315,7 @@ namespace Warehouse.Managers
             //Drugi wiersz
             //ETA
             graph.DrawString("ETA:", _titleTable, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.ETA == null ? string.Empty : ((DateTime)order.ETA).ToString("dd-MM-yyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight+3+25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.ETA == null ? string.Empty : ((DateTime)order.ETA).ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight+3+25, 0, 0), XStringFormats.TopLeft);
 
 
             //Numer kontenera
@@ -631,7 +631,7 @@ namespace Warehouse.Managers
             //Drugi wiersz
             //ETA
             graph.DrawString("ETA:", _titleTable, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.ETA == null ? string.Empty : ((DateTime)order.ETA).ToString("dd-MM-yyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.ETA == null ? string.Empty : ((DateTime)order.ETA).ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
 
             //Numer kontenera
@@ -1350,7 +1350,7 @@ namespace Warehouse.Managers
 
                     //Place and date of dispatch
                     double placeDateDispStartY = 240;
-                    string createDT = dispatchToPDF.Creation_Date == null ? string.Empty : dispatchToPDF.Creation_Date.Value.ToString("dd-MM-yyy");
+                    string createDT = dispatchToPDF.Creation_Date == null ? string.Empty : dispatchToPDF.Creation_Date.Value.ToString("dd-MM-yyyy");
                     graph.DrawString("miejsce załadowania, " + createDT, _contentCMR, XBrushes.Black, new XRect(leftMargin1_5, placeDateDispStartY, 0, 0), XStringFormats.TopLeft);
 
                     //Place and date of establishment
