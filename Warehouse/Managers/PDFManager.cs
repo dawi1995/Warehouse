@@ -1003,7 +1003,7 @@ namespace Warehouse.Managers
             //NR dokumentu celnego
             graph.DrawString("Nr dokumentu celnego/", _titleTable, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Dokumentnummer des Zolls:", _titleTable, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + 2 * firstTableRowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(dispatchInfo.Duty_Doc_Id, _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(dispatchInfo.Duty_Doc_Id, _contentTableNormal, XBrushes.Black, new XRect(firstColumnWidth+4, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
 
 
