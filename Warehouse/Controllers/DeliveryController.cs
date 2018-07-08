@@ -166,7 +166,7 @@ namespace Warehouse.Controllers
             {
                 bool isDifferent = false;
                 RequestResult result = new RequestResult();
-                Regex ATBregex = new Regex("ATB[0-9].{17}");
+                Regex ATBregex = new Regex("ATB[0-9]{18}");
                 if (!ATBregex.IsMatch(createDelivery.ATB))
                 {
                     result.Status = false;

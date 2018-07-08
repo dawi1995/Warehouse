@@ -152,7 +152,7 @@ namespace Warehouse.Controllers
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin, (int)UserType.Admin, (int)UserType.Client }))
             {
                 RequestResult result = new RequestResult();
-                Regex ATBregex = new Regex("ATB[0-9].{17}");
+                Regex ATBregex = new Regex("ATB[0-9]{18}");
                 if (!ATBregex.IsMatch(createOrder.ATB))
                 {
                     result.Status = false;
@@ -226,7 +226,7 @@ namespace Warehouse.Controllers
             {
                 DateTime dateOfEdit = DateTime.Now;
                 RequestResult result = new RequestResult();
-                Regex ATBregex = new Regex("ATB[0-9].{17}");
+                Regex ATBregex = new Regex("ATB[0-9]{18}");
                 if (!ATBregex.IsMatch(editOrder.ATB))
                 {
                     result.Status = false;
