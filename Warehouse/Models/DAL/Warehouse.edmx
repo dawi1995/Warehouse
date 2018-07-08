@@ -50,7 +50,6 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Order_Id" Type="int" Nullable="false" />
-          <Property Name="Transport_Type" Type="int" Nullable="false" />
           <Property Name="Date_Of_Delivery" Type="date" Nullable="false" />
           <Property Name="Delivery_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="If_PDF_And_Sent" Type="bit" />
@@ -272,7 +271,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Order_Id" Type="Int32" Nullable="false" />
-          <Property Name="Transport_Type" Type="Int32" Nullable="false" />
           <Property Name="Date_Of_Delivery" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Delivery_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="If_PDF_And_Sent" Type="Boolean" />
@@ -480,7 +478,6 @@
                 <ScalarProperty Name="If_PDF_And_Sent" ColumnName="If_PDF_And_Sent" />
                 <ScalarProperty Name="Delivery_Number" ColumnName="Delivery_Number" />
                 <ScalarProperty Name="Date_Of_Delivery" ColumnName="Date_Of_Delivery" />
-                <ScalarProperty Name="Transport_Type" ColumnName="Transport_Type" />
                 <ScalarProperty Name="Order_Id" ColumnName="Order_Id" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

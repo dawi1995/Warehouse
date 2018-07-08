@@ -8,7 +8,6 @@ namespace Warehouse.Models.Custom
     public class CreateDelivery
     {
         public int Order_Id { get; set; }
-        public int Transport_Type { get; set; }
 
         public string ATB { get; set; }
         public string Car_Id { get; set; }

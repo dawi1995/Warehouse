@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using Warehouse.Helpers;
@@ -142,7 +143,6 @@ namespace Warehouse.Controllers
                     result.Id = deliveryFromDB.Id;
                     result.Date_Of_Delivery = deliveryFromDB.Date_Of_Delivery == null ? string.Empty : ((DateTime)deliveryFromDB.Date_Of_Delivery).ToString("dd-MM-yyyy");
                     result.Delivery_Number = deliveryFromDB.Delivery_Number;
-                    result.Transport_Type = deliveryFromDB.Transport_Type;
                     result.Car_Id = deliveryFromDB.Car_Id;
                     result.ListOfOrderPositions = listOfOrderPositions;
                     return result;
@@ -166,6 +166,13 @@ namespace Warehouse.Controllers
             {
                 bool isDifferent = false;
                 RequestResult result = new RequestResult();
+                Regex ATBregex = new Regex("ATB[0-9].{17}");
+                if (!ATBregex.IsMatch(createDelivery.ATB))
+                {
+                    result.Status = false;
+                    result.Message = "ATB is in wrong format";
+                    return result;
+                }
                 DateTime dateOfCreate = DateTime.Now;
                 try
                 {
@@ -184,7 +191,6 @@ namespace Warehouse.Controllers
                     newDelivery.If_PDF_Differential = false;
                     newDelivery.If_PDF_Dispatch = false;
                     newDelivery.Order_Id = createDelivery.Order_Id;
-                    newDelivery.Transport_Type = createDelivery.Transport_Type;
                     newDelivery.Car_Id = createDelivery.Car_Id;
                     newDelivery.Creator_Id = UserHelper.GetCurrentUserId();
                     _context.Deliveries.Add(newDelivery);
@@ -326,7 +332,6 @@ namespace Warehouse.Controllers
                         deliveryToEdit.If_PDF_And_Sent = false;
                         deliveryToEdit.If_PDF_Differential = false;
                         deliveryToEdit.If_PDF_Dispatch = false;
-                        deliveryToEdit.Transport_Type = editDelivery.Transport_Type;
                     }
                     else
                     {

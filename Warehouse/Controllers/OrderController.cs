@@ -157,6 +157,7 @@ namespace Warehouse.Controllers
                 {
                     result.Status = false;
                     result.Message = "ATB is in wrong format";
+                    return result;
                 }
                 try
                 {
@@ -225,6 +226,13 @@ namespace Warehouse.Controllers
             {
                 DateTime dateOfEdit = DateTime.Now;
                 RequestResult result = new RequestResult();
+                Regex ATBregex = new Regex("ATB[0-9].{17}");
+                if (!ATBregex.IsMatch(editOrder.ATB))
+                {
+                    result.Status = false;
+                    result.Message = "ATB is in wrong format";
+                    return result;
+                }
                 try
                 {
                     Order orderToEdit = _context.Orders.FirstOrDefault(o => o.Id == editOrder.Id);

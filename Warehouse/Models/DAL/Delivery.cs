@@ -16,7 +16,6 @@ namespace Warehouse.Models.DAL
     {
         public int Id { get; set; }
         public int Order_Id { get; set; }
-        public int Transport_Type { get; set; }
         public System.DateTime Date_Of_Delivery { get; set; }
         public string Delivery_Number { get; set; }
         public Nullable<bool> If_PDF_And_Sent { get; set; }
