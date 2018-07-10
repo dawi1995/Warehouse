@@ -24,5 +24,6 @@ namespace Warehouse.Models.DAL
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Edited_At { get; set; }
         public Nullable<System.DateTime> Deleted_At { get; set; }
+        public string PrefixVat_Id { get; set; }
     }
 }

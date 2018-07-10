@@ -13,6 +13,7 @@ namespace Warehouse.Models.Custom
         public int Role { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
+        public string PrefixVat_Id { get; set; }
         public string VAT_Id { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }

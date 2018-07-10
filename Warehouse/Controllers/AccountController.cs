@@ -88,7 +88,7 @@ namespace Warehouse.Controllers
                         User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Name=registration.UserName, Surname=registration.UserSurname, Created_at = DateTime.Now };
                         _context.Users.Add(userToAdd);
                         _context.SaveChanges();
-                        Client clientToAdd = new Client { Name = registration.Name, Address = registration.Address, VAT_Id = registration.VAT_Id, Email = registration.Email, User_Id = userToAdd.Id, Created_At = userToAdd.Created_at, PhoneNumber=registration.PhoneNumber };
+                        Client clientToAdd = new Client { Name = registration.Name, Address = registration.Address, PrefixVat_Id = registration.PrefixVat_Id, VAT_Id = registration.VAT_Id, Email = registration.Email, User_Id = userToAdd.Id, Created_At = userToAdd.Created_at, PhoneNumber=registration.PhoneNumber };
                         _context.Clients.Add(clientToAdd);
                         _context.SaveChanges();
                         requestResult.Status = true;
@@ -203,6 +203,7 @@ namespace Warehouse.Controllers
                     Client clientToEdit = _context.Clients.FirstOrDefault(c => c.User_Id == registration.Id);
                     clientToEdit.Name = registration.Name;
                     clientToEdit.Address = registration.Address;
+                    clientToEdit.PrefixVat_Id = registration.PrefixVat_Id;
                     clientToEdit.VAT_Id = registration.VAT_Id;
                     clientToEdit.Email = registration.Email;
                     clientToEdit.PhoneNumber = registration.PhoneNumber;
@@ -400,6 +401,7 @@ namespace Warehouse.Controllers
                     userInfo.Edited_At = user.User.Edited_at == null ? string.Empty : ((DateTime)user.User.Edited_at).ToString("dd-MM-yyyy");
                     userInfo.Name = user.Client == null ? string.Empty : user.Client.Name;
                     userInfo.Address = user.Client == null ? string.Empty : user.Client.Address;
+                    userInfo.PrefixVat_Id = user.Client == null ? string.Empty : user.Client.PrefixVat_Id;
                     userInfo.VAT_Id = user.Client == null ? string.Empty : user.Client.VAT_Id;
                     userInfo.Email = user.Client == null ? string.Empty : user.Client.Email;
                     userInfo.PhoneNumber = user.Client == null ? string.Empty : user.Client.PhoneNumber;
@@ -478,6 +480,7 @@ namespace Warehouse.Controllers
                         {
                             userInfo.Name = client.Name;
                             userInfo.Address = client.Address;
+                            userInfo.PrefixVat_Id = client.PrefixVat_Id;
                             userInfo.VAT_Id = client.VAT_Id;
                             userInfo.Email = client.Email;
                             userInfo.PhoneNumber = client.PhoneNumber;

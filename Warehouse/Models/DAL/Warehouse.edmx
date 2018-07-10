@@ -19,6 +19,7 @@
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Edited_At" Type="datetime" />
           <Property Name="Deleted_At" Type="datetime" />
+          <Property Name="PrefixVat_Id" Type="nvarchar" MaxLength="2" />
         </EntityType>
         <EntityType Name="CMR_Dispatches">
           <Key>
@@ -240,6 +241,7 @@
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
+          <Property Name="PrefixVat_Id" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CMR_Dispatches">
           <Key>
@@ -424,6 +426,7 @@
           <EntitySetMapping Name="Clients">
             <EntityTypeMapping TypeName="WarehouseModel.Client">
               <MappingFragment StoreEntitySet="Clients">
+                <ScalarProperty Name="PrefixVat_Id" ColumnName="PrefixVat_Id" />
                 <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
                 <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
