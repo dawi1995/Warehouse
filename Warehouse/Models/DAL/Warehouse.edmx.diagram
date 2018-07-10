@@ -8,15 +8,15 @@
         <EntityTypeShape EntityType="WarehouseModel.Client" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="WarehouseModel.CMR_Dispatches" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="WarehouseModel.Counter" Width="1.5" PointX="4.75" PointY="0.75" />
-        <EntityTypeShape EntityType="WarehouseModel.Delivery" Width="1.5" PointX="0.75" PointY="4.75" />
-        <EntityTypeShape EntityType="WarehouseModel.Deliveries_Dispatches" Width="1.5" PointX="2.75" PointY="4.75" />
-        <EntityTypeShape EntityType="WarehouseModel.Dispatch" Width="1.5" PointX="4.75" PointY="3.75" />
-        <EntityTypeShape EntityType="WarehouseModel.Dispatches_Positions" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="WarehouseModel.Order" Width="1.5" PointX="6.75" PointY="4.75" />
-        <EntityTypeShape EntityType="WarehouseModel.Orders_Positions" Width="1.5" PointX="8.75" PointY="0.75" />
-        <EntityTypeShape EntityType="WarehouseModel.Protocols_of_Difference" Width="1.5" PointX="8.75" PointY="4.75" />
-        <EntityTypeShape EntityType="WarehouseModel.sysdiagram" Width="1.5" PointX="8.75" PointY="7.75" />
-        <EntityTypeShape EntityType="WarehouseModel.User" Width="1.5" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="WarehouseModel.Delivery" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="WarehouseModel.Deliveries_Dispatches" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="WarehouseModel.Dispatch" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="WarehouseModel.Dispatches_Positions" Width="1.5" PointX="6.75" PointY="7.75" />
+        <EntityTypeShape EntityType="WarehouseModel.Order" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="WarehouseModel.Orders_Positions" Width="1.5" PointX="0.75" PointY="8.75" />
+        <EntityTypeShape EntityType="WarehouseModel.Protocols_of_Difference" Width="1.5" PointX="2.75" PointY="8.75" />
+        <EntityTypeShape EntityType="WarehouseModel.sysdiagram" Width="1.5" PointX="8.75" PointY="6.75" />
+        <EntityTypeShape EntityType="WarehouseModel.User" Width="1.5" PointX="8.75" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

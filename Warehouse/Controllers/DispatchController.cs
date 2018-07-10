@@ -100,6 +100,7 @@ namespace Warehouse.Controllers
                                 cmrToResult.Sender_Address = cmrDispatch.Sender_Address;
                                 cmrToResult.Sender_Email = cmrDispatch.Sender_Email;
                                 cmrToResult.Sender_Name = cmrDispatch.Sender_Name;
+                                cmrToResult.Sender_PrefixVat_Id = cmrDispatch.Sender_PrefixVat_Id;
                                 cmrToResult.Sender_VAT_Id = cmrDispatch.Sender_VAT_Id;
 
                             }
@@ -260,6 +261,7 @@ namespace Warehouse.Controllers
                             CMRDispatch.Sender_Address = editDispatch.CMRDispatch.Sender_Address;
                             CMRDispatch.Sender_Email = editDispatch.CMRDispatch.Sender_Email;
                             CMRDispatch.Sender_Name = editDispatch.CMRDispatch.Sender_Name;
+                            CMRDispatch.Sender_PrefixVat_Id = editDispatch.CMRDispatch.Sender_PrefixVat_Id;
                             CMRDispatch.Sender_VAT_Id = editDispatch.CMRDispatch.Sender_VAT_Id;
                             _context.SaveChanges();
                         }
@@ -575,6 +577,7 @@ namespace Warehouse.Controllers
                         cmrDispatch.Sender_Address = newDispatch.CMRDispatch.Sender_Address;
                         cmrDispatch.Sender_Email = newDispatch.CMRDispatch.Sender_Email;
                         cmrDispatch.Sender_Name = newDispatch.CMRDispatch.Sender_Name;
+                        cmrDispatch.Sender_PrefixVat_Id = newDispatch.CMRDispatch.Sender_PrefixVat_Id;
                         cmrDispatch.Sender_VAT_Id = newDispatch.CMRDispatch.Sender_VAT_Id;
                         cmrDispatch.Dispatch_Id = dispatchToAdd.Id;
                         cmrDispatch.Commodity_Type = newDispatch.CMRDispatch.Commodity_Type;

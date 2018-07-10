@@ -12,6 +12,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PrefixVat_Id" Type="nvarchar" MaxLength="2" />
           <Property Name="VAT_Id" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="User_Id" Type="int" />
@@ -19,7 +20,6 @@
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Edited_At" Type="datetime" />
           <Property Name="Deleted_At" Type="datetime" />
-          <Property Name="PrefixVat_Id" Type="nvarchar" MaxLength="2" />
         </EntityType>
         <EntityType Name="CMR_Dispatches">
           <Key>
@@ -31,6 +31,7 @@
           <Property Name="Destination" Type="nvarchar" MaxLength="50" />
           <Property Name="Sender_Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Sender_Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sender_PrefixVat_Id" Type="nvarchar" MaxLength="2" />
           <Property Name="Sender_VAT_Id" Type="nvarchar" MaxLength="50" />
           <Property Name="Sender_Email" Type="nvarchar" MaxLength="50" />
           <Property Name="Created_At" Type="datetime" />
@@ -234,6 +235,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PrefixVat_Id" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
           <Property Name="VAT_Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="User_Id" Type="Int32" />
@@ -241,7 +243,6 @@
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
           <Property Name="Deleted_At" Type="DateTime" Precision="3" />
-          <Property Name="PrefixVat_Id" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CMR_Dispatches">
           <Key>
@@ -253,6 +254,7 @@
           <Property Name="Destination" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Sender_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Sender_Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sender_PrefixVat_Id" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
           <Property Name="Sender_VAT_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Sender_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
@@ -426,7 +428,6 @@
           <EntitySetMapping Name="Clients">
             <EntityTypeMapping TypeName="WarehouseModel.Client">
               <MappingFragment StoreEntitySet="Clients">
-                <ScalarProperty Name="PrefixVat_Id" ColumnName="PrefixVat_Id" />
                 <ScalarProperty Name="Deleted_At" ColumnName="Deleted_At" />
                 <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
@@ -434,6 +435,7 @@
                 <ScalarProperty Name="User_Id" ColumnName="User_Id" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="VAT_Id" ColumnName="VAT_Id" />
+                <ScalarProperty Name="PrefixVat_Id" ColumnName="PrefixVat_Id" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -448,6 +450,7 @@
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
                 <ScalarProperty Name="Sender_Email" ColumnName="Sender_Email" />
                 <ScalarProperty Name="Sender_VAT_Id" ColumnName="Sender_VAT_Id" />
+                <ScalarProperty Name="Sender_PrefixVat_Id" ColumnName="Sender_PrefixVat_Id" />
                 <ScalarProperty Name="Sender_Address" ColumnName="Sender_Address" />
                 <ScalarProperty Name="Sender_Name" ColumnName="Sender_Name" />
                 <ScalarProperty Name="Destination" ColumnName="Destination" />

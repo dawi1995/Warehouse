@@ -17,6 +17,7 @@ namespace Warehouse.Models.DAL
         public int Id { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
+        public string PrefixVat_Id { get; set; }
         public string VAT_Id { get; set; }
         public string Email { get; set; }
         public Nullable<int> User_Id { get; set; }
@@ -24,6 +25,5 @@ namespace Warehouse.Models.DAL
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Edited_At { get; set; }
         public Nullable<System.DateTime> Deleted_At { get; set; }
-        public string PrefixVat_Id { get; set; }
     }
 }
