@@ -14,7 +14,16 @@ namespace Warehouse.Managers
         private static readonly WarehouseEntities _context = new WarehouseEntities();
         public static int CountOfDispatches(string needle = "")
         {
-            return _context.Dispatches.Where(d => d.Deleted_At == null && (d.Car_Id.Contains(needle) || d.Receiver_Name.Contains(needle) || d.Carrier_Name.Contains(needle))).Count();
+            //return _context.Dispatches.Where(d => d.Deleted_At == null && (d.Car_Id.Contains(needle) || d.Receiver_Name.Contains(needle) || d.Carrier_Name.Contains(needle))).Count();
+            return (from dispatches in _context.Dispatches
+                    join dispatchPositions in _context.Dispatches_Positions on dispatches.Id equals dispatchPositions.Dispatch_Id into q
+                    from dispatchPositions in q.DefaultIfEmpty()
+                    join orderPositions in _context.Orders_Positions on dispatchPositions.Order_Position_Id equals orderPositions.Id into x
+                    from orderPositions in x.DefaultIfEmpty()
+                    join orders in _context.Orders on orderPositions.Order_id equals orders.Id into z
+                    from orders in z.DefaultIfEmpty()
+                    where (dispatches.Deleted_At == null && dispatchPositions.Deleted_At == null && orderPositions.Deleted_At == null && orders.Deleted_At == null && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle)))
+                    select new { Dispatches = dispatches }).Distinct().Count();
         }
 
         public static List<int> GetListOfDeliveriesIdsForDispatch(Dispatch dispatchFromDB)

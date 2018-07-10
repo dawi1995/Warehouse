@@ -32,19 +32,29 @@ namespace Warehouse.Controllers
             {
                 try
                 {
+                    dynamic listOfDispatchFromDB = null;
                     DispatchListNumber result = new DispatchListNumber();
                     List<DispatchList> listOfDispatches = new List<DispatchList>();
-                    List<Dispatch> listOfDispatchFromDB = _context.Dispatches.Where(d=>d.Deleted_At == null && (d.Car_Id.Contains(needle) || d.Receiver_Name.Contains(needle) || d.Carrier_Name.Contains(needle))).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
+                    listOfDispatchFromDB = (from dispatches in _context.Dispatches
+                                      join dispatchPositions in _context.Dispatches_Positions on dispatches.Id equals dispatchPositions.Dispatch_Id into q
+                                      from dispatchPositions in q.DefaultIfEmpty()
+                                      join orderPositions in _context.Orders_Positions on dispatchPositions.Order_Position_Id equals orderPositions.Id into x
+                                      from orderPositions in x.DefaultIfEmpty()
+                                      join orders in _context.Orders on orderPositions.Order_id equals orders.Id into z
+                                      from orders in z.DefaultIfEmpty()
+                                      where (dispatches.Deleted_At == null && dispatchPositions.Deleted_At == null && orderPositions.Deleted_At == null && orders.Deleted_At == null && (orders.ATB.Contains(needle) || orders.Container_Id.Contains(needle)))
+                                   select new { Dispatches = dispatches}).Distinct().OrderByDescending(d => d.Dispatches.Created_At).Skip(offset).Take(limit);
+                    //List<Dispatch> listOfDispatchFromDB = _context.Dispatches.Where(d=>d.Deleted_At == null && (d.Car_Id.Contains(needle) || d.Receiver_Name.Contains(needle) || d.Carrier_Name.Contains(needle))).OrderByDescending(o => o.Creation_Date).Skip(offset).Take(limit).ToList();
                     foreach (var dispatch in listOfDispatchFromDB)
                     {
                         DispatchList dispatchToResult = new DispatchList();
-                        dispatchToResult.Carrier_Name = dispatch.Carrier_Name;
-                        dispatchToResult.Car_Id = dispatch.Car_Id;
-                        dispatchToResult.Creation_Date = dispatch.Creation_Date == null ? string.Empty : ((DateTime)dispatch.Creation_Date).ToString("dd-MM-yyyy");
-                        dispatchToResult.Id = dispatch.Id;
-                        dispatchToResult.Receiver_Name = dispatch.Receiver_Name;
-                        dispatchToResult.IsCMR = dispatch.If_CMR == null ? false : dispatch.If_CMR.Value;
-                        dispatchToResult.Dispatch_Number = dispatch.Dispatch_Number;
+                        dispatchToResult.Carrier_Name = dispatch.Dispatches.Carrier_Name;
+                        dispatchToResult.Car_Id = dispatch.Dispatches.Car_Id;
+                        dispatchToResult.Creation_Date = dispatch.Dispatches.Creation_Date == null ? string.Empty : ((DateTime)dispatch.Dispatches.Creation_Date).ToString("dd-MM-yyyy");
+                        dispatchToResult.Id = dispatch.Dispatches.Id;
+                        dispatchToResult.Receiver_Name = dispatch.Dispatches.Receiver_Name;
+                        dispatchToResult.IsCMR = dispatch.Dispatches.If_CMR == null ? false : dispatch.Dispatches.If_CMR;
+                        dispatchToResult.Dispatch_Number = dispatch.Dispatches.Dispatch_Number;
                         listOfDispatches.Add(dispatchToResult);
                     }
                     result.ListOfDispatches = listOfDispatches;
