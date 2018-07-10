@@ -173,8 +173,8 @@ namespace Warehouse.Controllers
                         _context.SaveChanges();
                     }
                     Order newOrder = new Order();
-                    newOrder.Container_Id = createOrder.Container_Id;
-                    newOrder.ATB = createOrder.ATB;
+                    newOrder.Container_Id = createOrder.Container_Id.RemoveWhiteSpaces();
+                    newOrder.ATB = createOrder.ATB.RemoveWhiteSpaces();
                     newOrder.Pickup_PIN = createOrder.Pickup_PIN;
                     newOrder.Creation_Date = DateTime.Now;
                     newOrder.Creator_Id = UserHelper.GetCurrentUserId();
@@ -182,7 +182,7 @@ namespace Warehouse.Controllers
                     newOrder.Name = createOrder.Name;
                     newOrder.Address = createOrder.Address;
                     newOrder.PrefixVat_Id = createOrder.PrefixVat_Id;
-                    newOrder.VAT_Id = createOrder.VAT_Id;
+                    newOrder.VAT_Id = createOrder.VAT_Id.RemoveWhiteSpaces();
                     newOrder.Email = createOrder.Email;
                     newOrder.ETA = createOrder.ETA;
                     newOrder.Num_of_Positions = createOrder.OrderPositions.Count;
@@ -246,15 +246,15 @@ namespace Warehouse.Controllers
                 try
                 {
                     Order orderToEdit = _context.Orders.FirstOrDefault(o => o.Id == editOrder.Id);
-                    orderToEdit.Container_Id = editOrder.Container_Id;
-                    orderToEdit.ATB = editOrder.ATB;
+                    orderToEdit.Container_Id = editOrder.Container_Id.RemoveWhiteSpaces();
+                    orderToEdit.ATB = editOrder.ATB.RemoveWhiteSpaces();
                     orderToEdit.Pickup_PIN = editOrder.Pickup_PIN;
                     orderToEdit.Creation_Date = editOrder.Creation_Date;
                     orderToEdit.Order_Number = editOrder.Order_Number;
                     orderToEdit.Name = editOrder.Name;
                     orderToEdit.Address = editOrder.Address;
                     orderToEdit.PrefixVat_Id = editOrder.PrefixVat_Id;
-                    orderToEdit.VAT_Id = editOrder.VAT_Id;
+                    orderToEdit.VAT_Id = editOrder.VAT_Id.RemoveWhiteSpaces();
                     orderToEdit.Email = editOrder.Email;
                     orderToEdit.ETA = editOrder.ETA;
                     orderToEdit.Terminal = editOrder.Terminal;

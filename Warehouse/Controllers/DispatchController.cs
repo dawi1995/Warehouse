@@ -266,7 +266,7 @@ namespace Warehouse.Controllers
                             CMRDispatch.Sender_Email = editDispatch.CMRDispatch.Sender_Email;
                             CMRDispatch.Sender_Name = editDispatch.CMRDispatch.Sender_Name;
                             CMRDispatch.Sender_PrefixVat_Id = editDispatch.CMRDispatch.Sender_PrefixVat_Id;
-                            CMRDispatch.Sender_VAT_Id = editDispatch.CMRDispatch.Sender_VAT_Id;
+                            CMRDispatch.Sender_VAT_Id = editDispatch.CMRDispatch.Sender_VAT_Id.RemoveWhiteSpaces();
                             _context.SaveChanges();
                         }
                         else
@@ -278,7 +278,7 @@ namespace Warehouse.Controllers
                             CMRDispatch.Sender_Address = editDispatch.CMRDispatch.Sender_Address;
                             CMRDispatch.Sender_Email = editDispatch.CMRDispatch.Sender_Email;
                             CMRDispatch.Sender_Name = editDispatch.CMRDispatch.Sender_Name;
-                            CMRDispatch.Sender_VAT_Id = editDispatch.CMRDispatch.Sender_VAT_Id;
+                            CMRDispatch.Sender_VAT_Id = editDispatch.CMRDispatch.Sender_VAT_Id.RemoveWhiteSpaces();
                             _context.CMR_Dispatches.Add(CMRDispatch);
                             _context.SaveChanges();
                         }
@@ -299,17 +299,17 @@ namespace Warehouse.Controllers
                         dispatchToEdit.Carrier_Email = editDispatch.Carrier.Carrier_Email;
                         dispatchToEdit.Carrier_Name = editDispatch.Carrier.Carrier_Name;
                         dispatchToEdit.Carrier_PrefixVat_Id = editDispatch.Carrier.Carrier_PrefixVat_Id;
-                        dispatchToEdit.Carrier_VAT_Id = editDispatch.Carrier.Carrier_VAT_Id;
-                        dispatchToEdit.Carrier_PhoneNumber = editDispatch.Carrier.Carrier_PhoneNumber;
-                        dispatchToEdit.Car_Id = editDispatch.Car_Id;
+                        dispatchToEdit.Carrier_VAT_Id = editDispatch.Carrier.Carrier_VAT_Id.RemoveWhiteSpaces();
+                        dispatchToEdit.Carrier_PhoneNumber = editDispatch.Carrier.Carrier_PhoneNumber.RemoveWhiteSpaces();
+                        dispatchToEdit.Car_Id = editDispatch.Car_Id.RemoveWhiteSpaces();
                         dispatchToEdit.Creation_Date = editDispatch.Creation_Date;
                         dispatchToEdit.Dispatch_Number = editDispatch.Dispatch_Number;
                         dispatchToEdit.Receiver_Address = editDispatch.Receiver.Receiver_Address;
                         dispatchToEdit.Receiver_Email = editDispatch.Receiver.Receiver_Email;
                         dispatchToEdit.Receiver_Name = editDispatch.Receiver.Receiver_Name;
                         dispatchToEdit.Receiver_PrefixVat_Id = editDispatch.Receiver.Receiver_PrefixVat_Id;
-                        dispatchToEdit.Receiver_VAT_Id = editDispatch.Receiver.Receiver_VAT_Id;
-                        dispatchToEdit.Receiver_PhoneNumber = editDispatch.Receiver.Receiver_PhoneNumber;
+                        dispatchToEdit.Receiver_VAT_Id = editDispatch.Receiver.Receiver_VAT_Id.RemoveWhiteSpaces();
+                        dispatchToEdit.Receiver_PhoneNumber = editDispatch.Receiver.Receiver_PhoneNumber.RemoveWhiteSpaces();
                         dispatchToEdit.Edited_At = dateOfEdit;                
                         dispatchToEdit.If_CMR = isCMR;
                         dispatchToEdit.Duty_Doc_Id = editDispatch.Duty_Doc_Id;
@@ -565,17 +565,17 @@ namespace Warehouse.Controllers
                     dispatchToAdd.Carrier_Email = newDispatch.Carrier.Carrier_Email;
                     dispatchToAdd.Carrier_Name = newDispatch.Carrier.Carrier_Name;
                     dispatchToAdd.Carrier_PrefixVat_Id = newDispatch.Carrier.Carrier_PrefixVat_Id;
-                    dispatchToAdd.Carrier_VAT_Id = newDispatch.Carrier.Carrier_VAT_Id;
-                    dispatchToAdd.Carrier_PhoneNumber = newDispatch.Carrier.Carrier_PhoneNumber;
-                    dispatchToAdd.Car_Id = newDispatch.Car_Id;
+                    dispatchToAdd.Carrier_VAT_Id = newDispatch.Carrier.Carrier_VAT_Id.RemoveWhiteSpaces();
+                    dispatchToAdd.Carrier_PhoneNumber = newDispatch.Carrier.Carrier_PhoneNumber.RemoveWhiteSpaces();
+                    dispatchToAdd.Car_Id = newDispatch.Car_Id.RemoveWhiteSpaces();
                     dispatchToAdd.Creation_Date = dateOfCreate;
                     dispatchToAdd.Dispatch_Number = _context.Counters.FirstOrDefault(c => c.Name == "DispatchCounter").Count.ToString() + "/" + ((DateTime)dispatchToAdd.Creation_Date).Month.ToString() + "/" + ((DateTime)dispatchToAdd.Creation_Date).Year.ToString();
                     dispatchToAdd.Receiver_Address = newDispatch.Receiver.Receiver_Address;
                     dispatchToAdd.Receiver_Email = newDispatch.Receiver.Receiver_Email;
                     dispatchToAdd.Receiver_Name = newDispatch.Receiver.Receiver_Name;
                     dispatchToAdd.Receiver_PrefixVat_Id = newDispatch.Receiver.Receiver_PrefixVat_Id;
-                    dispatchToAdd.Receiver_VAT_Id = newDispatch.Receiver.Receiver_VAT_Id;
-                    dispatchToAdd.Receiver_PhoneNumber = newDispatch.Receiver.Receiver_PhoneNumber;
+                    dispatchToAdd.Receiver_VAT_Id = newDispatch.Receiver.Receiver_VAT_Id.RemoveWhiteSpaces();
+                    dispatchToAdd.Receiver_PhoneNumber = newDispatch.Receiver.Receiver_PhoneNumber.RemoveWhiteSpaces();
                     dispatchToAdd.Created_At = dateOfCreate;
                     if (isCMR)
                     {
@@ -586,7 +586,7 @@ namespace Warehouse.Controllers
                         cmrDispatch.Sender_Email = newDispatch.CMRDispatch.Sender_Email;
                         cmrDispatch.Sender_Name = newDispatch.CMRDispatch.Sender_Name;
                         cmrDispatch.Sender_PrefixVat_Id = newDispatch.CMRDispatch.Sender_PrefixVat_Id;
-                        cmrDispatch.Sender_VAT_Id = newDispatch.CMRDispatch.Sender_VAT_Id;
+                        cmrDispatch.Sender_VAT_Id = newDispatch.CMRDispatch.Sender_VAT_Id.RemoveWhiteSpaces();
                         cmrDispatch.Dispatch_Id = dispatchToAdd.Id;
                         cmrDispatch.Commodity_Type = newDispatch.CMRDispatch.Commodity_Type;
                         _context.CMR_Dispatches.Add(cmrDispatch);

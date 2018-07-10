@@ -88,7 +88,7 @@ namespace Warehouse.Controllers
                         User userToAdd = new User { Login = registration.Login, Password = PasswordHash, Role = registration.Role, Name=registration.UserName, Surname=registration.UserSurname, Created_at = DateTime.Now };
                         _context.Users.Add(userToAdd);
                         _context.SaveChanges();
-                        Client clientToAdd = new Client { Name = registration.Name, Address = registration.Address, PrefixVat_Id = registration.PrefixVat_Id, VAT_Id = registration.VAT_Id, Email = registration.Email, User_Id = userToAdd.Id, Created_At = userToAdd.Created_at, PhoneNumber=registration.PhoneNumber };
+                        Client clientToAdd = new Client { Name = registration.Name, Address = registration.Address, PrefixVat_Id = registration.PrefixVat_Id, VAT_Id = registration.VAT_Id.RemoveWhiteSpaces(), Email = registration.Email, User_Id = userToAdd.Id, Created_At = userToAdd.Created_at, PhoneNumber=registration.PhoneNumber.RemoveWhiteSpaces() };
                         _context.Clients.Add(clientToAdd);
                         _context.SaveChanges();
                         requestResult.Status = true;
@@ -204,9 +204,9 @@ namespace Warehouse.Controllers
                     clientToEdit.Name = registration.Name;
                     clientToEdit.Address = registration.Address;
                     clientToEdit.PrefixVat_Id = registration.PrefixVat_Id;
-                    clientToEdit.VAT_Id = registration.VAT_Id;
+                    clientToEdit.VAT_Id = registration.VAT_Id.RemoveWhiteSpaces();
                     clientToEdit.Email = registration.Email;
-                    clientToEdit.PhoneNumber = registration.PhoneNumber;
+                    clientToEdit.PhoneNumber = registration.PhoneNumber.RemoveWhiteSpaces();
                     clientToEdit.Edited_At = userToEdit.Edited_at;
                     _context.SaveChanges();
                     requestResult.Status = true;

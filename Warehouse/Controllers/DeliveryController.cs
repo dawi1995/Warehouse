@@ -195,7 +195,7 @@ namespace Warehouse.Controllers
                     newDelivery.If_PDF_Differential = false;
                     newDelivery.If_PDF_Dispatch = false;
                     newDelivery.Order_Id = createDelivery.Order_Id;
-                    newDelivery.Car_Id = createDelivery.Car_Id;
+                    newDelivery.Car_Id = createDelivery.Car_Id.RemoveWhiteSpaces();
                     newDelivery.Creator_Id = UserHelper.GetCurrentUserId();
                     _context.Deliveries.Add(newDelivery);
                     foreach (var item in createDelivery.DeliveryPositions)
@@ -226,7 +226,7 @@ namespace Warehouse.Controllers
                         orderToEdit.If_Delivery_Generated = true;
 
                         if(createDelivery.ATB != null)
-                            orderToEdit.ATB = createDelivery.ATB;
+                            orderToEdit.ATB = createDelivery.ATB.RemoveWhiteSpaces();
 
                         if (isDifferent)
                         {
@@ -331,7 +331,7 @@ namespace Warehouse.Controllers
                         deliveryToEdit.Edited_At = dateOfEdit;
                         deliveryToEdit.Date_Of_Delivery = editDelivery.Date_Of_Delivery;
                         deliveryToEdit.Delivery_Number = editDelivery.Delivery_Number;
-                        deliveryToEdit.Car_Id = editDelivery.Car_Id;
+                        deliveryToEdit.Car_Id = editDelivery.Car_Id.RemoveWhiteSpaces();
                         deliveryToEdit.If_Delivery_Dispatch_Balanced = false;
                         deliveryToEdit.If_PDF_And_Sent = false;
                         deliveryToEdit.If_PDF_Differential = false;
