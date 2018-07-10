@@ -60,6 +60,7 @@ namespace Warehouse.Controllers
                         orderResult.Status = order.Status;
                         orderResult.Name = order.Name;
                         orderResult.Terminal = order.Terminal;
+                        orderResult.ReturnTerminal = order.ReturnTerminal;
                         var delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == order.Id && d.Deleted_At == null);
                         if (delivery != null)
                         {
@@ -132,6 +133,7 @@ namespace Warehouse.Controllers
                     result.ETA = orderFromDB.ETA == null ? string.Empty : orderFromDB.ETA.Value.ToString("dd-MM-yyyy");
                     result.Orderer = orderer;
                     result.Terminal = orderFromDB.Terminal;
+                    result.ReturnTerminal = orderFromDB.ReturnTerminal;
                     result.ListOfOrderPositions = listOfOrderPositions;
                     return result;
                 }
@@ -187,6 +189,7 @@ namespace Warehouse.Controllers
                     newOrder.ETA = createOrder.ETA;
                     newOrder.Num_of_Positions = createOrder.OrderPositions.Count;
                     newOrder.Terminal = createOrder.Terminal;
+                    newOrder.ReturnTerminal = createOrder.ReturnTerminal;
                     newOrder.If_PDF_And_Sent = false;
                     newOrder.If_Delivery_Generated = false;
                     newOrder.Status = (int)OrderStatus.Reported;
@@ -258,6 +261,7 @@ namespace Warehouse.Controllers
                     orderToEdit.Email = editOrder.Email;
                     orderToEdit.ETA = editOrder.ETA;
                     orderToEdit.Terminal = editOrder.Terminal;
+                    orderToEdit.ReturnTerminal = editOrder.ReturnTerminal;
                     //orderToEdit.Num_of_Positions = editOrder.Num_of_Positions;
                     orderToEdit.Edited_At = dateOfEdit;
                     _context.SaveChanges();

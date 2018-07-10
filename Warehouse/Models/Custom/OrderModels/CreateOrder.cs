@@ -15,6 +15,7 @@ namespace Warehouse.Models.Custom
         public string PrefixVat_Id { get; set; }
         public string VAT_Id { get; set; }
         public string Email { get; set; }
+        public string ReturnTerminal { get; set; }
         public string Terminal { get; set; }
         public DateTime ETA { get; set; }
         public List<CreateOrdersPositions> OrderPositions { get; set; }

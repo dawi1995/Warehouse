@@ -143,6 +143,7 @@
           <Property Name="Status" Type="int" />
           <Property Name="ETA" Type="date" />
           <Property Name="Terminal" Type="nvarchar" MaxLength="50" />
+          <Property Name="ReturnTerminal" Type="nvarchar" MaxLength="50" />
           <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Edited_At" Type="datetime" />
@@ -369,6 +370,7 @@
           <Property Name="Status" Type="Int32" />
           <Property Name="ETA" Type="DateTime" Precision="0" />
           <Property Name="Terminal" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReturnTerminal" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Edited_At" Type="DateTime" Precision="3" />
@@ -560,6 +562,7 @@
                 <ScalarProperty Name="Edited_At" ColumnName="Edited_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
                 <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="ReturnTerminal" ColumnName="ReturnTerminal" />
                 <ScalarProperty Name="Terminal" ColumnName="Terminal" />
                 <ScalarProperty Name="ETA" ColumnName="ETA" />
                 <ScalarProperty Name="Status" ColumnName="Status" />

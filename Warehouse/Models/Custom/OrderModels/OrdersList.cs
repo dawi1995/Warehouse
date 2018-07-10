@@ -13,6 +13,7 @@ namespace Warehouse.Models.Custom
         public string Creation_Date { get; set; }
         public string Name { get; set; }
         public int? Status { get; set; }
+        public string ReturnTerminal { get; set; }
         public string Terminal { get; set; }
         public bool IsDispatched { get; set; }
     }

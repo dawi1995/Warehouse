@@ -33,6 +33,7 @@ namespace Warehouse.Models.DAL
         public Nullable<int> Status { get; set; }
         public Nullable<System.DateTime> ETA { get; set; }
         public string Terminal { get; set; }
+        public string ReturnTerminal { get; set; }
         public string PhoneNumber { get; set; }
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Edited_At { get; set; }
