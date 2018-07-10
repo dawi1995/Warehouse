@@ -112,6 +112,7 @@ namespace Warehouse.Controllers
                     List<Orders_Positions> ordersPositionsFromDB = _context.Orders_Positions.Where(o => o.Deleted_At == null && o.Order_id == orderId).OrderBy(o => o.Name).ToList();
                     Order orderFromDB = _context.Orders.FirstOrDefault(o => o.Id == orderId);
                     orderer.Name = orderFromDB.Name;
+                    orderer.PrefixVat_Id = orderFromDB.PrefixVat_Id;
                     orderer.VAT_Id = orderFromDB.VAT_Id;
                     orderer.Address = orderFromDB.Address;
                     orderer.Email = orderFromDB.Email;
@@ -180,6 +181,7 @@ namespace Warehouse.Controllers
                     newOrder.Order_Number = _context.Counters.FirstOrDefault(c => c.Name == "OrderCounter").Count.ToString() +"/"+ newOrder.Creation_Date.Month.ToString() + "/" + newOrder.Creation_Date.Year.ToString();
                     newOrder.Name = createOrder.Name;
                     newOrder.Address = createOrder.Address;
+                    newOrder.PrefixVat_Id = createOrder.PrefixVat_Id;
                     newOrder.VAT_Id = createOrder.VAT_Id;
                     newOrder.Email = createOrder.Email;
                     newOrder.ETA = createOrder.ETA;
@@ -251,6 +253,7 @@ namespace Warehouse.Controllers
                     orderToEdit.Order_Number = editOrder.Order_Number;
                     orderToEdit.Name = editOrder.Name;
                     orderToEdit.Address = editOrder.Address;
+                    orderToEdit.PrefixVat_Id = editOrder.PrefixVat_Id;
                     orderToEdit.VAT_Id = editOrder.VAT_Id;
                     orderToEdit.Email = editOrder.Email;
                     orderToEdit.ETA = editOrder.ETA;

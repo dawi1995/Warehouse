@@ -78,7 +78,7 @@ namespace Warehouse.Managers
             graph.DrawString("Zleceniodawca/Kunde", _contentTableSmall, XBrushes.Black, new XRect(44, 83, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Nazwa: " + order.Name, _contentTableSmall, XBrushes.Black, new XRect(44, 96, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres: " + order.Address, _contentTableSmall, XBrushes.Black, new XRect(44, 107, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("NIP: " + order.VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 118, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("NIP: "+ order.PrefixVat_Id + order.VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 118, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: " + order.Email, _contentTableSmall, XBrushes.Black, new XRect(44, 129, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Telefon: " + phoneNumber, _contentTableSmall, XBrushes.Black, new XRect(44, 140, 0, 0), XStringFormats.TopLeft);
 
@@ -299,7 +299,7 @@ namespace Warehouse.Managers
             graph.DrawString("Zleceniodawca/Kunde", _titleTable, XBrushes.Black, new XRect(44, 80+3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Nazwa: " + order.Name, _contentTableSmall, XBrushes.Black, new XRect(44, 80+14, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres: " + order.Address, _contentTableSmall, XBrushes.Black, new XRect(44, 80+25, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("NIP: " + order.VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80+36, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("NIP: "+order.PrefixVat_Id + order.VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80+36, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: " + order.Email, _contentTableSmall, XBrushes.Black, new XRect(44, 80+47, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Telefon: "+ phoneNumber, _contentTableSmall, XBrushes.Black, new XRect(44, 80+58, 0, 0), XStringFormats.TopLeft);
 
@@ -605,7 +605,7 @@ namespace Warehouse.Managers
             graph.DrawString("Zleceniodawca/Kunde", _titleTable, XBrushes.Black, new XRect(44, 80 + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Nazwa: " + order.Name, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 14, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres: " + order.Address, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 25, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("NIP: " + order.VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 36, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("NIP: "+order.PrefixVat_Id + order.VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 36, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: " + order.Email, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 47, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Telefon: " + phoneNumber, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 58, 0, 0), XStringFormats.TopLeft);
 
@@ -974,7 +974,7 @@ namespace Warehouse.Managers
             graph.DrawString("Odbiorca/Empfänger:", _titleTable, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Nazwa: "+ dispatchInfo.Receiver.Receiver_Name, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 14, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres: "+ dispatchInfo.Receiver.Receiver_Address, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 25, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("NIP: "+ dispatchInfo.Receiver.Receiver_VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 36, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("NIP: "+dispatchInfo.Receiver.Receiver_PrefixVat_Id+ dispatchInfo.Receiver.Receiver_VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 36, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: "+ dispatchInfo.Receiver.Receiver_Email, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 47, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Telefon: "+ receiverPhoneNumber, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 58, 0, 0), XStringFormats.TopLeft);
 
@@ -995,7 +995,7 @@ namespace Warehouse.Managers
             graph.DrawString("Angaben zum Beförderer:", _titleTable, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Nazwa: " + dispatchInfo.Carrier.Carrier_Name, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 13, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres: "+ dispatchInfo.Carrier.Carrier_Address, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 23, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString("NIP: "+ dispatchInfo.Carrier.Carrier_VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 33, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString("NIP: "+dispatchInfo.Carrier.Carrier_PrefixVat_Id+ dispatchInfo.Carrier.Carrier_VAT_Id, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 33, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Adres e-mail: "+ dispatchInfo.Carrier.Carrier_Email, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 43, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Telefon: " + carrierPhoneNumber, _contentTableSmall, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 11 + 53, 0, 0), XStringFormats.TopLeft);
 

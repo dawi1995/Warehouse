@@ -12,6 +12,7 @@ namespace Warehouse.Models.Custom
         public string Pickup_PIN { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
+        public string PrefixVat_Id { get; set; }
         public string VAT_Id { get; set; }
         public string Email { get; set; }
         public string Terminal { get; set; }

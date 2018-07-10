@@ -20,11 +20,13 @@ namespace Warehouse.Models.DAL
         public string Car_Id { get; set; }
         public string Carrier_Name { get; set; }
         public string Carrier_Address { get; set; }
+        public string Carrier_PrefixVat_Id { get; set; }
         public string Carrier_VAT_Id { get; set; }
         public string Carrier_Email { get; set; }
         public string Carrier_PhoneNumber { get; set; }
         public string Receiver_Name { get; set; }
         public string Receiver_Address { get; set; }
+        public string Receiver_PrefixVat_Id { get; set; }
         public string Receiver_VAT_Id { get; set; }
         public string Receiver_Email { get; set; }
         public string Receiver_PhoneNumber { get; set; }

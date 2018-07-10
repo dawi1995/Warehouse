@@ -131,12 +131,14 @@ namespace Warehouse.Controllers
 
                         carrier.Carrier_Address = dispatchFromDB.Carrier_Address;
                         carrier.Carrier_Email = dispatchFromDB.Carrier_Email;
+                        carrier.Carrier_PrefixVat_Id = dispatchFromDB.Carrier_PrefixVat_Id;
                         carrier.Carrier_VAT_Id = dispatchFromDB.Carrier_VAT_Id;
                         carrier.Carrier_Name = dispatchFromDB.Carrier_Name;
                         carrier.Carrier_PhoneNumber = dispatchFromDB.Carrier_PhoneNumber;
                         receiver.Receiver_Address = dispatchFromDB.Receiver_Address;
                         receiver.Receiver_Email = dispatchFromDB.Receiver_Email;
                         receiver.Receiver_Name = dispatchFromDB.Receiver_Name;
+                        receiver.Receiver_PrefixVat_Id = dispatchFromDB.Receiver_PrefixVat_Id;
                         receiver.Receiver_VAT_Id = dispatchFromDB.Receiver_VAT_Id;
                         receiver.Receiver_PhoneNumber = dispatchFromDB.Receiver_PhoneNumber;
                         result.Dispatch_Number = dispatchFromDB.Dispatch_Number;
@@ -212,11 +214,13 @@ namespace Warehouse.Controllers
                         carrierDispatch.Carrier_Name = dispatch.Carrier_Name;
                         carrierDispatch.Carrier_Email = dispatch.Carrier_Email;
                         carrierDispatch.Carrier_Address = dispatch.Carrier_Address;
+                        carrierDispatch.Carrier_PrefixVat_Id = dispatch.Carrier_PrefixVat_Id;
                         carrierDispatch.Carrier_VAT_Id = dispatch.Carrier_VAT_Id;
                         carrierDispatch.Carrier_PhoneNumber = dispatch.Carrier_PhoneNumber;
                         receiverDispatch.Receiver_Name = dispatch.Receiver_Name;
                         receiverDispatch.Receiver_Email = dispatch.Receiver_Email;
                         receiverDispatch.Receiver_Address = dispatch.Receiver_Address;
+                        receiverDispatch.Receiver_PrefixVat_Id = dispatch.Receiver_PrefixVat_Id;
                         receiverDispatch.Receiver_VAT_Id = dispatch.Receiver_VAT_Id;
                         receiverDispatch.Receiver_PhoneNumber = dispatch.Receiver_PhoneNumber;
                         dispatchDetails.Id = dispatch.Id;
@@ -294,6 +298,7 @@ namespace Warehouse.Controllers
                         dispatchToEdit.Carrier_Address = editDispatch.Carrier.Carrier_Address;
                         dispatchToEdit.Carrier_Email = editDispatch.Carrier.Carrier_Email;
                         dispatchToEdit.Carrier_Name = editDispatch.Carrier.Carrier_Name;
+                        dispatchToEdit.Carrier_PrefixVat_Id = editDispatch.Carrier.Carrier_PrefixVat_Id;
                         dispatchToEdit.Carrier_VAT_Id = editDispatch.Carrier.Carrier_VAT_Id;
                         dispatchToEdit.Carrier_PhoneNumber = editDispatch.Carrier.Carrier_PhoneNumber;
                         dispatchToEdit.Car_Id = editDispatch.Car_Id;
@@ -302,6 +307,7 @@ namespace Warehouse.Controllers
                         dispatchToEdit.Receiver_Address = editDispatch.Receiver.Receiver_Address;
                         dispatchToEdit.Receiver_Email = editDispatch.Receiver.Receiver_Email;
                         dispatchToEdit.Receiver_Name = editDispatch.Receiver.Receiver_Name;
+                        dispatchToEdit.Receiver_PrefixVat_Id = editDispatch.Receiver.Receiver_PrefixVat_Id;
                         dispatchToEdit.Receiver_VAT_Id = editDispatch.Receiver.Receiver_VAT_Id;
                         dispatchToEdit.Receiver_PhoneNumber = editDispatch.Receiver.Receiver_PhoneNumber;
                         dispatchToEdit.Edited_At = dateOfEdit;                
@@ -558,6 +564,7 @@ namespace Warehouse.Controllers
                     dispatchToAdd.Carrier_Address = newDispatch.Carrier.Carrier_Address;
                     dispatchToAdd.Carrier_Email = newDispatch.Carrier.Carrier_Email;
                     dispatchToAdd.Carrier_Name = newDispatch.Carrier.Carrier_Name;
+                    dispatchToAdd.Carrier_PrefixVat_Id = newDispatch.Carrier.Carrier_PrefixVat_Id;
                     dispatchToAdd.Carrier_VAT_Id = newDispatch.Carrier.Carrier_VAT_Id;
                     dispatchToAdd.Carrier_PhoneNumber = newDispatch.Carrier.Carrier_PhoneNumber;
                     dispatchToAdd.Car_Id = newDispatch.Car_Id;
@@ -566,6 +573,7 @@ namespace Warehouse.Controllers
                     dispatchToAdd.Receiver_Address = newDispatch.Receiver.Receiver_Address;
                     dispatchToAdd.Receiver_Email = newDispatch.Receiver.Receiver_Email;
                     dispatchToAdd.Receiver_Name = newDispatch.Receiver.Receiver_Name;
+                    dispatchToAdd.Receiver_PrefixVat_Id = newDispatch.Receiver.Receiver_PrefixVat_Id;
                     dispatchToAdd.Receiver_VAT_Id = newDispatch.Receiver.Receiver_VAT_Id;
                     dispatchToAdd.Receiver_PhoneNumber = newDispatch.Receiver.Receiver_PhoneNumber;
                     dispatchToAdd.Created_At = dateOfCreate;

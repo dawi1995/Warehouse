@@ -86,11 +86,13 @@
           <Property Name="Car_Id" Type="nvarchar" MaxLength="50" />
           <Property Name="Carrier_Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Carrier_Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Carrier_PrefixVat_Id" Type="nvarchar" MaxLength="2" />
           <Property Name="Carrier_VAT_Id" Type="nvarchar" MaxLength="50" />
           <Property Name="Carrier_Email" Type="nvarchar" MaxLength="50" />
           <Property Name="Carrier_PhoneNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Receiver_Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Receiver_Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Receiver_PrefixVat_Id" Type="nvarchar" MaxLength="2" />
           <Property Name="Receiver_VAT_Id" Type="nvarchar" MaxLength="50" />
           <Property Name="Receiver_Email" Type="nvarchar" MaxLength="50" />
           <Property Name="Receiver_PhoneNumber" Type="nvarchar" MaxLength="50" />
@@ -132,6 +134,7 @@
           <Property Name="Order_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PrefixVat_Id" Type="nvarchar" MaxLength="2" />
           <Property Name="VAT_Id" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Num_of_Positions" Type="int" Nullable="false" />
@@ -309,11 +312,13 @@
           <Property Name="Car_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Carrier_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Carrier_Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Carrier_PrefixVat_Id" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
           <Property Name="Carrier_VAT_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Carrier_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Carrier_PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Receiver_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Receiver_Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Receiver_PrefixVat_Id" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
           <Property Name="Receiver_VAT_Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Receiver_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Receiver_PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -355,6 +360,7 @@
           <Property Name="Order_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PrefixVat_Id" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
           <Property Name="VAT_Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Num_of_Positions" Type="Int32" Nullable="false" />
@@ -517,11 +523,13 @@
                 <ScalarProperty Name="Receiver_PhoneNumber" ColumnName="Receiver_PhoneNumber" />
                 <ScalarProperty Name="Receiver_Email" ColumnName="Receiver_Email" />
                 <ScalarProperty Name="Receiver_VAT_Id" ColumnName="Receiver_VAT_Id" />
+                <ScalarProperty Name="Receiver_PrefixVat_Id" ColumnName="Receiver_PrefixVat_Id" />
                 <ScalarProperty Name="Receiver_Address" ColumnName="Receiver_Address" />
                 <ScalarProperty Name="Receiver_Name" ColumnName="Receiver_Name" />
                 <ScalarProperty Name="Carrier_PhoneNumber" ColumnName="Carrier_PhoneNumber" />
                 <ScalarProperty Name="Carrier_Email" ColumnName="Carrier_Email" />
                 <ScalarProperty Name="Carrier_VAT_Id" ColumnName="Carrier_VAT_Id" />
+                <ScalarProperty Name="Carrier_PrefixVat_Id" ColumnName="Carrier_PrefixVat_Id" />
                 <ScalarProperty Name="Carrier_Address" ColumnName="Carrier_Address" />
                 <ScalarProperty Name="Carrier_Name" ColumnName="Carrier_Name" />
                 <ScalarProperty Name="Car_Id" ColumnName="Car_Id" />
@@ -560,6 +568,7 @@
                 <ScalarProperty Name="Num_of_Positions" ColumnName="Num_of_Positions" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="VAT_Id" ColumnName="VAT_Id" />
+                <ScalarProperty Name="PrefixVat_Id" ColumnName="PrefixVat_Id" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Order_Number" ColumnName="Order_Number" />
