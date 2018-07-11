@@ -265,7 +265,7 @@ namespace Warehouse.Controllers
                 RequestResult result = new RequestResult();
                 try
                 {
-                    CMR_Dispatches CMRDispatch = _context.CMR_Dispatches.FirstOrDefault(c => c.Dispatch_Id == editDispatch.CMRId);
+                    CMR_Dispatches CMRDispatch = _context.CMR_Dispatches.FirstOrDefault(c => c.Id == editDispatch.CMRId);
                     if (isCMR)
                     {
                         if (CMRDispatch != null)
