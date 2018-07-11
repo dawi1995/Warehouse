@@ -75,7 +75,8 @@ namespace Warehouse.Managers
             DispatchDetailsPDF result = new DispatchDetailsPDF();
             List<OrderPositionsDispatchInfoPDF> listOfOrderPositionsDispatchInfoPDF = new List<OrderPositionsDispatchInfoPDF>();
             Dispatch dispatch = _context.Dispatches.FirstOrDefault(d => d.Id == dispatchId && d.Deleted_At == null);
-            CMR_Dispatches cmrDispatch = _context.CMR_Dispatches.FirstOrDefault(c => c.Dispatch_Id == dispatchId && c.Deleted_At == null);
+            int cmrId = Convert.ToInt32(dispatch.CMR_Id);
+            CMR_Dispatches cmrDispatch = _context.CMR_Dispatches.FirstOrDefault(c => c.Id == cmrId && c.Deleted_At == null);
             List<Dispatches_Positions> dispatchPositions = _context.Dispatches_Positions.Where(d => d.Dispatch_Id == dispatchId && d.Deleted_At == null).ToList();
             
             foreach (var item in dispatchPositions)
