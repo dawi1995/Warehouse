@@ -344,7 +344,7 @@ namespace Warehouse.Controllers
                                         Orders_Positions orderPosition = _context.Orders_Positions.FirstOrDefault(o => o.Id == dispatchPositionForParameter.Order_Position_Id && o.Deleted_At == null);
                                         dispatchPositionForParameter.Amount = dispatchPosition.Amount;
                                         dispatchPositionForParameter.Edited_At = dateOfEdit;
-                                        dispatchPositionForParameter.Weight_Gross = dispatchPosition.Amount * orderPosition.Unit_Weight;
+                                        dispatchPositionForParameter.Weight_Gross = Math.Round((decimal)(dispatchPosition.Amount * orderPosition.Unit_Weight),2);
                                         _context.SaveChanges();
                                         Delivery delivery = _context.Deliveries.FirstOrDefault(d => d.Order_Id == orderPosition.Order_id && d.Deleted_At == null);
                                         List<Orders_Positions> listOfOrdersPositionsForOrderPosition = _context.Orders_Positions.Where(o => o.Order_id == orderPosition.Order_id && o.Deleted_At == null).ToList();
@@ -377,7 +377,7 @@ namespace Warehouse.Controllers
                                         dispatchPostionToAdd.Created_At = dateOfEdit;
                                         dispatchPostionToAdd.Dispatch_Id = editDispatch.Id;
                                         dispatchPostionToAdd.Order_Position_Id = dispatchPosition.Id;
-                                        dispatchPostionToAdd.Weight_Gross = dispatchPosition.Amount * orderPosition.Unit_Weight;
+                                        dispatchPostionToAdd.Weight_Gross = Math.Round((decimal)(dispatchPosition.Amount * orderPosition.Unit_Weight),2);
                                         _context.Dispatches_Positions.Add(dispatchPostionToAdd);
                                         _context.SaveChanges();
 
@@ -625,7 +625,7 @@ namespace Warehouse.Controllers
                         dispatchPostion.Created_At = dateOfCreate;
                         dispatchPostion.Dispatch_Id = dispatchToAdd.Id;
                         dispatchPostion.Order_Position_Id = item.Id;
-                        dispatchPostion.Weight_Gross = item.Amount * orderPosition.Unit_Weight;
+                        dispatchPostion.Weight_Gross = Math.Round((decimal)(item.Amount * orderPosition.Unit_Weight), 2);
                         _context.Dispatches_Positions.Add(dispatchPostion);
                         _context.SaveChanges();
 

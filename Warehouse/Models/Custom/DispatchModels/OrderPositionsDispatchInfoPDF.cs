@@ -9,6 +9,7 @@ namespace Warehouse.Models.Custom
     {
         public int Id { get; set; }
         public string ATB { get; set; }
+        public string Container_Id { get; set; }
         public string Name { get; set; }
         public int? Amount_Received { get; set; }
         public decimal? Weight_Gross_Received { get; set; }

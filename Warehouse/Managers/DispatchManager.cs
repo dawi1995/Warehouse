@@ -93,6 +93,7 @@ namespace Warehouse.Managers
                 decimal? weightDispatch = item.Weight_Gross;
                 toAddToList.Id = item.Id;
                 toAddToList.ATB = order.ATB;
+                toAddToList.Container_Id = order.Container_Id;
                 toAddToList.Name = orderPosition.Name;
                 toAddToList.Amount_Received = amountReceived;
                 toAddToList.Weight_Gross_Received = weightReceived;
