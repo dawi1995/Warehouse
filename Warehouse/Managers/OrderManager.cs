@@ -11,8 +11,12 @@ namespace Warehouse.Managers
 {
     public class OrderManager
     {
-        private static readonly WarehouseEntities _context = new WarehouseEntities();
-        public static int CountOfOrders(string needle = "")
+        private readonly WarehouseEntities _context;
+        public OrderManager(WarehouseEntities context)
+        {
+            _context = context;
+        }
+        public int CountOfOrders(string needle = "")
         {
             int currentUserId = UserHelper.GetCurrentUserId();
             if (UserHelper.GetCurrentUserRole() == (int)UserType.SuperAdmin || UserHelper.GetCurrentUserRole() == (int)UserType.Admin)
@@ -26,7 +30,7 @@ namespace Warehouse.Managers
 
         }
 
-        public static List<int> GetIdstoRemove(List<EditOrdersPositions> orderPositionsFromUser, List<Orders_Positions> orderPosotionsFromDB)
+        public List<int> GetIdstoRemove(List<EditOrdersPositions> orderPositionsFromUser, List<Orders_Positions> orderPosotionsFromDB)
         {
             List<int> result = new List<int>();
             List<int> orderpositionsFromUserIds = new List<int>();

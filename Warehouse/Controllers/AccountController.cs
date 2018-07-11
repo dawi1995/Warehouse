@@ -25,11 +25,13 @@ namespace Warehouse.Controllers
     {
         private readonly WarehouseEntities _context;
         private readonly AccountRepository _accountRepository;
+        private readonly AccountManager _accountManager;
         // GET: Account
         public AccountController()
         {
             _context = new WarehouseEntities();
             _accountRepository = new AccountRepository();
+            _accountManager = new AccountManager(_context);
         }
 
         [Authorize]
@@ -410,7 +412,7 @@ namespace Warehouse.Controllers
                     listOfUsersInfo.Add(userInfo);
 
                 }
-                result.NumberOfUsers = AccountManager.CountOfUsers(role, needle);
+                result.NumberOfUsers = _accountManager.CountOfUsers(role, needle);
                 result.ListOfUsers = listOfUsersInfo;
                 return result;
             }

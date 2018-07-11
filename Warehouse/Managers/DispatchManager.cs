@@ -11,8 +11,12 @@ namespace Warehouse.Managers
 {
     public class DispatchManager
     {
-        private static readonly WarehouseEntities _context = new WarehouseEntities();
-        public static int CountOfDispatches(string needle = "")
+        private readonly WarehouseEntities _context;
+        public DispatchManager(WarehouseEntities context)
+        {
+            _context = context;
+        }
+        public int CountOfDispatches(string needle = "")
         {
             //return _context.Dispatches.Where(d => d.Deleted_At == null && (d.Car_Id.Contains(needle) || d.Receiver_Name.Contains(needle) || d.Carrier_Name.Contains(needle))).Count();
             return (from dispatches in _context.Dispatches
@@ -26,7 +30,7 @@ namespace Warehouse.Managers
                     select new { Dispatches = dispatches }).Distinct().Count();
         }
 
-        public static List<int> GetListOfDeliveriesIdsForDispatch(Dispatch dispatchFromDB)
+        public List<int> GetListOfDeliveriesIdsForDispatch(Dispatch dispatchFromDB)
         {
             List<int> result = new List<int>();
             List<Deliveries_Dispatches> listOfDeliveryDispatches = _context.Deliveries_Dispatches.Where(d => d.Dispatch_Id == dispatchFromDB.Id).ToList();
@@ -44,7 +48,7 @@ namespace Warehouse.Managers
             }
             return result;
         }
-        public static List<int> GetIdstoRemove(List<EditDispatchPositions> dispatchPositionsFromUser, List<Dispatches_Positions> dispatchPositionsFromDB)
+        public List<int> GetIdstoRemove(List<EditDispatchPositions> dispatchPositionsFromUser, List<Dispatches_Positions> dispatchPositionsFromDB)
         {
             List<int> result = new List<int>();
             List<int> dispatchpositionsFromUserIds = new List<int>();
@@ -70,7 +74,7 @@ namespace Warehouse.Managers
             }
             return result;
         }
-        public static DispatchDetailsPDF GetDispatchDetails(int dispatchId)
+        public DispatchDetailsPDF GetDispatchDetails(int dispatchId)
         {
             DispatchDetailsPDF result = new DispatchDetailsPDF();
             List<OrderPositionsDispatchInfoPDF> listOfOrderPositionsDispatchInfoPDF = new List<OrderPositionsDispatchInfoPDF>();

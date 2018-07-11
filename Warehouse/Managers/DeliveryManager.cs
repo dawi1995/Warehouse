@@ -8,8 +8,12 @@ namespace Warehouse.Managers
 {
     public class DeliveryManager
     {
-        private static readonly WarehouseEntities _context = new WarehouseEntities();
-        public static int CountOfDeliveries(string needle = "", bool isCreatingDispatch = false, int dispatchId = 0)
+        private readonly WarehouseEntities _context;
+        public DeliveryManager(WarehouseEntities context)
+        {
+            _context = context;
+        }
+        public int CountOfDeliveries(string needle = "", bool isCreatingDispatch = false, int dispatchId = 0)
         {
             if (isCreatingDispatch)
             {

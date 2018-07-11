@@ -20,10 +20,12 @@ namespace Warehouse.Controllers
 
         private readonly WarehouseEntities _context;
         private readonly PDFManager _pdfManager;
+        private readonly DeliveryManager _deliveryManager;
         public DeliveryController()
         {
             _context = new WarehouseEntities();
             _pdfManager = new PDFManager();
+            _deliveryManager = new DeliveryManager(_context);
         }
 
         [HttpGet]
@@ -103,7 +105,7 @@ namespace Warehouse.Controllers
                     }
 
                     result.ListOfDeliveries = listOfDeliveryResult;
-                    result.NumberOfDeliveries = DeliveryManager.CountOfDeliveries(needle, isCreatingDispatch, dispatchId);
+                    result.NumberOfDeliveries = _deliveryManager.CountOfDeliveries(needle, isCreatingDispatch, dispatchId);
                     return result;
                 }
                 catch (Exception ex)

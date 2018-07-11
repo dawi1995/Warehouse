@@ -8,8 +8,13 @@ namespace Warehouse.Managers
 {
     public class AccountManager
     {
-        private static readonly WarehouseEntities _context = new WarehouseEntities();
-        public static int CountOfUsers(int role = 0, string needle = "")
+        private readonly WarehouseEntities _context;
+        public AccountManager(WarehouseEntities context)
+        {
+            _context = context;
+        }
+
+        public int CountOfUsers(int role = 0, string needle = "")
         {
             if (role == 0)
             {

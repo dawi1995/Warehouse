@@ -18,10 +18,12 @@ namespace Warehouse.Controllers
     {
         private readonly WarehouseEntities _context;
         private readonly PDFManager _pdfManager;
+        private readonly DispatchManager _dispatchManager;
         public DispatchController()
         {
             _context = new WarehouseEntities();
             _pdfManager = new PDFManager();
+            _dispatchManager = new DispatchManager(_context);
         }
 
         [HttpGet]
@@ -58,7 +60,7 @@ namespace Warehouse.Controllers
                         listOfDispatches.Add(dispatchToResult);
                     }
                     result.ListOfDispatches = listOfDispatches;
-                    result.NumberOfDispatches = DispatchManager.CountOfDispatches(needle);
+                    result.NumberOfDispatches = _dispatchManager.CountOfDispatches(needle);
                     return result;
                 } 
                 catch (Exception ex)
@@ -90,7 +92,7 @@ namespace Warehouse.Controllers
                     Dispatch dispatchFromDB = _context.Dispatches.FirstOrDefault(d => d.Id == dispatchId && d.Deleted_At == null);
                     if (dispatchFromDB != null)
                     {
-                        List<int> listOfDeliveryIdsForDispatch = DispatchManager.GetListOfDeliveriesIdsForDispatch(dispatchFromDB);
+                        List<int> listOfDeliveryIdsForDispatch = _dispatchManager.GetListOfDeliveriesIdsForDispatch(dispatchFromDB);
                         foreach (var deliveryId in listOfDeliveryIdsForDispatch)
                         {
                             DispatchOrderList dispatchOrderList = new DispatchOrderList();
@@ -433,7 +435,7 @@ namespace Warehouse.Controllers
                         _context.SaveChanges();
 
                         //Deleting orderPosition
-                        List<int> listOfIdsToDelete = DispatchManager.GetIdstoRemove(editDispatch.DispatchPositions, dispatchPositionsFromDB);
+                        List<int> listOfIdsToDelete = _dispatchManager.GetIdstoRemove(editDispatch.DispatchPositions, dispatchPositionsFromDB);
                         foreach (var id in listOfIdsToDelete)
                         {
                             var dispatchPositionToDelete = _context.Dispatches_Positions.FirstOrDefault(d => d.Order_Position_Id == id && d.Dispatch_Id == editDispatch.Id && d.Deleted_At == null);
@@ -676,7 +678,6 @@ namespace Warehouse.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "User don't have acces to this method"));
             }
         }
-
         [HttpGet]
         [Route("GetDispatchPDF")]
         public byte[] GetDispatchPDF(int dispatchId, bool ifSendEmail = false)
@@ -685,7 +686,7 @@ namespace Warehouse.Controllers
             {
                 try
                 {
-                    DispatchDetailsPDF dispatchInfoToPDF = DispatchManager.GetDispatchDetails(dispatchId);
+                    DispatchDetailsPDF dispatchInfoToPDF = _dispatchManager.GetDispatchDetails(dispatchId);
                     Dispatch dispatch = _context.Dispatches.FirstOrDefault(d => d.Id == dispatchId && d.Deleted_At == null);
                     User userCreator = _context.Users.FirstOrDefault(u => u.Id == dispatch.Creator_Id && u.Deleted_at == null);
                     string creatorName = "";

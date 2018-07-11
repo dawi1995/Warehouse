@@ -23,10 +23,12 @@ namespace Warehouse.Controllers
     {
         private readonly WarehouseEntities _context;
         private readonly PDFManager _pdfManager;
+        private readonly OrderManager _orderManager;
         public OrderController()
         {
             _context = new WarehouseEntities();
             _pdfManager = new PDFManager();
+            _orderManager = new OrderManager(_context);
         }
 
         [HttpGet]
@@ -82,7 +84,7 @@ namespace Warehouse.Controllers
                     }
 
                     result.ListOfOrders = listOfOrderResult;
-                    result.NumberOfOrders = OrderManager.CountOfOrders(needle);
+                    result.NumberOfOrders = _orderManager.CountOfOrders(needle);
                     return result;
                 }
                 catch (Exception ex)
@@ -295,7 +297,7 @@ namespace Warehouse.Controllers
                     _context.SaveChanges();
 
                     //Deleting orderPosition
-                    List<int> listOfIdsToDelete = OrderManager.GetIdstoRemove(editOrder.OrderPositions, orderPositionsFromDB);
+                    List<int> listOfIdsToDelete = _orderManager.GetIdstoRemove(editOrder.OrderPositions, orderPositionsFromDB);
                     foreach (var id in listOfIdsToDelete)
                     {
                         var orderPositionToDelete = _context.Orders_Positions.FirstOrDefault(o => o.Id == id && o.Deleted_At == null);
