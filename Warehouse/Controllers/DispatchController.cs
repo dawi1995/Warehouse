@@ -264,11 +264,13 @@ namespace Warehouse.Controllers
         {
             if (UserHelper.IsAuthorize(new List<int> { (int)UserType.SuperAdmin }))
             {
+                Dispatch dispatchToEdit = _context.Dispatches.FirstOrDefault(o => o.Id == editDispatch.Id && o.Deleted_At == null);
                 DateTime dateOfEdit = DateTime.Now;
                 RequestResult result = new RequestResult();
                 try
                 {
-                    CMR_Dispatches CMRDispatch = _context.CMR_Dispatches.FirstOrDefault(c => c.Id == editDispatch.CMRId);
+                    int CMRId = Convert.ToInt32(dispatchToEdit.CMR_Id);
+                    CMR_Dispatches CMRDispatch = _context.CMR_Dispatches.FirstOrDefault(c => c.Id == CMRId);
                     if (isCMR)
                     {
                         if (CMRDispatch != null)
@@ -291,6 +293,7 @@ namespace Warehouse.Controllers
                             CMRDispatch.Sender_Address = editDispatch.CMRDispatch.Sender_Address;
                             CMRDispatch.Sender_Email = editDispatch.CMRDispatch.Sender_Email;
                             CMRDispatch.Sender_Name = editDispatch.CMRDispatch.Sender_Name;
+                            CMRDispatch.Sender_PrefixVat_Id = editDispatch.CMRDispatch.Sender_PrefixVat_Id;
                             CMRDispatch.Sender_VAT_Id = editDispatch.CMRDispatch.Sender_VAT_Id.RemoveWhiteSpaces();
                             _context.CMR_Dispatches.Add(CMRDispatch);
                             _context.SaveChanges();
@@ -305,7 +308,6 @@ namespace Warehouse.Controllers
                         }
                     }
                     
-                    Dispatch dispatchToEdit = _context.Dispatches.FirstOrDefault(o => o.Id == editDispatch.Id && o.Deleted_At == null);
                     if (dispatchToEdit != null)
                     {
                         dispatchToEdit.Carrier_Address = editDispatch.Carrier.Carrier_Address;
