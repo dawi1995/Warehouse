@@ -58,7 +58,7 @@ namespace Warehouse.Controllers
                         orderResult.Id = order.Id;
                         orderResult.Container_Id = order.Container_Id;
                         orderResult.ATB = order.ATB;                    
-                        orderResult.Creation_Date = order.Creation_Date == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd.MM.yyyy");                    
+                        orderResult.Creation_Date = order.Creation_Date == null ? string.Empty : ((DateTime)order.Creation_Date).ToString("dd-MM-yyyy");                    
                         orderResult.Status = order.Status;
                         orderResult.Name = order.Name;
                         orderResult.Terminal = order.Terminal;
@@ -132,7 +132,7 @@ namespace Warehouse.Controllers
                     result.Num_of_Positions = orderFromDB.Num_of_Positions;
                     result.Order_Number = orderFromDB.Order_Number;
                     result.Pickup_PIN = orderFromDB.Pickup_PIN;
-                    result.ETA = orderFromDB.ETA == null ? string.Empty : orderFromDB.ETA.Value.ToString("dd.MM.yyyy");
+                    result.ETA = orderFromDB.ETA == null ? string.Empty : orderFromDB.ETA.Value.ToString("dd-MM-yyyy");
                     result.Orderer = orderer;
                     result.Terminal = orderFromDB.Terminal;
                     result.ReturnTerminal = orderFromDB.ReturnTerminal;

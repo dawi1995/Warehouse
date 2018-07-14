@@ -133,7 +133,7 @@ namespace Warehouse.Managers
 
             result.Id = dispatch.Id;
             result.Dispatch_Number = dispatch.Dispatch_Number;
-            result.Creation_Date = dispatch.Creation_Date == null ? string.Empty : dispatch.Creation_Date.Value.ToString("dd.MM.yyyy");
+            result.Creation_Date = dispatch.Creation_Date == null ? string.Empty : dispatch.Creation_Date.Value.ToString("dd-MM-yyyy");
             result.Car_Id = dispatch.Car_Id;
             result.Destination = cmrDispatch == null ? string.Empty : cmrDispatch.Destination;
             result.Carrier = carrierDispatch;

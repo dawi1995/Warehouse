@@ -84,7 +84,7 @@ namespace Warehouse.Controllers
                         deliveryResult.OrderId = item.Delivery.Order_Id;
                         deliveryResult.ATB = item.Order.ATB;
                         deliveryResult.Container_Id = item.Order.Container_Id;
-                        deliveryResult.Date_Of_Delivery = item.Delivery.Date_Of_Delivery == null? string.Empty : item.Delivery.Date_Of_Delivery.ToString("dd.MM.yyyy");
+                        deliveryResult.Date_Of_Delivery = item.Delivery.Date_Of_Delivery == null? string.Empty : item.Delivery.Date_Of_Delivery.ToString("dd-MM-yyyy");
                         deliveryResult.Name = item.Order.Name;
                         deliveryResult.IsBalancedDeliveryDispatch = item.Delivery.If_Delivery_Dispatch_Balanced;
                         deliveryResult.IsDifferentDeliveryOrder = item.Delivery.If_Differential_Delivery_Order;
@@ -143,7 +143,7 @@ namespace Warehouse.Controllers
                         listOfOrderPositions.Add(orderPositionDeliveryInfo);
                     }
                     result.Id = deliveryFromDB.Id;
-                    result.Date_Of_Delivery = deliveryFromDB.Date_Of_Delivery == null ? string.Empty : ((DateTime)deliveryFromDB.Date_Of_Delivery).ToString("dd.MM.yyyy");
+                    result.Date_Of_Delivery = deliveryFromDB.Date_Of_Delivery == null ? string.Empty : ((DateTime)deliveryFromDB.Date_Of_Delivery).ToString("dd-MM-yyyy");
                     result.Delivery_Number = deliveryFromDB.Delivery_Number;
                     result.Car_Id = deliveryFromDB.Car_Id;
                     result.ListOfOrderPositions = listOfOrderPositions;
