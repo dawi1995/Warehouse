@@ -52,7 +52,7 @@ namespace Warehouse.Controllers
                         DispatchList dispatchToResult = new DispatchList();
                         dispatchToResult.Carrier_Name = dispatch.Dispatches.Carrier_Name;
                         dispatchToResult.Car_Id = dispatch.Dispatches.Car_Id;
-                        dispatchToResult.Creation_Date = dispatch.Dispatches.Creation_Date == null ? string.Empty : ((DateTime)dispatch.Dispatches.Creation_Date).ToString("dd-MM-yyyy");
+                        dispatchToResult.Creation_Date = dispatch.Dispatches.Creation_Date == null ? string.Empty : ((DateTime)dispatch.Dispatches.Creation_Date).ToString("dd.MM.yyyy");
                         dispatchToResult.Id = dispatch.Dispatches.Id;
                         dispatchToResult.Receiver_Name = dispatch.Dispatches.Receiver_Name;
                         dispatchToResult.IsCMR = dispatch.Dispatches.If_CMR == null ? false : dispatch.Dispatches.If_CMR;
@@ -162,7 +162,7 @@ namespace Warehouse.Controllers
                         result.CmrDispatch = cmrToResult;
                         result.Duty_Doc_Id = dispatchFromDB.Duty_Doc_Id;
                         result.Car_Id = dispatchFromDB.Car_Id;
-                        result.Creation_Date = dispatchFromDB.Creation_Date == null ? string.Empty : dispatchFromDB.Creation_Date.Value.ToString("dd-MM-yyyy");
+                        result.Creation_Date = dispatchFromDB.Creation_Date == null ? string.Empty : dispatchFromDB.Creation_Date.Value.ToString("dd.MM.yyyy");
                     }
                     return result;                 
                 }
@@ -237,7 +237,7 @@ namespace Warehouse.Controllers
                         receiverDispatch.Receiver_PhoneNumber = dispatch.Receiver_PhoneNumber;
                         dispatchDetails.Id = dispatch.Id;
                         dispatchDetails.Dispatch_Number = dispatch.Dispatch_Number;
-                        dispatchDetails.Creation_Date = dispatch.Creation_Date == null ? string.Empty : ((DateTime)(dispatch.Creation_Date)).ToString("dd-MM-yyyy");
+                        dispatchDetails.Creation_Date = dispatch.Creation_Date == null ? string.Empty : ((DateTime)(dispatch.Creation_Date)).ToString("dd.MM.yyyy");
                         dispatchDetails.Car_Id = dispatch.Car_Id;
                         dispatchDetails.Carrier = carrierDispatch;
                         dispatchDetails.Receiver = receiverDispatch;

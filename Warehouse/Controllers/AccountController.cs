@@ -399,8 +399,8 @@ namespace Warehouse.Controllers
                     userInfo.Id = user.User.Id;
                     userInfo.Login = user.User.Login;
                     userInfo.Role = user.User.Role;
-                    userInfo.Created_At = user.User.Created_at == null ? string.Empty : ((DateTime)user.User.Created_at).ToString("dd-MM-yyyy");
-                    userInfo.Edited_At = user.User.Edited_at == null ? string.Empty : ((DateTime)user.User.Edited_at).ToString("dd-MM-yyyy");
+                    userInfo.Created_At = user.User.Created_at == null ? string.Empty : ((DateTime)user.User.Created_at).ToString("dd.MM.yyyy");
+                    userInfo.Edited_At = user.User.Edited_at == null ? string.Empty : ((DateTime)user.User.Edited_at).ToString("dd.MM.yyyy");
                     userInfo.Name = user.Client == null ? string.Empty : user.Client.Name;
                     userInfo.Address = user.Client == null ? string.Empty : user.Client.Address;
                     userInfo.PrefixVat_Id = user.Client == null ? string.Empty : user.Client.PrefixVat_Id;
@@ -475,8 +475,8 @@ namespace Warehouse.Controllers
                         userInfo.Role = user.Role;
                         userInfo.UserName = user.Name;
                         userInfo.UserSurname = user.Surname;
-                        userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd-MM-yyyy");
-                        userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd-MM-yyyy");
+                        userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd.MM.yyyy");
+                        userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd.MM.yyyy");
                         Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
                         if (client != null)
                         {

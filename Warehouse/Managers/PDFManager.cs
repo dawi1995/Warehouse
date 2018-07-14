@@ -84,7 +84,7 @@ namespace Warehouse.Managers
 
             //Data zlecenia
             graph.DrawString("Data zlecenia/Datum der Bestellung:", _titleTable, XBrushes.Black, new XRect(194, 83, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.Creation_Date.Date.ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(194, 118, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.Creation_Date.Date.ToString("dd.MM.yyyy"), _contentTableNormal, XBrushes.Black, new XRect(194, 118, 0, 0), XStringFormats.TopLeft);
 
 
             //Numer zlecenia
@@ -94,7 +94,7 @@ namespace Warehouse.Managers
             //Drugi wiersz
             //ETA
             graph.DrawString("ETA:", _titleTable, XBrushes.Black, new XRect(44, 163, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.ETA == null ? string.Empty: ((DateTime)order.ETA).ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 198, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.ETA == null ? string.Empty: ((DateTime)order.ETA).ToString("dd.MM.yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 198, 0, 0), XStringFormats.TopLeft);
 
 
             //Numer kontenera
@@ -305,7 +305,7 @@ namespace Warehouse.Managers
 
             //Data zlecenia
             graph.DrawString("Data zlecenia/Datum der Bestellung:", _titleTable, XBrushes.Black, new XRect(194, 80+3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.Creation_Date.Date.ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(194, 80+3+25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.Creation_Date.Date.ToString("dd.MM.yyyy"), _contentTableNormal, XBrushes.Black, new XRect(194, 80+3+25, 0, 0), XStringFormats.TopLeft);
 
 
             //Numer zlecenia
@@ -315,7 +315,7 @@ namespace Warehouse.Managers
             //Drugi wiersz
             //ETA
             graph.DrawString("ETA:", _titleTable, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.ETA == null ? string.Empty : ((DateTime)order.ETA).ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight+3+25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.ETA == null ? string.Empty : ((DateTime)order.ETA).ToString("dd.MM.yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight+3+25, 0, 0), XStringFormats.TopLeft);
 
 
             //Numer kontenera
@@ -330,7 +330,7 @@ namespace Warehouse.Managers
             //ATB
             graph.DrawString("Data zlecenia/", _titleTable, XBrushes.Black, new XRect(44, 80 + 2* firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Datum der Bestellung:", _titleTable, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.Creation_Date.ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3+25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.Creation_Date.ToString("dd.MM.yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3+25, 0, 0), XStringFormats.TopLeft);
 
             //PIN
             graph.DrawString("Nr zlecenia/Bestellnummer:", _titleTable, XBrushes.Black, new XRect(194, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
@@ -612,11 +612,11 @@ namespace Warehouse.Managers
             //Data protokołu rozbieżności
             graph.DrawString("Data protokołu rozbieżności/", _titleTable, XBrushes.Black, new XRect(194, 80 + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Datum des Diskrepanzprotokolls:", _titleTable, XBrushes.Black, new XRect(194, 80 + 3+10, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(DateTime.Now.ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(DateTime.Now.ToString("dd.MM.yyyy"), _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
             ////Data zlecenia
             //graph.DrawString("Data zlecenia/Datum der Bestellung:", _titleTable, XBrushes.Black, new XRect(194, 80 + 3, 0, 0), XStringFormats.TopLeft);
-            //graph.DrawString(order.Creation_Date.Date.ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            //graph.DrawString(order.Creation_Date.Date.ToString("dd.MM.yyyy"), _contentTableNormal, XBrushes.Black, new XRect(194, 80 + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
             //Numer zlecenia
             graph.DrawString("Numer przyjęcia/Annahmenummer:", _titleTable, XBrushes.Black, new XRect((rightMargin - 190) / 2 + 194, 80 + 3, 0, 0), XStringFormats.TopLeft);
@@ -631,7 +631,7 @@ namespace Warehouse.Managers
             //Drugi wiersz
             //ETA
             graph.DrawString("ETA:", _titleTable, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.ETA == null ? string.Empty : ((DateTime)order.ETA).ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.ETA == null ? string.Empty : ((DateTime)order.ETA).ToString("dd.MM.yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
 
             //Numer kontenera
@@ -646,7 +646,7 @@ namespace Warehouse.Managers
             //Data zlecenia
             graph.DrawString("Data zlecenia/", _titleTable, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
             graph.DrawString("Datum der Bestellung:", _titleTable, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3 + 10, 0, 0), XStringFormats.TopLeft);
-            graph.DrawString(order.Creation_Date.ToString("dd-MM-yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
+            graph.DrawString(order.Creation_Date.ToString("dd.MM.yyyy"), _contentTableNormal, XBrushes.Black, new XRect(44, 80 + 2 * firstTableRowHeight + 3 + 25, 0, 0), XStringFormats.TopLeft);
 
             //Numer zlecenia
             graph.DrawString("Nr zlecenia/Bestellnummer:", _titleTable, XBrushes.Black, new XRect(194, 80 + 2 * firstTableRowHeight + 3, 0, 0), XStringFormats.TopLeft);
@@ -1350,12 +1350,12 @@ namespace Warehouse.Managers
 
                     //Place and date of dispatch
                     double placeDateDispStartY = 240;
-                    string createDT = dispatchToPDF.Creation_Date == null ? string.Empty : dispatchToPDF.Creation_Date.Value.ToString("dd-MM-yyyy");
+                    string createDT = dispatchToPDF.Creation_Date == null ? string.Empty : dispatchToPDF.Creation_Date.Value.ToString("dd.MM.yyyy");
                     graph.DrawString("miejsce załadowania, " + createDT, _contentCMR, XBrushes.Black, new XRect(leftMargin1_5, placeDateDispStartY, 0, 0), XStringFormats.TopLeft);
 
                     //Place and date of establishment
                     double placeDateEstablishStartY = 700;
-                    string dateEstablishment = DateTime.Now.ToString("dd-MM-yyyy");
+                    string dateEstablishment = DateTime.Now.ToString("dd.MM.yyyy");
                     graph.DrawString("miejsce wystawienia", _contentCMR, XBrushes.Black, new XRect(leftMargin1_5, placeDateEstablishStartY, 0, 0), XStringFormats.TopLeft);
                     graph.DrawString(dateEstablishment, _contentCMR, XBrushes.Black, new XRect(leftMargin1_5 + 103, placeDateEstablishStartY, 0, 0), XStringFormats.TopLeft);
 

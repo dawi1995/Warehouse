@@ -59,8 +59,8 @@ namespace Warehouse.Helpers
                     userInfo.Id = user.Id;
                     userInfo.Login = user.Login;
                     userInfo.Role = user.Role;
-                    userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd-MM-yyyy");
-                    userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd-MM-yyyy");
+                    userInfo.Created_At = user.Created_at == null ? string.Empty : ((DateTime)user.Created_at).ToString("dd.MM.yyyy");
+                    userInfo.Edited_At = user.Edited_at == null ? string.Empty : ((DateTime)user.Edited_at).ToString("dd.MM.yyyy");
                     Client client = _context.Clients.FirstOrDefault(c => c.User_Id == user.Id);
                     if (client != null)
                     {
