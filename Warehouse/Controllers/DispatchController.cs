@@ -133,6 +133,7 @@ namespace Warehouse.Controllers
                                     listOfDispatchPositions.Add(dispatchPosition);
                                 }
                             }
+                            dispatchOrderList.Delivery_Id = delivery.Id;
                             dispatchOrderList.Delivery_Number = delivery.Delivery_Number;
                             dispatchOrderList.Order_Number = order.Order_Number;
                             dispatchOrderList.ContainerId = order.Container_Id;
